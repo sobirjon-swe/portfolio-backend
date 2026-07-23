@@ -16,7 +16,7 @@ Route::prefix('v1')->group(function () {
     /*
      * Authentication.
      */
-    Route::post('login', [AuthController::class, 'login']);
+    Route::post('login', [AuthController::class, 'login'])->middleware('throttle:auth');
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('me', [AuthController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
@@ -47,10 +47,10 @@ Route::prefix('v1')->group(function () {
     Route::get('leetcode', [LeetCodeController::class, 'stats']);
 
     // Visitors record their own page views.
-    Route::post('page-views', [PageViewController::class, 'store']);
+    Route::post('page-views', [PageViewController::class, 'store'])->middleware('throttle:page-views');
 
     // Visitors send project inquiries.
-    Route::post('messages', [MessageController::class, 'store']);
+    Route::post('messages', [MessageController::class, 'store'])->middleware('throttle:contact');
 
     /*
      * Admin write endpoints (token-protected).

@@ -43,7 +43,7 @@ class ProjectService
         $technologyIds = $this->pullTechnologyIds($data);
 
         $data['user_id'] = $ownerId;
-        $data['slug'] = $this->uniqueSlug($data['title']);
+        $data['slug'] = $this->uniqueSlug($this->titleString($data['title']));
 
         return $this->repository->create($data, $technologyIds);
     }
@@ -60,9 +60,9 @@ class ProjectService
             ? $this->pullTechnologyIds($data)
             : null;
 
-        // Regenerate the slug only when the title actually changes.
-        if (isset($data['title']) && $data['title'] !== $project->title) {
-            $data['slug'] = $this->uniqueSlug($data['title'], $project->id);
+        // Regenerate the slug from the default-locale title when it is present.
+        if (isset($data['title'])) {
+            $data['slug'] = $this->uniqueSlug($this->titleString($data['title']), $project->id);
         }
 
         return $this->repository->update($project, $data, $technologyIds);
@@ -88,6 +88,22 @@ class ProjectService
         unset($data['technology_ids']);
 
         return array_map('intval', (array) $ids);
+    }
+
+    /**
+     * Resolve a plain string from a translatable title (default locale first).
+     *
+     * @param  array<string, string>|string  $title
+     */
+    private function titleString(array|string $title): string
+    {
+        if (is_array($title)) {
+            $values = array_filter($title, static fn ($v) => is_string($v) && $v !== '');
+
+            return (string) ($title['en'] ?? (array_values($values)[0] ?? ''));
+        }
+
+        return $title;
     }
 
     /**

@@ -21,8 +21,14 @@ class UpdatePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['sometimes', 'required', 'string', 'max:255'],
-            'content' => ['sometimes', 'required', 'string'],
+            'title' => ['sometimes', 'array'],
+            'title.en' => ['required_with:title', 'string', 'max:255'],
+            'title.uz' => ['nullable', 'string', 'max:255'],
+            'title.ru' => ['nullable', 'string', 'max:255'],
+            'content' => ['sometimes', 'array'],
+            'content.en' => ['required_with:content', 'string'],
+            'content.uz' => ['nullable', 'string'],
+            'content.ru' => ['nullable', 'string'],
             'cover_image' => ['sometimes', 'nullable', 'string', 'max:255'],
             'published_at' => ['sometimes', 'nullable', 'date'],
         ];

@@ -19,8 +19,14 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:255'],
-            'content' => ['required', 'string'],
+            'title' => ['required', 'array'],
+            'title.en' => ['required', 'string', 'max:255'],
+            'title.uz' => ['nullable', 'string', 'max:255'],
+            'title.ru' => ['nullable', 'string', 'max:255'],
+            'content' => ['required', 'array'],
+            'content.en' => ['required', 'string'],
+            'content.uz' => ['nullable', 'string'],
+            'content.ru' => ['nullable', 'string'],
             'cover_image' => ['nullable', 'string', 'max:255'],
             'published_at' => ['nullable', 'date'], // null = draft
         ];

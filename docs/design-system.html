@@ -1,0 +1,478 @@
+<title>sobirjonswe.uz — Design System</title>
+<style>
+  :root {
+    /* neutral is blue-biased, not pure grey — chosen, not inherited */
+    --bg: #0a0b0f;
+    --surface: #101219;
+    --surface-2: #161a24;
+    --border: #222735;
+    --border-soft: #1a1e28;
+    --text: #e8eaf0;
+    --muted: #8b93a4;
+    --faint: #5b6270;
+    --accent: #4c8dff;
+    --accent-strong: #3e7bfa;
+    --accent-soft: rgba(76, 141, 255, 0.12);
+    --accent-line: rgba(76, 141, 255, 0.28);
+    --ok: #35c98a;
+    --ok-soft: rgba(53, 201, 138, 0.14);
+    --shadow: 0 18px 50px -24px rgba(0, 0, 0, 0.7);
+    --mono: ui-monospace, "Cascadia Code", "JetBrains Mono", "SF Mono", Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --maxw: 1080px;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f6f7f9;
+      --surface: #ffffff;
+      --surface-2: #f0f2f6;
+      --border: #e0e4ea;
+      --border-soft: #eaedf2;
+      --text: #10131a;
+      --muted: #5a6472;
+      --faint: #97a0b0;
+      --accent: #2f6bf0;
+      --accent-strong: #2560e0;
+      --accent-soft: rgba(47, 107, 240, 0.09);
+      --accent-line: rgba(47, 107, 240, 0.22);
+      --ok: #16a06a;
+      --ok-soft: rgba(22, 160, 106, 0.12);
+      --shadow: 0 20px 45px -28px rgba(20, 30, 60, 0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0a0b0f; --surface: #101219; --surface-2: #161a24; --border: #222735;
+    --border-soft: #1a1e28; --text: #e8eaf0; --muted: #8b93a4; --faint: #5b6270;
+    --accent: #4c8dff; --accent-strong: #3e7bfa; --accent-soft: rgba(76,141,255,0.12);
+    --accent-line: rgba(76,141,255,0.28); --ok: #35c98a; --ok-soft: rgba(53,201,138,0.14);
+    --shadow: 0 18px 50px -24px rgba(0,0,0,0.7);
+  }
+  :root[data-theme="light"] {
+    --bg: #f6f7f9; --surface: #ffffff; --surface-2: #f0f2f6; --border: #e0e4ea;
+    --border-soft: #eaedf2; --text: #10131a; --muted: #5a6472; --faint: #97a0b0;
+    --accent: #2f6bf0; --accent-strong: #2560e0; --accent-soft: rgba(47,107,240,0.09);
+    --accent-line: rgba(47,107,240,0.22); --ok: #16a06a; --ok-soft: rgba(22,160,106,0.12);
+    --shadow: 0 20px 45px -28px rgba(20,30,60,0.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+  section { padding: 72px 0; border-top: 1px solid var(--border-soft); }
+  section:first-of-type { border-top: none; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .eyebrow::before {
+    content: ""; width: 22px; height: 1px; background: var(--accent-line);
+  }
+  h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 620; letter-spacing: -0.02em; margin: 0 0 10px; text-wrap: balance; }
+  .lede { color: var(--muted); max-width: 62ch; margin: 0; }
+
+  /* ---------- top bar ---------- */
+  .topbar {
+    position: sticky; top: 0; z-index: 20;
+    backdrop-filter: blur(12px);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .topbar .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .brand { font-family: var(--mono); font-weight: 600; font-size: 14px; letter-spacing: -0.01em; }
+  .brand b { color: var(--accent); }
+  .top-right { display: flex; align-items: center; gap: 14px; }
+  .langs { display: flex; gap: 2px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 3px; }
+  .langs button {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em;
+    border: none; background: transparent; color: var(--muted);
+    padding: 4px 11px; border-radius: 999px; cursor: pointer; transition: .18s;
+  }
+  .langs button.on { background: var(--accent); color: #fff; }
+  .langs button:not(.on):hover { color: var(--text); }
+  .theme-btn {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em;
+    background: var(--surface-2); border: 1px solid var(--border); color: var(--muted);
+    padding: 6px 12px; border-radius: 999px; cursor: pointer; transition: .18s;
+  }
+  .theme-btn:hover { color: var(--text); border-color: var(--accent-line); }
+
+  /* ---------- hero of the spec ---------- */
+  .hero { padding: 90px 0 64px; }
+  .status {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em;
+    color: var(--ok); background: var(--ok-soft);
+    border: 1px solid color-mix(in srgb, var(--ok) 30%, transparent);
+    padding: 5px 12px; border-radius: 999px; margin-bottom: 22px;
+  }
+  .status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 0 var(--ok); animation: pulse 2.4s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 55%, transparent); } 70% { box-shadow: 0 0 0 7px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+  .hero h1 {
+    font-size: clamp(2.3rem, 6vw, 4rem); font-weight: 650; letter-spacing: -0.035em;
+    line-height: 1.02; margin: 0 0 20px; text-wrap: balance;
+  }
+  .hero h1 .thesis { color: var(--accent); }
+  .hero p { color: var(--muted); font-size: 1.05rem; max-width: 58ch; margin: 0 0 30px; }
+  .refs { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font-family: var(--mono); font-size: 11.5px; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 7px; padding: 5px 10px;
+    background: var(--surface);
+  }
+  .chip b { color: var(--text); font-weight: 600; }
+
+  /* ---------- color palette ---------- */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-top: 30px; }
+  .sw { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--surface); }
+  .sw .chip-color { height: 74px; }
+  .sw .meta { padding: 11px 13px; }
+  .sw .name { font-size: 13px; font-weight: 600; }
+  .sw .hex { font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+
+  /* ---------- type scale ---------- */
+  .type-rows { margin-top: 26px; display: flex; flex-direction: column; gap: 4px; }
+  .type-row {
+    display: flex; align-items: baseline; gap: 22px; padding: 16px 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .type-row .tag { font-family: var(--mono); font-size: 11px; color: var(--faint); width: 130px; flex-shrink: 0; letter-spacing: 0.04em; }
+  .type-row .demo { line-height: 1.15; }
+  .t-display { font-size: clamp(2rem, 5vw, 3rem); font-weight: 650; letter-spacing: -0.035em; }
+  .t-h2 { font-size: 1.6rem; font-weight: 620; letter-spacing: -0.02em; }
+  .t-body { font-size: 1rem; color: var(--muted); }
+  .t-mono { font-family: var(--mono); font-size: 13px; letter-spacing: 0.02em; color: var(--accent); }
+
+  /* ---------- generic preview shell ---------- */
+  .preview {
+    margin-top: 30px; border: 1px solid var(--border); border-radius: 16px;
+    background: var(--surface); box-shadow: var(--shadow); overflow: hidden;
+  }
+  .preview-label {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--faint); padding: 12px 20px; border-bottom: 1px solid var(--border-soft);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .preview-label::before { content: "◆"; color: var(--accent); font-size: 9px; }
+  .preview-body { padding: 34px; }
+
+  /* services cards */
+  .svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .svc {
+    border: 1px solid var(--border); border-radius: 13px; padding: 22px;
+    background: var(--surface-2); transition: transform .25s ease, border-color .25s ease;
+  }
+  .svc:hover { transform: translateY(-4px); border-color: var(--accent-line); }
+  .svc .num { font-family: var(--mono); font-size: 12px; color: var(--accent); }
+  .svc h4 { margin: 12px 0 8px; font-size: 1.05rem; font-weight: 620; letter-spacing: -0.01em; }
+  .svc p { margin: 0; font-size: 0.9rem; color: var(--muted); }
+  .cta {
+    margin-top: 24px; display: inline-flex; align-items: center; gap: 9px;
+    background: var(--accent); color: #fff; border: none; border-radius: 10px;
+    font-family: var(--sans); font-size: 0.92rem; font-weight: 560; padding: 12px 20px;
+    cursor: pointer; transition: .2s;
+  }
+  .cta:hover { background: var(--accent-strong); transform: translateY(-2px); }
+  .cta .arrow { transition: transform .2s; }
+  .cta:hover .arrow { transform: translateX(3px); }
+
+  /* project card */
+  .proj {
+    display: grid; grid-template-columns: 1.1fr 1fr; gap: 0;
+    border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--surface-2);
+  }
+  .proj .art {
+    min-height: 210px; position: relative; overflow: hidden;
+    background:
+      radial-gradient(120% 90% at 15% 10%, color-mix(in srgb, var(--accent) 32%, transparent), transparent 60%),
+      linear-gradient(150deg, var(--surface) 0%, var(--surface-2) 100%);
+    border-right: 1px solid var(--border-soft);
+  }
+  .proj .art .grid-lines { position: absolute; inset: 0; opacity: .5;
+    background-image: linear-gradient(var(--border-soft) 1px, transparent 1px), linear-gradient(90deg, var(--border-soft) 1px, transparent 1px);
+    background-size: 26px 26px; mask-image: radial-gradient(70% 70% at 70% 40%, #000, transparent); }
+  .proj .art .badge { position: absolute; top: 16px; left: 16px; font-family: var(--mono); font-size: 11px; color: var(--accent); background: var(--accent-soft); border: 1px solid var(--accent-line); padding: 4px 9px; border-radius: 7px; }
+  .proj .info { padding: 26px; display: flex; flex-direction: column; }
+  .proj .info h4 { margin: 0 0 8px; font-size: 1.25rem; font-weight: 640; letter-spacing: -0.02em; }
+  .proj .info p { margin: 0 0 16px; font-size: 0.92rem; color: var(--muted); }
+  .stack { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
+  .stack span { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; }
+  .proj-links { display: flex; gap: 16px; margin-top: 16px; }
+  .proj-links a { font-family: var(--mono); font-size: 12px; color: var(--accent); text-decoration: none; }
+  .proj-links a:hover { text-decoration: underline; }
+
+  /* experience timeline */
+  .timeline { position: relative; padding-left: 26px; }
+  .timeline::before { content: ""; position: absolute; left: 4px; top: 6px; bottom: 6px; width: 1px; background: var(--border); }
+  .tl-item { position: relative; padding-bottom: 26px; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-item::before { content: ""; position: absolute; left: -25px; top: 5px; width: 9px; height: 9px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
+  .tl-item .when { font-family: var(--mono); font-size: 11.5px; color: var(--faint); letter-spacing: 0.03em; }
+  .tl-item h4 { margin: 4px 0 3px; font-size: 1.02rem; font-weight: 600; }
+  .tl-item .org { font-size: 0.9rem; color: var(--accent); }
+  .tl-item p { margin: 7px 0 0; font-size: 0.9rem; color: var(--muted); }
+
+  /* leetcode widget */
+  .stats-grid { display: grid; grid-template-columns: 200px 1fr; gap: 24px; align-items: center; }
+  .ring-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .ring { position: relative; width: 150px; height: 150px; }
+  .ring svg { transform: rotate(-90deg); }
+  .ring .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .ring .center .total { font-family: var(--mono); font-size: 1.7rem; font-weight: 600; }
+  .ring .center .label { font-family: var(--mono); font-size: 10px; color: var(--faint); letter-spacing: 0.1em; text-transform: uppercase; }
+  .diffs { display: flex; flex-direction: column; gap: 14px; }
+  .diff .diff-top { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; margin-bottom: 6px; }
+  .diff .bar { height: 6px; border-radius: 4px; background: var(--surface-2); overflow: hidden; }
+  .diff .bar i { display: block; height: 100%; border-radius: 4px; }
+
+  /* contact form */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); }
+  .field .box {
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 9px;
+    padding: 11px 13px; color: var(--muted); font-size: 0.9rem; min-height: 42px;
+  }
+  .field .box.area { min-height: 78px; }
+  .flow-note { display: flex; align-items: center; gap: 10px; margin-top: 18px; font-size: 0.86rem; color: var(--faint); font-family: var(--mono); }
+  .flow-note b { color: var(--ok); }
+
+  /* motion tokens */
+  .motion-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; margin-top: 26px; }
+  .motion-card { border: 1px solid var(--border); border-radius: 12px; padding: 18px; background: var(--surface); }
+  .motion-card .k { font-family: var(--mono); font-size: 12px; color: var(--accent); }
+  .motion-card .v { font-size: 0.88rem; color: var(--muted); margin-top: 6px; }
+
+  footer { padding: 40px 0 60px; border-top: 1px solid var(--border-soft); color: var(--faint); font-family: var(--mono); font-size: 12px; }
+
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .status .dot { animation: none; }
+    * { scroll-behavior: auto !important; }
+  }
+  @media (max-width: 720px) {
+    .svc-grid { grid-template-columns: 1fr; }
+    .proj { grid-template-columns: 1fr; }
+    .proj .art { border-right: none; border-bottom: 1px solid var(--border-soft); }
+    .form-grid, .stats-grid { grid-template-columns: 1fr; }
+    .type-row { flex-direction: column; gap: 8px; }
+    .type-row .tag { width: auto; }
+    .ring-wrap { flex-direction: row; justify-content: center; }
+  }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+</style>
+
+<div class="topbar">
+  <div class="wrap">
+    <span class="brand">sobirjon<b>swe</b>.uz</span>
+    <div class="top-right">
+      <div class="langs" role="group" aria-label="Til / Language">
+        <button class="on">EN</button>
+        <button>UZ</button>
+        <button>RU</button>
+      </div>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">◐ THEME</button>
+    </div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap reveal">
+    <span class="status"><span class="dot"></span>Available for work · Ishga tayyor · Открыт к работе</span>
+    <h1>The design system for a portfolio that <span class="thesis">turns visitors into clients.</span></h1>
+    <p>A single visual language blending <b>majd-portfolio</b>'s minimal, motion-led calm with <b>jora.uz</b>'s local, professional warmth. Dark-first, blue-accented, trilingual — built to lead with services, then prove with work.</p>
+    <div class="refs">
+      <span class="chip"><b>Skeleton:</b> majd-portfolio</span>
+      <span class="chip"><b>Voice:</b> jora.uz</span>
+      <span class="chip"><b>Projects:</b> newtonyuan</span>
+      <span class="chip"><b>Timeline:</b> elliottprogrammer</span>
+      <span class="chip"><b>Stats:</b> haffee · leetcode</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reveal">
+    <p class="eyebrow">01 — Palette</p>
+    <h2>Dark-first, one blue voice</h2>
+    <p class="lede">The neutral leans slightly blue so it reads as chosen, not default. Boldness is spent in a single place — the accent. Green is reserved strictly for the "available" status, never as decoration.</p>
+    <div class="swatches">
+      <div class="sw"><div class="chip-color" style="background:#0a0b0f"></div><div class="meta"><div class="name">Background</div><div class="hex">#0A0B0F</div></div></div>
+      <div class="sw"><div class="chip-color" style="background:#101219"></div><div class="meta"><div class="name">Surface</div><div class="hex">#101219</div></div></div>
+      <div class="sw"><div class="chip-color" style="background:#161a24"></div><div class="meta"><div class="name">Surface 2</div><div class="hex">#161A24</div></div></div>
+      <div class="sw"><div class="chip-color" style="background:#222735"></div><div class="meta"><div class="name">Border</div><div class="hex">#222735</div></div></div>
+      <div class="sw"><div class="chip-color" style="background:#4c8dff"></div><div class="meta"><div class="name">Accent</div><div class="hex">#4C8DFF</div></div></div>
+      <div class="sw"><div class="chip-color" style="background:#e8eaf0"></div><div class="meta"><div class="name">Text</div><div class="hex">#E8EAF0</div></div></div>
+      <div class="sw"><div class="chip-color" style="background:#8b93a4"></div><div class="meta"><div class="name">Muted</div><div class="hex">#8B93A4</div></div></div>
+      <div class="sw"><div class="chip-color" style="background:#35c98a"></div><div class="meta"><div class="name">Status only</div><div class="hex">#35C98A</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <p class="eyebrow">02 — Typography</p>
+    <h2>Sans reads, mono signs the work</h2>
+    <p class="lede">A clean sans carries all reading. Monospace is the developer's own vernacular — reserved for eyebrows, labels, stats and code — so the identity feels native to the craft rather than borrowed from a template.</p>
+    <div class="type-rows">
+      <div class="type-row"><span class="tag">display / 650</span><span class="demo t-display">Sobirjon Qurbonov</span></div>
+      <div class="type-row"><span class="tag">heading / 620</span><span class="demo t-h2">Selected work &amp; case studies</span></div>
+      <div class="type-row"><span class="tag">body / 400</span><span class="demo t-body">Full-stack engineer building fast, reliable products for local and remote clients.</span></div>
+      <div class="type-row"><span class="tag">mono / label</span><span class="demo t-mono">01 — SERVICES · $ whoami</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <p class="eyebrow">03 — Services first</p>
+    <h2>The section that earns the site its keep</h2>
+    <p class="lede">Placed second, right after the hero — a visitor learns "this person can build my project" before scrolling anything else. The CTA opens the contact form; every submission becomes a lead.</p>
+    <div class="preview">
+      <div class="preview-label">section · xizmatlar</div>
+      <div class="preview-body">
+        <div class="svc-grid">
+          <div class="svc"><div class="num">/ 01</div><h4>Web Development</h4><p>Responsive, fast marketing sites and web apps — React, modern tooling, SEO-ready.</p></div>
+          <div class="svc"><div class="num">/ 02</div><h4>Backend &amp; APIs</h4><p>Laravel REST APIs, clean layered architecture, PostgreSQL, auth &amp; integrations.</p></div>
+          <div class="svc"><div class="num">/ 03</div><h4>Full-stack Delivery</h4><p>End-to-end product build — from database schema to a polished, shipping UI.</p></div>
+        </div>
+        <button class="cta">Start a project<span class="arrow">→</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <p class="eyebrow">04 — Work</p>
+    <h2>Case-study cards, served from the backend</h2>
+    <p class="lede">Each project is dynamic — managed from the admin panel, translated per language. Cards lift on hover; the visual panel uses a generated grid + accent glow instead of a heavy screenshot.</p>
+    <div class="preview">
+      <div class="preview-label">GET /api/v1/projects?lang=en</div>
+      <div class="preview-body">
+        <div class="proj">
+          <div class="art"><div class="grid-lines"></div><span class="badge">★ Featured</span></div>
+          <div class="info">
+            <h4>Portfolio Platform</h4>
+            <p>Trilingual portfolio with a lead-capture engine: contact form → Telegram alert → Excel export for the owner.</p>
+            <div class="stack"><span>Laravel</span><span>React</span><span>PostgreSQL</span><span>i18n</span></div>
+            <div class="proj-links"><a href="#">↗ Live</a><a href="#">↗ GitHub</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <p class="eyebrow">05 — Experience &amp; stats</p>
+    <h2>A timeline that reads, numbers that prove</h2>
+    <p class="lede">Experience uses a real typed timeline (order carries meaning). The LeetCode widget pulls live from the cached backend proxy — an honest signal of ongoing craft, not a badge.</p>
+    <div class="preview">
+      <div class="preview-label">experiences · leetcode</div>
+      <div class="preview-body" style="display:grid; grid-template-columns:1fr 1fr; gap:34px;">
+        <div class="timeline">
+          <div class="tl-item"><div class="when">2024 — Present</div><h4>Full-stack Engineer</h4><div class="org">Freelance · Remote</div><p>Shipping client web products end-to-end across the CIS and international markets.</p></div>
+          <div class="tl-item"><div class="when">2023 — 2024</div><h4>Backend Developer</h4><div class="org">Product Studio</div><p>Laravel APIs, PostgreSQL, layered architecture and integrations.</p></div>
+          <div class="tl-item"><div class="when">2022 — 2023</div><h4>Junior Developer</h4><div class="org">First role</div><p>Foundations in PHP, JavaScript and shipping to production.</p></div>
+        </div>
+        <div class="stats-grid" style="grid-template-columns:1fr;">
+          <div class="ring-wrap">
+            <div class="ring">
+              <svg width="150" height="150" viewBox="0 0 150 150">
+                <circle cx="75" cy="75" r="64" fill="none" stroke="var(--surface-2)" stroke-width="10"/>
+                <circle cx="75" cy="75" r="64" fill="none" stroke="var(--accent)" stroke-width="10" stroke-linecap="round" stroke-dasharray="402" stroke-dashoffset="140"/>
+              </svg>
+              <div class="center"><span class="total">412</span><span class="label">Solved</span></div>
+            </div>
+          </div>
+          <div class="diffs">
+            <div class="diff"><div class="diff-top"><span style="color:#35c98a">Easy</span><span>198</span></div><div class="bar"><i style="width:82%;background:#35c98a"></i></div></div>
+            <div class="diff"><div class="diff-top"><span style="color:#e2a33c">Medium</span><span>176</span></div><div class="bar"><i style="width:55%;background:#e2a33c"></i></div></div>
+            <div class="diff"><div class="diff-top"><span style="color:#e5595b">Hard</span><span>38</span></div><div class="bar"><i style="width:24%;background:#e5595b"></i></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <p class="eyebrow">06 — Contact → Lead</p>
+    <h2>Every message is a business signal</h2>
+    <p class="lede">The form posts to the backend with a hidden honeypot for spam. On submit it saves the lead, fires a Telegram alert to you instantly, and appears in an admin list you can export to Excel.</p>
+    <div class="preview">
+      <div class="preview-label">POST /api/v1/messages</div>
+      <div class="preview-body">
+        <div class="form-grid">
+          <div class="field"><label>Name / Ism</label><div class="box">Anvar Karimov</div></div>
+          <div class="field"><label>Email</label><div class="box">anvar@company.uz</div></div>
+          <div class="field full"><label>Budget (optional)</label><div class="box">$1,000 – $3,000</div></div>
+          <div class="field full"><label>Message</label><div class="box area">Salom! Bizga kompaniya uchun sayt kerak...</div></div>
+        </div>
+        <button class="cta">Send message<span class="arrow">→</span></button>
+        <div class="flow-note">saved → <b>🔔 Telegram alert</b> → admin list → ⬇ Excel export</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <p class="eyebrow">07 — Motion</p>
+    <h2>Restrained, like majd</h2>
+    <p class="lede">Motion confirms structure, it doesn't perform. One reveal pattern, one hover pattern, everything eased the same way. Reduced-motion users get a still, complete page.</p>
+    <div class="motion-grid">
+      <div class="motion-card"><div class="k">reveal</div><div class="v">fade + 18px rise on scroll-in, 0.6s ease-out, once</div></div>
+      <div class="motion-card"><div class="k">hover-lift</div><div class="v">cards translateY(-4px), border → accent, 0.25s</div></div>
+      <div class="motion-card"><div class="k">cta</div><div class="v">arrow nudges 3px, background deepens</div></div>
+      <div class="motion-card"><div class="k">status</div><div class="v">soft 2.4s pulse on the availability dot only</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">sobirjonswe.uz — design system v1 · majd × jora · EN / UZ / RU · pairs with docs/PORTFOLIO_PLAN.md</div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('themeToggle');
+    btn.addEventListener('click', function () {
+      var cur = root.getAttribute('data-theme');
+      if (!cur) { cur = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+      root.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+    });
+
+    var langBtns = document.querySelectorAll('.langs button');
+    langBtns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        langBtns.forEach(function (x) { x.classList.remove('on'); });
+        b.classList.add('on');
+      });
+    });
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+  })();
+</script>

@@ -22,8 +22,14 @@ class UpdateProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['sometimes', 'required', 'string', 'max:255'],
-            'description' => ['sometimes', 'required', 'string'],
+            'title' => ['sometimes', 'array'],
+            'title.en' => ['required_with:title', 'string', 'max:255'],
+            'title.uz' => ['nullable', 'string', 'max:255'],
+            'title.ru' => ['nullable', 'string', 'max:255'],
+            'description' => ['sometimes', 'array'],
+            'description.en' => ['required_with:description', 'string'],
+            'description.uz' => ['nullable', 'string'],
+            'description.ru' => ['nullable', 'string'],
             'cover_image' => ['sometimes', 'nullable', 'string', 'max:255'],
             'github_url' => ['sometimes', 'nullable', 'url', 'max:255'],
             'live_url' => ['sometimes', 'nullable', 'url', 'max:255'],

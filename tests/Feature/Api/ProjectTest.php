@@ -58,23 +58,27 @@ class ProjectTest extends TestCase
         $techs = Technology::factory()->count(2)->create();
 
         $response = $this->postJson('/api/v1/projects', [
-            'title' => 'My Cool Project',
-            'description' => 'A description.',
+            'title' => ['en' => 'My Cool Project', 'uz' => 'Zo\'r loyiham'],
+            'description' => ['en' => 'A description.'],
             'is_featured' => true,
             'technology_ids' => $techs->pluck('id')->all(),
         ]);
 
         $response->assertCreated()
             ->assertJsonPath('data.slug', 'my-cool-project')
+            ->assertJsonPath('data.title', 'My Cool Project')
             ->assertJsonPath('data.is_featured', true)
             ->assertJsonCount(2, 'data.technologies')
             ->assertJsonPath('message', 'Project created.');
 
         $this->assertDatabaseHas('projects', [
-            'title' => 'My Cool Project',
             'slug' => 'my-cool-project',
             'user_id' => $user->id,
         ]);
+
+        // The translation the admin also entered is retrievable per-locale.
+        $this->getJson("/api/v1/projects/{$response->json('data.id')}?lang=uz")
+            ->assertJsonPath('data.title', 'Zo\'r loyiham');
         $this->assertDatabaseCount('project_technology', 2);
     }
 
@@ -84,8 +88,8 @@ class ProjectTest extends TestCase
         Project::factory()->create(['slug' => 'duplicate-title']);
 
         $this->postJson('/api/v1/projects', [
-            'title' => 'Duplicate Title',
-            'description' => 'x',
+            'title' => ['en' => 'Duplicate Title'],
+            'description' => ['en' => 'x'],
         ])->assertCreated()->assertJsonPath('data.slug', 'duplicate-title-2');
     }
 
@@ -109,7 +113,7 @@ class ProjectTest extends TestCase
         $newTech = Technology::factory()->create();
 
         $this->patchJson("/api/v1/projects/{$project->id}", [
-            'title' => 'Brand New',
+            'title' => ['en' => 'Brand New'],
             'technology_ids' => [$newTech->id],
         ])
             ->assertOk()

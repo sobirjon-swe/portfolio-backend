@@ -1,0 +1,904 @@
+<title>sobirjonswe.uz — Portfolio</title>
+<meta name="description" content="Sobirjon Qurbonov — full-stack engineer. Web apps & APIs for local and international clients." />
+<style>
+  :root {
+    --bg: #0a0b0f;
+    --surface: #101219;
+    --surface-2: #161a24;
+    --surface-3: #1b2130;
+    --border: #222735;
+    --border-soft: #1a1e28;
+    --text: #e8eaf0;
+    --muted: #8b93a4;
+    --faint: #5b6270;
+    --accent: #4c8dff;
+    --accent-strong: #3e7bfa;
+    --accent-soft: rgba(76, 141, 255, 0.12);
+    --accent-line: rgba(76, 141, 255, 0.28);
+    --ok: #35c98a;
+    --ok-soft: rgba(53, 201, 138, 0.14);
+    --easy: #35c98a;
+    --medium: #e2a33c;
+    --hard: #e5595b;
+    --shadow: 0 18px 50px -24px rgba(0, 0, 0, 0.72);
+    --shadow-lg: 0 40px 80px -40px rgba(0, 0, 0, 0.85);
+    --mono: ui-monospace, "Cascadia Code", "JetBrains Mono", "SF Mono", Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --maxw: 1120px;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f6f7f9; --surface: #ffffff; --surface-2: #f0f2f6; --surface-3: #e8ecf3;
+      --border: #e0e4ea; --border-soft: #eaedf2; --text: #10131a; --muted: #5a6472; --faint: #97a0b0;
+      --accent: #2f6bf0; --accent-strong: #2560e0; --accent-soft: rgba(47,107,240,0.09);
+      --accent-line: rgba(47,107,240,0.22); --ok: #16a06a; --ok-soft: rgba(22,160,106,0.12);
+      --easy: #16a06a; --medium: #c9821f; --hard: #d6474a;
+      --shadow: 0 20px 45px -28px rgba(20,30,60,0.35); --shadow-lg: 0 40px 80px -44px rgba(20,30,60,0.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0a0b0f; --surface: #101219; --surface-2: #161a24; --surface-3: #1b2130; --border: #222735;
+    --border-soft: #1a1e28; --text: #e8eaf0; --muted: #8b93a4; --faint: #5b6270;
+    --accent: #4c8dff; --accent-strong: #3e7bfa; --accent-soft: rgba(76,141,255,0.12);
+    --accent-line: rgba(76,141,255,0.28); --ok: #35c98a; --ok-soft: rgba(53,201,138,0.14);
+    --easy: #35c98a; --medium: #e2a33c; --hard: #e5595b;
+    --shadow: 0 18px 50px -24px rgba(0,0,0,0.72); --shadow-lg: 0 40px 80px -40px rgba(0,0,0,0.85);
+  }
+  :root[data-theme="light"] {
+    --bg: #f6f7f9; --surface: #ffffff; --surface-2: #f0f2f6; --surface-3: #e8ecf3; --border: #e0e4ea;
+    --border-soft: #eaedf2; --text: #10131a; --muted: #5a6472; --faint: #97a0b0;
+    --accent: #2f6bf0; --accent-strong: #2560e0; --accent-soft: rgba(47,107,240,0.09);
+    --accent-line: rgba(47,107,240,0.22); --ok: #16a06a; --ok-soft: rgba(22,160,106,0.12);
+    --easy: #16a06a; --medium: #c9821f; --hard: #d6474a;
+    --shadow: 0 20px 45px -28px rgba(20,30,60,0.35); --shadow-lg: 0 40px 80px -44px rgba(20,30,60,0.4);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: var(--sans); line-height: 1.6; -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { color: inherit; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+  .section { padding: 96px 0; border-top: 1px solid var(--border-soft); position: relative; }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 16px; display: flex; align-items: center; gap: 11px;
+  }
+  .eyebrow::before { content: ""; width: 26px; height: 1px; background: var(--accent-line); }
+  .sec-head { max-width: 60ch; margin-bottom: 44px; }
+  .sec-head h2 { font-size: clamp(1.7rem, 3.4vw, 2.4rem); font-weight: 640; letter-spacing: -0.025em; margin: 0 0 12px; text-wrap: balance; line-height: 1.08; }
+  .sec-head .lede { color: var(--muted); margin: 0; font-size: 1.02rem; }
+
+  /* ---------------- top bar ---------------- */
+  .topbar {
+    position: sticky; top: 0; z-index: 50; backdrop-filter: blur(14px);
+    background: color-mix(in srgb, var(--bg) 80%, transparent);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .topbar .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 20px; }
+  .brand { font-family: var(--mono); font-weight: 600; font-size: 14.5px; letter-spacing: -0.01em; text-decoration: none; white-space: nowrap; }
+  .brand b { color: var(--accent); }
+  .nav { display: flex; gap: 4px; }
+  .nav a {
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.03em; color: var(--muted);
+    text-decoration: none; padding: 7px 12px; border-radius: 8px; transition: color .18s, background .18s;
+  }
+  .nav a:hover { color: var(--text); background: var(--surface-2); }
+  .nav a.active { color: var(--accent); }
+  .top-right { display: flex; align-items: center; gap: 12px; }
+  .langs { display: flex; gap: 2px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 3px; }
+  .langs button {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; border: none; background: transparent;
+    color: var(--muted); padding: 4px 10px; border-radius: 999px; cursor: pointer; transition: .18s;
+  }
+  .langs button.on { background: var(--accent); color: #fff; }
+  .langs button:not(.on):hover { color: var(--text); }
+  .theme-btn {
+    font-family: var(--mono); font-size: 13px; background: var(--surface-2); border: 1px solid var(--border);
+    color: var(--muted); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; transition: .18s;
+    display: grid; place-items: center;
+  }
+  .theme-btn:hover { color: var(--accent); border-color: var(--accent-line); }
+  .nav-toggle { display: none; }
+
+  /* ---------------- hero ---------------- */
+  .hero { position: relative; padding: 84px 0 92px; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+  .hero-bg .glow {
+    position: absolute; top: -20%; right: -5%; width: 620px; height: 620px; border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-soft), transparent 62%); filter: blur(8px);
+  }
+  .hero-bg .grid {
+    position: absolute; inset: 0; opacity: .55;
+    background-image: linear-gradient(var(--border-soft) 1px, transparent 1px), linear-gradient(90deg, var(--border-soft) 1px, transparent 1px);
+    background-size: 34px 34px;
+    mask-image: radial-gradient(75% 60% at 72% 20%, #000, transparent 78%);
+    -webkit-mask-image: radial-gradient(75% 60% at 72% 20%, #000, transparent 78%);
+  }
+  .hero .wrap { position: relative; z-index: 1; display: grid; grid-template-columns: 1.35fr 0.9fr; gap: 48px; align-items: center; }
+  .status {
+    display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px;
+    letter-spacing: 0.03em; color: var(--ok); background: var(--ok-soft);
+    border: 1px solid color-mix(in srgb, var(--ok) 30%, transparent); padding: 5px 13px; border-radius: 999px; margin-bottom: 24px;
+  }
+  .status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); animation: pulse 2.4s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 55%, transparent); } 70% { box-shadow: 0 0 0 7px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+  .hero .kicker { font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.06em; color: var(--muted); margin: 0 0 16px; }
+  .hero h1 {
+    font-size: clamp(2.4rem, 5.6vw, 4.15rem); font-weight: 660; letter-spacing: -0.038em;
+    line-height: 1.02; margin: 0 0 22px; text-wrap: balance;
+  }
+  .hero h1 .thesis { color: var(--accent); }
+  .hero .sub { color: var(--muted); font-size: 1.08rem; max-width: 52ch; margin: 0 0 32px; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 9px; border-radius: 11px; font-family: var(--sans);
+    font-size: 0.95rem; font-weight: 560; padding: 13px 22px; cursor: pointer; text-decoration: none;
+    transition: transform .2s ease, background .2s ease, border-color .2s ease; border: 1px solid transparent;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-strong); transform: translateY(-2px); }
+  .btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
+  .btn-ghost:hover { border-color: var(--accent-line); color: var(--accent); transform: translateY(-2px); }
+  .btn .arrow { transition: transform .2s; }
+  .btn:hover .arrow { transform: translateX(3px); }
+
+  /* profile card */
+  .profile {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 24px;
+    box-shadow: var(--shadow); position: relative; overflow: hidden;
+  }
+  .profile::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 76px;
+    background: radial-gradient(120% 120% at 20% 0%, var(--accent-soft), transparent 70%);
+  }
+  .profile .p-top { display: flex; align-items: center; gap: 14px; position: relative; }
+  .avatar {
+    width: 54px; height: 54px; border-radius: 14px; display: grid; place-items: center; flex-shrink: 0;
+    font-family: var(--mono); font-weight: 700; font-size: 1.15rem; color: #fff;
+    background: linear-gradient(140deg, var(--accent), var(--accent-strong)); box-shadow: 0 6px 18px -6px var(--accent);
+  }
+  .profile .p-name { font-weight: 640; font-size: 1.05rem; letter-spacing: -0.01em; }
+  .profile .p-role { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .facts { list-style: none; margin: 22px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .facts li { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 0.88rem; }
+  .facts .k { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--faint); }
+  .facts .v { color: var(--text); font-weight: 500; text-align: right; }
+  .facts .v b { color: var(--accent); font-weight: 600; }
+  .p-socials { display: flex; gap: 8px; margin-top: 22px; }
+  .p-socials a {
+    flex: 1; text-align: center; font-family: var(--mono); font-size: 11.5px; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 9px; padding: 8px 0; text-decoration: none; transition: .18s;
+  }
+  .p-socials a:hover { color: var(--accent); border-color: var(--accent-line); background: var(--accent-soft); }
+
+  /* marquee ticker */
+  .ticker { margin-top: 40px; border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft); overflow: hidden; padding: 14px 0; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .ticker-track { display: flex; gap: 44px; width: max-content; animation: scroll-x 26s linear infinite; }
+  .ticker-track span { font-family: var(--mono); font-size: 13px; color: var(--faint); letter-spacing: 0.04em; white-space: nowrap; }
+  .ticker-track span b { color: var(--muted); }
+  @keyframes scroll-x { to { transform: translateX(-50%); } }
+
+  /* ---------------- services ---------------- */
+  .svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .svc {
+    border: 1px solid var(--border); border-radius: 15px; padding: 26px; background: var(--surface);
+    transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; position: relative;
+  }
+  .svc:hover { transform: translateY(-5px); border-color: var(--accent-line); box-shadow: var(--shadow); }
+  .svc .num { font-family: var(--mono); font-size: 12px; color: var(--accent); }
+  .svc h3 { margin: 16px 0 9px; font-size: 1.12rem; font-weight: 620; letter-spacing: -0.01em; }
+  .svc p { margin: 0; font-size: 0.92rem; color: var(--muted); }
+  .svc .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+  .svc .tags span { font-family: var(--mono); font-size: 10.5px; color: var(--faint); border: 1px solid var(--border-soft); border-radius: 6px; padding: 3px 7px; }
+  .svc-cta { margin-top: 30px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .svc-cta .note { font-family: var(--mono); font-size: 12px; color: var(--faint); }
+
+  /* ---------------- work ---------------- */
+  .featured {
+    display: grid; grid-template-columns: 1.05fr 1fr; border: 1px solid var(--border); border-radius: 18px;
+    overflow: hidden; background: var(--surface); margin-bottom: 18px;
+    transition: border-color .25s ease, box-shadow .25s ease;
+  }
+  .featured:hover { border-color: var(--accent-line); box-shadow: var(--shadow); }
+  .art {
+    position: relative; overflow: hidden; min-height: 300px; border-right: 1px solid var(--border-soft);
+    background: radial-gradient(130% 100% at 12% 8%, color-mix(in srgb, var(--accent) 34%, transparent), transparent 58%), linear-gradient(150deg, var(--surface) 0%, var(--surface-2) 100%);
+  }
+  .art .grid-lines {
+    position: absolute; inset: 0; opacity: .5;
+    background-image: linear-gradient(var(--border-soft) 1px, transparent 1px), linear-gradient(90deg, var(--border-soft) 1px, transparent 1px);
+    background-size: 28px 28px; mask-image: radial-gradient(72% 72% at 68% 42%, #000, transparent);
+    -webkit-mask-image: radial-gradient(72% 72% at 68% 42%, #000, transparent);
+  }
+  .art .badge { position: absolute; top: 18px; left: 18px; font-family: var(--mono); font-size: 11px; color: var(--accent); background: var(--accent-soft); border: 1px solid var(--accent-line); padding: 5px 10px; border-radius: 8px; }
+  .art .window { position: absolute; left: 32px; right: -40px; bottom: -1px; top: 62px; border-radius: 12px 12px 0 0; border: 1px solid var(--border); border-bottom: none; background: var(--bg); box-shadow: var(--shadow-lg); overflow: hidden; }
+  .art .window .bar { height: 30px; display: flex; align-items: center; gap: 6px; padding: 0 12px; border-bottom: 1px solid var(--border-soft); background: var(--surface); }
+  .art .window .bar i { width: 9px; height: 9px; border-radius: 50%; background: var(--border); }
+  .art .window .body { padding: 16px; font-family: var(--mono); font-size: 11px; color: var(--faint); line-height: 1.9; }
+  .art .window .body .ln b { color: var(--accent); }
+  .art .window .body .ln em { color: var(--ok); font-style: normal; }
+  .featured .info { padding: 30px; display: flex; flex-direction: column; }
+  .featured .info h3 { margin: 0 0 10px; font-size: 1.4rem; font-weight: 650; letter-spacing: -0.02em; }
+  .featured .info p { margin: 0 0 18px; font-size: 0.96rem; color: var(--muted); }
+  .stack { display: flex; flex-wrap: wrap; gap: 7px; margin-top: auto; }
+  .stack span { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px solid var(--border); border-radius: 6px; padding: 4px 9px; }
+  .proj-links { display: flex; gap: 18px; margin-top: 20px; }
+  .proj-links a { font-family: var(--mono); font-size: 12.5px; color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
+  .proj-links a:hover { text-decoration: underline; }
+
+  .work-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .card {
+    border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: var(--surface);
+    transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; display: flex; flex-direction: column;
+  }
+  .card:hover { transform: translateY(-5px); border-color: var(--accent-line); box-shadow: var(--shadow); }
+  .card .art { min-height: 168px; border-right: none; border-bottom: 1px solid var(--border-soft); }
+  .card .art.a2 { background: radial-gradient(120% 100% at 85% 12%, color-mix(in srgb, var(--medium) 26%, transparent), transparent 58%), linear-gradient(150deg, var(--surface) 0%, var(--surface-2) 100%); }
+  .card .art.a3 { background: radial-gradient(120% 100% at 30% 90%, color-mix(in srgb, var(--ok) 24%, transparent), transparent 58%), linear-gradient(150deg, var(--surface) 0%, var(--surface-2) 100%); }
+  .card .info { padding: 24px; display: flex; flex-direction: column; flex: 1; }
+  .card .info h3 { margin: 0 0 8px; font-size: 1.15rem; font-weight: 630; letter-spacing: -0.015em; }
+  .card .info p { margin: 0 0 16px; font-size: 0.9rem; color: var(--muted); }
+
+  /* ---------------- experience ---------------- */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before { content: ""; position: absolute; left: 4px; top: 8px; bottom: 8px; width: 1px; background: var(--border); }
+  .tl-item { position: relative; padding-bottom: 30px; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-item::before { content: ""; position: absolute; left: -27px; top: 5px; width: 9px; height: 9px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); transition: box-shadow .3s; }
+  .tl-item:hover::before { box-shadow: 0 0 0 5px var(--accent-soft); }
+  .tl-item .when { font-family: var(--mono); font-size: 11.5px; color: var(--faint); letter-spacing: 0.03em; }
+  .tl-item h3 { margin: 5px 0 3px; font-size: 1.06rem; font-weight: 620; }
+  .tl-item .org { font-family: var(--mono); font-size: 0.85rem; color: var(--accent); }
+  .tl-item p { margin: 9px 0 0; font-size: 0.9rem; color: var(--muted); }
+
+  /* stack column */
+  .stack-groups { display: flex; flex-direction: column; gap: 22px; }
+  .stack-group .g-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); margin-bottom: 11px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips span {
+    font-family: var(--mono); font-size: 12.5px; color: var(--text); background: var(--surface); border: 1px solid var(--border);
+    border-radius: 9px; padding: 8px 13px; transition: .2s;
+  }
+  .chips span:hover { border-color: var(--accent-line); color: var(--accent); transform: translateY(-2px); }
+
+  /* ---------------- stats / leetcode ---------------- */
+  .stats-wrap { border: 1px solid var(--border); border-radius: 18px; background: var(--surface); overflow: hidden; }
+  .stats-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--border-soft); font-family: var(--mono); font-size: 12px; color: var(--faint); }
+  .stats-head .who { color: var(--accent); }
+  .stats-body { display: grid; grid-template-columns: 220px 1fr; gap: 34px; padding: 32px; align-items: center; }
+  .ring-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .ring { position: relative; width: 168px; height: 168px; }
+  .ring svg { transform: rotate(-90deg); }
+  .ring .track { stroke: var(--surface-2); }
+  .ring .prog { stroke: var(--accent); stroke-linecap: round; transition: stroke-dashoffset 1.4s cubic-bezier(.16,1,.3,1); }
+  .ring .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .ring .center .total { font-family: var(--mono); font-size: 2rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .ring .center .label { font-family: var(--mono); font-size: 10px; color: var(--faint); letter-spacing: 0.14em; text-transform: uppercase; margin-top: 2px; }
+  .ring-sub { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+  .diffs { display: flex; flex-direction: column; gap: 18px; }
+  .diff .diff-top { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12.5px; margin-bottom: 7px; }
+  .diff .diff-top .n { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .diff .bar { height: 7px; border-radius: 5px; background: var(--surface-2); overflow: hidden; }
+  .diff .bar i { display: block; height: 100%; border-radius: 5px; width: 0; transition: width 1.3s cubic-bezier(.16,1,.3,1); }
+  .stat-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; border-top: 1px solid var(--border-soft); padding: 22px 32px; }
+  .tile { text-align: center; }
+  .tile .big { font-family: var(--mono); font-size: 1.5rem; font-weight: 600; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+  .tile .big.accent { color: var(--accent); }
+  .tile .small { font-family: var(--mono); font-size: 10.5px; color: var(--faint); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
+
+  /* ---------------- about ---------------- */
+  .about { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 48px; align-items: center; }
+  .about-visual {
+    aspect-ratio: 1/1; border-radius: 20px; border: 1px solid var(--border); position: relative; overflow: hidden;
+    background: radial-gradient(120% 120% at 25% 15%, var(--accent-soft), transparent 60%), linear-gradient(160deg, var(--surface) 0%, var(--surface-2) 100%);
+    display: grid; place-items: center;
+  }
+  .about-visual .mono-mark { font-family: var(--mono); font-weight: 700; font-size: clamp(3rem, 9vw, 6rem); color: var(--accent); letter-spacing: -0.04em; opacity: .92; }
+  .about-visual .ring-deco { position: absolute; inset: 14px; border: 1px dashed var(--border); border-radius: 16px; }
+  .about-text p { font-size: 1.06rem; color: var(--muted); margin: 0 0 18px; }
+  .about-text p b { color: var(--text); font-weight: 600; }
+  .about-text .quote { border-left: 2px solid var(--accent); padding-left: 16px; font-family: var(--mono); font-size: 0.92rem; color: var(--faint); }
+
+  /* ---------------- contact ---------------- */
+  .contact { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 48px; }
+  .contact-side .lede { color: var(--muted); font-size: 1.04rem; margin: 0 0 24px; }
+  .contact-facts { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
+  .contact-facts li { display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 0.9rem; color: var(--muted); }
+  .contact-facts li b { color: var(--accent); font-weight: 500; }
+  .form { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; box-shadow: var(--shadow); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); }
+  .field input, .field select, .field textarea {
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 13px;
+    color: var(--text); font-size: 0.92rem; font-family: var(--sans); transition: border-color .18s, box-shadow .18s;
+  }
+  .field textarea { min-height: 96px; resize: vertical; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .field input::placeholder, .field textarea::placeholder { color: var(--faint); }
+  .honeypot { position: absolute; left: -9999px; opacity: 0; }
+  .form .btn-primary { margin-top: 18px; width: 100%; justify-content: center; }
+  .flow-note { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 16px; font-family: var(--mono); font-size: 11.5px; color: var(--faint); }
+  .flow-note b { color: var(--ok); }
+  .flow-note .sep { color: var(--border); }
+
+  /* ---------------- footer ---------------- */
+  footer { border-top: 1px solid var(--border-soft); padding: 48px 0; }
+  footer .wrap { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  footer .f-brand { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+  footer .f-brand b { color: var(--accent); }
+  footer .f-links { display: flex; gap: 8px; }
+  footer .f-links a { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; border: 1px solid var(--border); border-radius: 8px; padding: 7px 13px; transition: .18s; }
+  footer .f-links a:hover { color: var(--accent); border-color: var(--accent-line); background: var(--accent-soft); }
+  footer .f-note { width: 100%; font-family: var(--mono); font-size: 11px; color: var(--faint); margin-top: 8px; }
+
+  /* ---------------- motion ---------------- */
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .status .dot, .ticker-track { animation: none; }
+    .ring .prog, .diff .bar i { transition: none; }
+  }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 5px; }
+
+  /* ---------------- responsive ---------------- */
+  @media (max-width: 940px) {
+    .hero .wrap { grid-template-columns: 1fr; gap: 36px; }
+    .profile { max-width: 420px; }
+    .featured, .about, .contact { grid-template-columns: 1fr; }
+    .art { border-right: none; border-bottom: 1px solid var(--border-soft); }
+    .featured .art .window { display: none; }
+    .split { grid-template-columns: 1fr; gap: 40px; }
+    .about-visual { max-width: 320px; }
+  }
+  @media (max-width: 720px) {
+    .nav { display: none; }
+    .section { padding: 72px 0; }
+    .svc-grid, .work-grid, .form-grid { grid-template-columns: 1fr; }
+    .stats-body { grid-template-columns: 1fr; gap: 28px; }
+    .stat-tiles { grid-template-columns: repeat(2, 1fr); }
+    .cta-row { width: 100%; }
+    .btn { flex: 1; justify-content: center; }
+  }
+</style>
+
+<div class="topbar">
+  <div class="wrap">
+    <a href="#top" class="brand">sobirjon<b>swe</b>.uz</a>
+    <nav class="nav" aria-label="Main">
+      <a href="#services" data-i18n="nav_services">Services</a>
+      <a href="#work" data-i18n="nav_work">Work</a>
+      <a href="#experience" data-i18n="nav_exp">Experience</a>
+      <a href="#stack" data-i18n="nav_stack">Stack</a>
+      <a href="#stats" data-i18n="nav_stats">Stats</a>
+      <a href="#contact" data-i18n="nav_contact">Contact</a>
+    </nav>
+    <div class="top-right">
+      <div class="langs" role="group" aria-label="Language">
+        <button data-lang="en" class="on">EN</button>
+        <button data-lang="uz">UZ</button>
+        <button data-lang="ru">RU</button>
+      </div>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">◐</button>
+    </div>
+  </div>
+</div>
+
+<header class="hero" id="top">
+  <div class="hero-bg"><span class="glow"></span><span class="grid"></span></div>
+  <div class="wrap">
+    <div class="reveal">
+      <span class="status"><span class="dot"></span><span data-i18n="status">Available for work</span></span>
+      <p class="kicker" data-i18n="kicker">Full-stack engineer · Uzbekistan</p>
+      <h1><span data-i18n="hero_a">I turn ideas into</span> <span class="thesis" data-i18n="hero_b">fast, reliable products.</span></h1>
+      <p class="sub" data-i18n="hero_sub">Full-stack developer building web apps and APIs for local and international clients — from database schema to a polished, shipping interface.</p>
+      <div class="cta-row">
+        <a href="#contact" class="btn btn-primary"><span data-i18n="cta_start">Start a project</span><span class="arrow">→</span></a>
+        <a href="#work" class="btn btn-ghost"><span data-i18n="cta_work">View work</span></a>
+      </div>
+    </div>
+    <aside class="profile reveal" aria-label="Profile summary">
+      <div class="p-top">
+        <div class="avatar">SQ</div>
+        <div>
+          <div class="p-name">Sobirjon Qurbonov</div>
+          <div class="p-role" data-i18n="p_role">Full-stack Engineer</div>
+        </div>
+      </div>
+      <ul class="facts">
+        <li><span class="k" data-i18n="f_loc">Location</span><span class="v">Uzbekistan 🇺🇿</span></li>
+        <li><span class="k" data-i18n="f_focus">Focus</span><span class="v" data-i18n="f_focus_v">Web apps &amp; APIs</span></li>
+        <li><span class="k" data-i18n="f_stack">Stack</span><span class="v"><b>Laravel</b> · <b>React</b></span></li>
+        <li><span class="k" data-i18n="f_resp">Response</span><span class="v" data-i18n="f_resp_v">within 24h</span></li>
+      </ul>
+      <div class="p-socials">
+        <a href="#" aria-label="GitHub">GitHub</a>
+        <a href="#" aria-label="LinkedIn">LinkedIn</a>
+        <a href="#" aria-label="Telegram">Telegram</a>
+      </div>
+    </aside>
+  </div>
+  <div class="wrap">
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span><b>Laravel</b></span><span><b>React</b></span><span><b>PostgreSQL</b></span><span><b>TypeScript</b></span><span><b>Tailwind</b></span><span><b>Redis</b></span><span><b>Docker</b></span><span><b>REST APIs</b></span><span><b>i18n</b></span>
+        <span><b>Laravel</b></span><span><b>React</b></span><span><b>PostgreSQL</b></span><span><b>TypeScript</b></span><span><b>Tailwind</b></span><span><b>Redis</b></span><span><b>Docker</b></span><span><b>REST APIs</b></span><span><b>i18n</b></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="section" id="services">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow" data-i18n="eb_services">What I do</p>
+      <h2 data-i18n="services_title">Services built to ship, and to earn their keep.</h2>
+      <p class="lede" data-i18n="services_lede">Placed first on purpose — so you know exactly how I can help before scrolling the work. Every enquiry reaches me instantly.</p>
+    </div>
+    <div class="svc-grid reveal">
+      <article class="svc">
+        <div class="num">/ 01</div>
+        <h3 data-i18n="svc1_t">Web Development</h3>
+        <p data-i18n="svc1_p">Responsive marketing sites and web apps in React — fast, SEO-ready and accessible by default.</p>
+        <div class="tags"><span>React</span><span>Vite</span><span>Tailwind</span><span>SEO</span></div>
+      </article>
+      <article class="svc">
+        <div class="num">/ 02</div>
+        <h3 data-i18n="svc2_t">Backend &amp; APIs</h3>
+        <p data-i18n="svc2_p">Laravel REST APIs with clean layered architecture, PostgreSQL, auth and third-party integrations.</p>
+        <div class="tags"><span>Laravel</span><span>PostgreSQL</span><span>Sanctum</span><span>Queues</span></div>
+      </article>
+      <article class="svc">
+        <div class="num">/ 03</div>
+        <h3 data-i18n="svc3_t">Full-stack Delivery</h3>
+        <p data-i18n="svc3_p">End-to-end product build — from database schema to a polished, shipping interface, deployed and monitored.</p>
+        <div class="tags"><span>Full-stack</span><span>CI/CD</span><span>Deploy</span></div>
+      </article>
+    </div>
+    <div class="svc-cta reveal">
+      <a href="#contact" class="btn btn-primary"><span data-i18n="cta_start2">Start a project</span><span class="arrow">→</span></a>
+      <span class="note" data-i18n="svc_note">Free 20-min scoping call · No obligation</span>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="work">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow" data-i18n="eb_work">Selected work</p>
+      <h2 data-i18n="work_title">Case studies, served live from the backend.</h2>
+      <p class="lede" data-i18n="work_lede">Each project is managed from the admin panel and translated per language — this list is what <code>GET /api/v1/projects</code> returns.</p>
+    </div>
+
+    <article class="featured reveal">
+      <div class="art">
+        <span class="badge">★ Featured</span>
+        <div class="grid-lines"></div>
+        <div class="window" aria-hidden="true">
+          <div class="bar"><i></i><i></i><i></i></div>
+          <div class="body">
+            <div class="ln"><b>GET</b> /api/v1/projects <em>200</em></div>
+            <div class="ln">→ contact form <em>→</em> <b>Telegram</b> alert</div>
+            <div class="ln">→ admin list <em>→</em> Excel export</div>
+            <div class="ln">locale: <b>en</b> · <b>uz</b> · <b>ru</b></div>
+          </div>
+        </div>
+      </div>
+      <div class="info">
+        <h3>Portfolio Platform</h3>
+        <p data-i18n="proj1_p">A trilingual portfolio with a built-in lead engine: every contact submission is saved, fires an instant Telegram alert, and drops into an admin list you can export to Excel.</p>
+        <div class="stack"><span>Laravel</span><span>React</span><span>PostgreSQL</span><span>i18n</span><span>Telegram</span></div>
+        <div class="proj-links"><a href="#">↗ Live</a><a href="#">↗ GitHub</a></div>
+      </div>
+    </article>
+
+    <div class="work-grid">
+      <article class="card reveal">
+        <div class="art a2"><div class="grid-lines"></div></div>
+        <div class="info">
+          <h3>Analytics Dashboard</h3>
+          <p data-i18n="proj2_p">A real-time SaaS dashboard with server-state caching, filters persisted in the URL, and data viz that matches the design system.</p>
+          <div class="stack"><span>React</span><span>TanStack Query</span><span>Recharts</span></div>
+          <div class="proj-links"><a href="#">↗ Live</a><a href="#">↗ GitHub</a></div>
+        </div>
+      </article>
+      <article class="card reveal">
+        <div class="art a3"><div class="grid-lines"></div></div>
+        <div class="info">
+          <h3>REST API Platform</h3>
+          <p data-i18n="proj3_p">A layered Laravel API — Controller → Service → Repository — with token auth, rate limiting and a Docker-based deploy pipeline.</p>
+          <div class="stack"><span>Laravel</span><span>Sanctum</span><span>PostgreSQL</span><span>Docker</span></div>
+          <div class="proj-links"><a href="#">↗ Live</a><a href="#">↗ GitHub</a></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="experience">
+  <div class="wrap">
+    <div class="split">
+      <div class="reveal">
+        <p class="eyebrow" data-i18n="eb_exp">Experience</p>
+        <h2 style="font-size:clamp(1.7rem,3.4vw,2.4rem);font-weight:640;letter-spacing:-0.025em;margin:0 0 12px;line-height:1.08;" data-i18n="exp_title">A path, not a pile of badges.</h2>
+        <p class="lede" style="color:var(--muted);margin:0 0 30px;" data-i18n="exp_lede">Ordered because sequence carries meaning — where I started and where I'm heading.</p>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="when">2024 — Present</div>
+            <h3>Full-stack Engineer</h3>
+            <div class="org">Freelance · Remote</div>
+            <p data-i18n="exp1_p">Shipping client web products end-to-end across the CIS and international markets — React front-ends on Laravel APIs.</p>
+          </div>
+          <div class="tl-item">
+            <div class="when">2023 — 2024</div>
+            <h3>Backend Developer</h3>
+            <div class="org">Product Studio</div>
+            <p data-i18n="exp2_p">Built and maintained Laravel APIs, PostgreSQL schemas and a layered architecture used across several products.</p>
+          </div>
+          <div class="tl-item">
+            <div class="when">2022 — 2023</div>
+            <h3>Junior Developer</h3>
+            <div class="org">First role</div>
+            <p data-i18n="exp3_p">Foundations in PHP and JavaScript, learning to ship reliable features to production.</p>
+          </div>
+        </div>
+      </div>
+      <div class="reveal" id="stack">
+        <p class="eyebrow" data-i18n="eb_stack">Stack &amp; tools</p>
+        <h2 style="font-size:clamp(1.7rem,3.4vw,2.4rem);font-weight:640;letter-spacing:-0.025em;margin:0 0 12px;line-height:1.08;" data-i18n="stack_title">The tools I reach for.</h2>
+        <p class="lede" style="color:var(--muted);margin:0 0 30px;" data-i18n="stack_lede">Deliberate, not maximal — a small set I know deeply rather than a logo wall.</p>
+        <div class="stack-groups">
+          <div class="stack-group">
+            <div class="g-label" data-i18n="g_front">Frontend</div>
+            <div class="chips"><span>React</span><span>TypeScript</span><span>Tailwind CSS</span><span>Vite</span></div>
+          </div>
+          <div class="stack-group">
+            <div class="g-label" data-i18n="g_back">Backend</div>
+            <div class="chips"><span>Laravel</span><span>PHP</span><span>Node.js</span><span>REST</span></div>
+          </div>
+          <div class="stack-group">
+            <div class="g-label" data-i18n="g_data">Database</div>
+            <div class="chips"><span>PostgreSQL</span><span>Redis</span><span>MySQL</span></div>
+          </div>
+          <div class="stack-group">
+            <div class="g-label" data-i18n="g_tools">Tools &amp; DevOps</div>
+            <div class="chips"><span>Docker</span><span>Git</span><span>Nginx</span><span>GitHub Actions</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="stats">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow" data-i18n="eb_stats">Coding stats</p>
+      <h2 data-i18n="stats_title">Numbers that prove the reps.</h2>
+      <p class="lede" data-i18n="stats_lede">Pulled live from the cached backend proxy — <code>GET /api/v1/leetcode</code> — an honest signal of ongoing craft, not a badge.</p>
+    </div>
+    <div class="stats-wrap reveal">
+      <div class="stats-head">
+        <span>leetcode.com/<span class="who">Sobirjon-swe</span></span>
+        <span>updated · cached 6h</span>
+      </div>
+      <div class="stats-body">
+        <div class="ring-wrap">
+          <div class="ring">
+            <svg width="168" height="168" viewBox="0 0 168 168">
+              <circle class="track" cx="84" cy="84" r="72" fill="none" stroke-width="11"/>
+              <circle class="prog" id="ring" cx="84" cy="84" r="72" fill="none" stroke-width="11" stroke-dasharray="452" stroke-dashoffset="452"/>
+            </svg>
+            <div class="center"><span class="total" id="totalSolved">0</span><span class="label" data-i18n="solved">Solved</span></div>
+          </div>
+          <div class="ring-sub" data-i18n="ring_sub">Acceptance 64% · Top 12%</div>
+        </div>
+        <div class="diffs">
+          <div class="diff">
+            <div class="diff-top"><span style="color:var(--easy)">Easy</span><span class="n">198 / 850</span></div>
+            <div class="bar"><i data-w="82%" style="background:var(--easy)"></i></div>
+          </div>
+          <div class="diff">
+            <div class="diff-top"><span style="color:var(--medium)">Medium</span><span class="n">176 / 1790</span></div>
+            <div class="bar"><i data-w="55%" style="background:var(--medium)"></i></div>
+          </div>
+          <div class="diff">
+            <div class="diff-top"><span style="color:var(--hard)">Hard</span><span class="n">38 / 780</span></div>
+            <div class="bar"><i data-w="24%" style="background:var(--hard)"></i></div>
+          </div>
+        </div>
+      </div>
+      <div class="stat-tiles">
+        <div class="tile"><div class="big accent" id="t1">412</div><div class="small" data-i18n="t_solved">Total solved</div></div>
+        <div class="tile"><div class="big" id="t2">128</div><div class="small" data-i18n="t_streak">Day streak</div></div>
+        <div class="tile"><div class="big" id="t3">64%</div><div class="small" data-i18n="t_acc">Acceptance</div></div>
+        <div class="tile"><div class="big" id="t4">1.4k</div><div class="small" data-i18n="t_contrib">GitHub contribs</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="wrap">
+    <div class="about">
+      <div class="about-visual reveal" aria-hidden="true">
+        <div class="ring-deco"></div>
+        <div class="mono-mark">SQ</div>
+      </div>
+      <div class="about-text reveal">
+        <p class="eyebrow" data-i18n="eb_about">About</p>
+        <p data-i18n="about_1">I'm <b>Sobirjon</b>, a full-stack engineer based in Uzbekistan. I build products that are fast to load, easy to maintain, and pleasant to use — for founders here and clients abroad.</p>
+        <p data-i18n="about_2">I care about <b>clean architecture</b>, honest performance, and actually shipping. Most of my work pairs a Laravel API with a React front-end, and I speak Uzbek, Russian and English with clients.</p>
+        <p class="quote" data-i18n="about_q">// I'd rather write less code that lasts than more code that impresses.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <div class="wrap">
+    <div class="contact">
+      <div class="contact-side reveal">
+        <p class="eyebrow" data-i18n="eb_contact">Start a project</p>
+        <h2 style="font-size:clamp(1.7rem,3.4vw,2.4rem);font-weight:640;letter-spacing:-0.025em;margin:0 0 14px;line-height:1.08;" data-i18n="contact_title">Tell me what you're building.</h2>
+        <p class="lede" data-i18n="contact_lede">A short message is enough to start. Every submission reaches me instantly on Telegram — I reply within a day.</p>
+        <ul class="contact-facts">
+          <li>📍 <span data-i18n="c_loc">Tashkent, Uzbekistan (GMT+5)</span></li>
+          <li>✉️ <b>hello@sobirjonswe.uz</b></li>
+          <li>💬 <span data-i18n="c_tg">Telegram</span> <b>@sobirjon_swe</b></li>
+          <li>🕑 <span data-i18n="c_resp">Replies within 24 hours</span></li>
+        </ul>
+      </div>
+      <form class="form reveal" id="leadForm" novalidate>
+        <div class="form-grid">
+          <div class="field"><label for="nm" data-i18n="l_name">Name</label><input id="nm" type="text" placeholder="Anvar Karimov" autocomplete="name"/></div>
+          <div class="field"><label for="em" data-i18n="l_email">Email</label><input id="em" type="email" placeholder="anvar@company.uz" autocomplete="email"/></div>
+          <div class="field full"><label for="bg" data-i18n="l_budget">Budget (optional)</label>
+            <select id="bg">
+              <option data-i18n="b_pick">Pick a range…</option>
+              <option>&lt; $1,000</option>
+              <option>$1,000 – $3,000</option>
+              <option>$3,000 – $8,000</option>
+              <option>$8,000 +</option>
+            </select>
+          </div>
+          <div class="field full"><label for="ms" data-i18n="l_msg">Message</label><textarea id="ms" placeholder="Salom! We need a website for our company…"></textarea></div>
+          <input class="honeypot" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"/>
+        </div>
+        <button type="submit" class="btn btn-primary"><span data-i18n="l_send">Send message</span><span class="arrow">→</span></button>
+        <div class="flow-note">
+          <span data-i18n="fn_saved">saved</span> <span class="sep">→</span> <b>🔔 Telegram</b> <span class="sep">→</span> <span data-i18n="fn_admin">admin list</span> <span class="sep">→</span> ⬇ Excel
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="f-brand">sobirjon<b>swe</b>.uz</span>
+    <div class="f-links">
+      <a href="#">GitHub</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">Telegram</a>
+      <a href="#">LeetCode</a>
+    </div>
+    <div class="f-note">© 2026 Sobirjon Qurbonov · Built with Laravel + React · EN / UZ / RU · majd × jora</div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+
+    /* ---- theme ---- */
+    document.getElementById('themeToggle').addEventListener('click', function () {
+      var cur = root.getAttribute('data-theme');
+      if (!cur) { cur = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+      root.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+    });
+
+    /* ---- i18n ---- */
+    var i18n = {
+      en: {
+        nav_services:"Services", nav_work:"Work", nav_exp:"Experience", nav_stack:"Stack", nav_stats:"Stats", nav_contact:"Contact",
+        status:"Available for work", kicker:"Full-stack engineer · Uzbekistan",
+        hero_a:"I turn ideas into", hero_b:"fast, reliable products.",
+        hero_sub:"Full-stack developer building web apps and APIs for local and international clients — from database schema to a polished, shipping interface.",
+        cta_start:"Start a project", cta_work:"View work", p_role:"Full-stack Engineer",
+        f_loc:"Location", f_focus:"Focus", f_focus_v:"Web apps & APIs", f_stack:"Stack", f_resp:"Response", f_resp_v:"within 24h",
+        eb_services:"What I do", services_title:"Services built to ship, and to earn their keep.",
+        services_lede:"Placed first on purpose — so you know exactly how I can help before scrolling the work. Every enquiry reaches me instantly.",
+        svc1_t:"Web Development", svc1_p:"Responsive marketing sites and web apps in React — fast, SEO-ready and accessible by default.",
+        svc2_t:"Backend & APIs", svc2_p:"Laravel REST APIs with clean layered architecture, PostgreSQL, auth and third-party integrations.",
+        svc3_t:"Full-stack Delivery", svc3_p:"End-to-end product build — from database schema to a polished, shipping interface, deployed and monitored.",
+        cta_start2:"Start a project", svc_note:"Free 20-min scoping call · No obligation",
+        eb_work:"Selected work", work_title:"Case studies, served live from the backend.",
+        work_lede:"Each project is managed from the admin panel and translated per language — this list is what GET /api/v1/projects returns.",
+        proj1_p:"A trilingual portfolio with a built-in lead engine: every contact submission is saved, fires an instant Telegram alert, and drops into an admin list you can export to Excel.",
+        proj2_p:"A real-time SaaS dashboard with server-state caching, filters persisted in the URL, and data viz that matches the design system.",
+        proj3_p:"A layered Laravel API — Controller → Service → Repository — with token auth, rate limiting and a Docker-based deploy pipeline.",
+        eb_exp:"Experience", exp_title:"A path, not a pile of badges.", exp_lede:"Ordered because sequence carries meaning — where I started and where I'm heading.",
+        exp1_p:"Shipping client web products end-to-end across the CIS and international markets — React front-ends on Laravel APIs.",
+        exp2_p:"Built and maintained Laravel APIs, PostgreSQL schemas and a layered architecture used across several products.",
+        exp3_p:"Foundations in PHP and JavaScript, learning to ship reliable features to production.",
+        eb_stack:"Stack & tools", stack_title:"The tools I reach for.", stack_lede:"Deliberate, not maximal — a small set I know deeply rather than a logo wall.",
+        g_front:"Frontend", g_back:"Backend", g_data:"Database", g_tools:"Tools & DevOps",
+        eb_stats:"Coding stats", stats_title:"Numbers that prove the reps.",
+        stats_lede:"Pulled live from the cached backend proxy — GET /api/v1/leetcode — an honest signal of ongoing craft, not a badge.",
+        solved:"Solved", ring_sub:"Acceptance 64% · Top 12%",
+        t_solved:"Total solved", t_streak:"Day streak", t_acc:"Acceptance", t_contrib:"GitHub contribs",
+        eb_about:"About",
+        about_1:"I'm <b>Sobirjon</b>, a full-stack engineer based in Uzbekistan. I build products that are fast to load, easy to maintain, and pleasant to use — for founders here and clients abroad.",
+        about_2:"I care about <b>clean architecture</b>, honest performance, and actually shipping. Most of my work pairs a Laravel API with a React front-end, and I speak Uzbek, Russian and English with clients.",
+        about_q:"// I'd rather write less code that lasts than more code that impresses.",
+        eb_contact:"Start a project", contact_title:"Tell me what you're building.",
+        contact_lede:"A short message is enough to start. Every submission reaches me instantly on Telegram — I reply within a day.",
+        c_loc:"Tashkent, Uzbekistan (GMT+5)", c_tg:"Telegram", c_resp:"Replies within 24 hours",
+        l_name:"Name", l_email:"Email", l_budget:"Budget (optional)", b_pick:"Pick a range…", l_msg:"Message", l_send:"Send message",
+        fn_saved:"saved", fn_admin:"admin list"
+      },
+      uz: {
+        nav_services:"Xizmatlar", nav_work:"Loyihalar", nav_exp:"Tajriba", nav_stack:"Texnologiya", nav_stats:"Statistika", nav_contact:"Aloqa",
+        status:"Ishga tayyor", kicker:"Full-stack muhandis · O'zbekiston",
+        hero_a:"Men g'oyalarni", hero_b:"tez va ishonchli mahsulotga aylantiraman.",
+        hero_sub:"Mahalliy va xalqaro mijozlar uchun veb-ilovalar va API'lar yarataman — ma'lumotlar bazasidan sayqallangan interfeysgacha.",
+        cta_start:"Loyiha boshlash", cta_work:"Ishlarni ko'rish", p_role:"Full-stack muhandis",
+        f_loc:"Manzil", f_focus:"Yo'nalish", f_focus_v:"Veb-ilova va API", f_stack:"Texnologiya", f_resp:"Javob", f_resp_v:"24 soat ichida",
+        eb_services:"Nima qilaman", services_title:"Ishga tushadigan va daromad keltiradigan xizmatlar.",
+        services_lede:"Ataylab birinchi qo'yildi — ishlarni ko'rishdan oldin qanday yordam bera olishimni bilib olasiz. Har bir so'rov menga darhol yetadi.",
+        svc1_t:"Veb-dasturlash", svc1_p:"React'da moslashuvchan sayt va veb-ilovalar — tez, SEO va foydalanish uchun qulay.",
+        svc2_t:"Backend va API", svc2_p:"Toza qatlamli arxitektura, PostgreSQL, autentifikatsiya va integratsiyalar bilan Laravel REST API'lar.",
+        svc3_t:"To'liq yetkazib berish", svc3_p:"Boshdan-oxir mahsulot — ma'lumotlar bazasidan sayqallangan interfeysgacha, deploy va monitoring bilan.",
+        cta_start2:"Loyiha boshlash", svc_note:"Bepul 20 daqiqalik suhbat · Majburiyatsiz",
+        eb_work:"Tanlangan ishlar", work_title:"Backend'dan jonli keladigan case-study'lar.",
+        work_lede:"Har bir loyiha admin paneldan boshqariladi va har tilga tarjima qilinadi — bu ro'yxatni GET /api/v1/projects qaytaradi.",
+        proj1_p:"Ichki lead tizimi bilan uch tilli portfolio: har bir xabar saqlanadi, darhol Telegram bildirishnomasini yuboradi va Excel'ga eksport qilinadigan admin ro'yxatiga tushadi.",
+        proj2_p:"Server holatini keshlash, URL'da saqlangan filtrlar va dizayn tizimiga mos data-vizual bilan real vaqt SaaS dashboard.",
+        proj3_p:"Qatlamli Laravel API — Controller → Service → Repository — token auth, rate limiting va Docker deploy bilan.",
+        eb_exp:"Tajriba", exp_title:"Bu — yo'l, nishonlar to'plami emas.", exp_lede:"Tartibli, chunki ketma-ketlik ma'no beradi — qayerdan boshladim va qayerga ketyapman.",
+        exp1_p:"MDH va xalqaro bozorlarda mijoz veb-mahsulotlarini boshdan-oxir yetkazaman — Laravel API ustida React interfeys.",
+        exp2_p:"Bir nechta mahsulotda ishlatilgan Laravel API, PostgreSQL sxema va qatlamli arxitekturani yaratdim va qo'llab-quvvatladim.",
+        exp3_p:"PHP va JavaScript asoslari, ishonchli funksiyalarni ishlab chiqarishga chiqarishni o'rgandim.",
+        eb_stack:"Texnologiya va vositalar", stack_title:"Men ishlatadigan vositalar.", stack_lede:"Ataylab tanlangan, ko'p emas — logotiplar devori emas, chuqur biladigan kichik to'plam.",
+        g_front:"Frontend", g_back:"Backend", g_data:"Ma'lumotlar bazasi", g_tools:"Vositalar va DevOps",
+        eb_stats:"Kodlash statistikasi", stats_title:"Mashqni isbotlaydigan raqamlar.",
+        stats_lede:"Keshlangan backend proksisidan jonli olinadi — GET /api/v1/leetcode — nishon emas, davomiy mahoratning halol belgisi.",
+        solved:"Yechilgan", ring_sub:"Qabul 64% · Top 12%",
+        t_solved:"Jami yechilgan", t_streak:"Kunlik seriya", t_acc:"Qabul darajasi", t_contrib:"GitHub hissa",
+        eb_about:"Men haqimda",
+        about_1:"Men <b>Sobirjon</b>man, O'zbekistonda faoliyat yurituvchi full-stack muhandis. Tez yuklanadigan, oson qo'llab-quvvatlanadigan va foydalanish yoqimli mahsulotlar yarataman — bu yerdagi asoschilar va chet el mijozlari uchun.",
+        about_2:"Men <b>toza arxitektura</b>, halol tezkorlik va aslida ishga tushirishni qadrlayman. Ishlarimning aksariyati Laravel API'ni React interfeys bilan birlashtiradi, mijozlar bilan o'zbek, rus va ingliz tilida gaplashaman.",
+        about_q:"// Ta'sirli ko'p kod yozgandan ko'ra, uzoq xizmat qiladigan kam kod yozganim ma'qul.",
+        eb_contact:"Loyiha boshlash", contact_title:"Nima qurayotganingizni ayting.",
+        contact_lede:"Boshlash uchun qisqa xabar kifoya. Har bir so'rov menga Telegram orqali darhol yetadi — bir kun ichida javob beraman.",
+        c_loc:"Toshkent, O'zbekiston (GMT+5)", c_tg:"Telegram", c_resp:"24 soat ichida javob",
+        l_name:"Ism", l_email:"Email", l_budget:"Budjet (ixtiyoriy)", b_pick:"Diapazonni tanlang…", l_msg:"Xabar", l_send:"Xabar yuborish",
+        fn_saved:"saqlandi", fn_admin:"admin ro'yxati"
+      },
+      ru: {
+        nav_services:"Услуги", nav_work:"Работы", nav_exp:"Опыт", nav_stack:"Стек", nav_stats:"Статистика", nav_contact:"Контакт",
+        status:"Открыт к работе", kicker:"Full-stack инженер · Узбекистан",
+        hero_a:"Я превращаю идеи в", hero_b:"быстрые и надёжные продукты.",
+        hero_sub:"Full-stack разработчик, создаю веб-приложения и API для локальных и международных клиентов — от схемы базы данных до отточенного интерфейса.",
+        cta_start:"Начать проект", cta_work:"Смотреть работы", p_role:"Full-stack инженер",
+        f_loc:"Локация", f_focus:"Фокус", f_focus_v:"Веб и API", f_stack:"Стек", f_resp:"Ответ", f_resp_v:"в течение 24ч",
+        eb_services:"Что я делаю", services_title:"Услуги, которые доходят до релиза и приносят пользу.",
+        services_lede:"Специально первыми — чтобы вы сразу поняли, чем я могу помочь. Каждый запрос доходит до меня мгновенно.",
+        svc1_t:"Веб-разработка", svc1_p:"Адаптивные сайты и веб-приложения на React — быстрые, готовые к SEO и доступные.",
+        svc2_t:"Backend и API", svc2_p:"Laravel REST API с чистой слоистой архитектурой, PostgreSQL, авторизацией и интеграциями.",
+        svc3_t:"Full-stack доставка", svc3_p:"Продукт под ключ — от схемы базы данных до отточенного интерфейса, с деплоем и мониторингом.",
+        cta_start2:"Начать проект", svc_note:"Бесплатный 20-мин созвон · Без обязательств",
+        eb_work:"Избранные работы", work_title:"Кейсы, отдаваемые прямо из бэкенда.",
+        work_lede:"Каждый проект управляется из админки и переведён по языкам — это то, что возвращает GET /api/v1/projects.",
+        proj1_p:"Трёхъязычное портфолио со встроенным движком лидов: каждая заявка сохраняется, мгновенно шлёт уведомление в Telegram и попадает в список для экспорта в Excel.",
+        proj2_p:"SaaS-дашборд в реальном времени с кешированием серверного состояния, фильтрами в URL и визуализацией под дизайн-систему.",
+        proj3_p:"Слоистое Laravel API — Controller → Service → Repository — с токен-авторизацией, rate limiting и деплоем на Docker.",
+        eb_exp:"Опыт", exp_title:"Путь, а не набор бейджей.", exp_lede:"По порядку — потому что последовательность несёт смысл: откуда я начал и куда иду.",
+        exp1_p:"Веду клиентские веб-продукты под ключ на рынках СНГ и за рубежом — React-фронтенд на Laravel API.",
+        exp2_p:"Создавал и поддерживал Laravel API, схемы PostgreSQL и слоистую архитектуру для нескольких продуктов.",
+        exp3_p:"Основы PHP и JavaScript, учился надёжно доставлять фичи в продакшн.",
+        eb_stack:"Стек и инструменты", stack_title:"Инструменты, к которым тянусь.", stack_lede:"Осознанно, без излишеств — небольшой набор, который знаю глубоко, а не стена логотипов.",
+        g_front:"Frontend", g_back:"Backend", g_data:"База данных", g_tools:"Инструменты и DevOps",
+        eb_stats:"Статистика кода", stats_title:"Цифры, подтверждающие практику.",
+        stats_lede:"Берётся вживую из кешированного прокси бэкенда — GET /api/v1/leetcode — честный сигнал работы, а не бейдж.",
+        solved:"Решено", ring_sub:"Принятие 64% · Топ 12%",
+        t_solved:"Всего решено", t_streak:"Дней подряд", t_acc:"Принятие", t_contrib:"GitHub вклад",
+        eb_about:"Обо мне",
+        about_1:"Я <b>Собиржон</b>, full-stack инженер из Узбекистана. Создаю продукты, которые быстро грузятся, легко поддерживаются и приятны в использовании — для основателей здесь и клиентов за рубежом.",
+        about_2:"Ценю <b>чистую архитектуру</b>, честную производительность и то, чтобы продукт реально выходил. Чаще всего связываю Laravel API с React-фронтендом, с клиентами говорю на узбекском, русском и английском.",
+        about_q:"// Лучше меньше кода, который живёт, чем больше кода, который впечатляет.",
+        eb_contact:"Начать проект", contact_title:"Расскажите, что вы создаёте.",
+        contact_lede:"Достаточно короткого сообщения. Каждая заявка мгновенно приходит мне в Telegram — отвечаю в течение дня.",
+        c_loc:"Ташкент, Узбекистан (GMT+5)", c_tg:"Telegram", c_resp:"Отвечаю в течение 24 часов",
+        l_name:"Имя", l_email:"Email", l_budget:"Бюджет (необязательно)", b_pick:"Выберите диапазон…", l_msg:"Сообщение", l_send:"Отправить",
+        fn_saved:"сохранено", fn_admin:"список админа"
+      }
+    };
+    var htmlKeys = { about_1:1, about_2:1 };
+    function setLang(lang) {
+      var dict = i18n[lang]; if (!dict) return;
+      document.documentElement.setAttribute('lang', lang);
+      document.querySelectorAll('[data-i18n]').forEach(function (el) {
+        var k = el.getAttribute('data-i18n');
+        if (dict[k] == null) return;
+        if (htmlKeys[k]) { el.innerHTML = dict[k]; } else { el.textContent = dict[k]; }
+      });
+    }
+    document.querySelectorAll('.langs button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        document.querySelectorAll('.langs button').forEach(function (x) { x.classList.remove('on'); });
+        b.classList.add('on');
+        setLang(b.getAttribute('data-lang'));
+      });
+    });
+
+    /* ---- scroll reveal ---- */
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+
+    /* ---- animated leetcode stats ---- */
+    var statsEl = document.getElementById('stats');
+    var statsDone = false;
+    var sio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting && !statsDone) {
+          statsDone = true;
+          var ring = document.getElementById('ring');
+          var C = 452, solved = 412, denom = 3420;
+          ring.style.strokeDashoffset = String(C - C * (solved / denom) * 3.2);
+          document.querySelectorAll('.diff .bar i').forEach(function (i) { i.style.width = i.getAttribute('data-w'); });
+          countUp(document.getElementById('totalSolved'), 412, '');
+          countUp(document.getElementById('t1'), 412, '');
+          countUp(document.getElementById('t2'), 128, '');
+        }
+      });
+    }, { threshold: 0.3 });
+    if (statsEl) sio.observe(statsEl);
+
+    function countUp(el, target, suffix) {
+      if (!el) return;
+      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) { el.textContent = target + suffix; return; }
+      var start = 0, dur = 1200, t0 = performance.now();
+      function step(now) {
+        var p = Math.min((now - t0) / dur, 1), eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(start + (target - start) * eased) + suffix;
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    /* ---- active nav ---- */
+    var sections = ['services','work','experience','stack','stats','contact'];
+    var navMap = {};
+    document.querySelectorAll('.nav a').forEach(function (a) { navMap[a.getAttribute('href').slice(1)] = a; });
+    var nio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          Object.values(navMap).forEach(function (a) { a.classList.remove('active'); });
+          var link = navMap[e.target.id]; if (link) link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    sections.forEach(function (id) { var s = document.getElementById(id); if (s) nio.observe(s); });
+
+    /* ---- lead form (mockup) ---- */
+    document.getElementById('leadForm').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var btn = this.querySelector('.btn-primary span:first-child');
+      if (btn) { btn.textContent = '✓ ' + (i18n[document.documentElement.getAttribute('lang')||'en'].fn_saved || 'sent'); }
+    });
+  })();
+</script>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -44,10 +45,18 @@ class LeetCodeController extends Controller
                 $request = $request->withoutVerifying();
             }
 
-            $response = $request->post('https://leetcode.com/graphql', [
-                'query' => self::QUERY,
-                'variables' => ['u' => $username],
-            ]);
+            try {
+                $response = $request->post('https://leetcode.com/graphql', [
+                    'query' => self::QUERY,
+                    'variables' => ['u' => $username],
+                ]);
+            } catch (ConnectionException $e) {
+                // DNS/connect/read timeout — not an HTTP response. Fail gracefully
+                // into the 502 path below instead of bubbling up as a 500.
+                report($e);
+
+                return null;
+            }
 
             $user = $response->json('data.matchedUser');
 

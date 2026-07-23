@@ -20,8 +20,14 @@ class UpdateExperienceRequest extends FormRequest
     {
         return [
             'company' => ['sometimes', 'required', 'string', 'max:255'],
-            'role' => ['sometimes', 'required', 'string', 'max:255'],
-            'description' => ['sometimes', 'nullable', 'string'],
+            'role' => ['sometimes', 'array'],
+            'role.en' => ['required_with:role', 'string', 'max:255'],
+            'role.uz' => ['nullable', 'string', 'max:255'],
+            'role.ru' => ['nullable', 'string', 'max:255'],
+            'description' => ['sometimes', 'nullable', 'array'],
+            'description.en' => ['nullable', 'string'],
+            'description.uz' => ['nullable', 'string'],
+            'description.ru' => ['nullable', 'string'],
             'start_date' => ['sometimes', 'required', 'string', 'max:50'],
             'end_date' => ['sometimes', 'nullable', 'string', 'max:50'],
             'url' => ['sometimes', 'nullable', 'url', 'max:255'],

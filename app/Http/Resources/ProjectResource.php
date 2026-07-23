@@ -18,11 +18,13 @@ class ProjectResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $allLocales = $request->boolean('all_locales');
+
         return [
             'id' => $this->id,
-            'title' => $this->title,
+            'title' => $allLocales ? $this->getTranslations('title') : $this->title,
             'slug' => $this->slug,
-            'description' => $this->description,
+            'description' => $allLocales ? $this->getTranslations('description') : $this->description,
             'cover_image' => $this->cover_image,
             'github_url' => $this->github_url,
             'live_url' => $this->live_url,

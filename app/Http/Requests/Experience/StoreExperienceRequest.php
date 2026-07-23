@@ -20,8 +20,14 @@ class StoreExperienceRequest extends FormRequest
     {
         return [
             'company' => ['required', 'string', 'max:255'],
-            'role' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
+            'role' => ['required', 'array'],
+            'role.en' => ['required', 'string', 'max:255'],
+            'role.uz' => ['nullable', 'string', 'max:255'],
+            'role.ru' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'array'],
+            'description.en' => ['nullable', 'string'],
+            'description.uz' => ['nullable', 'string'],
+            'description.ru' => ['nullable', 'string'],
             'start_date' => ['required', 'string', 'max:50'],
             'end_date' => ['nullable', 'string', 'max:50'],
             'url' => ['nullable', 'url', 'max:255'],

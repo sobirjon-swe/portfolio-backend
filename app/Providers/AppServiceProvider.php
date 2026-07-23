@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +22,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Global API limiter (applied to the whole api group via throttleApi()).
+        RateLimiter::for('api', fn (Request $request): Limit => Limit::perMinute(60)
+            ->by($request->user()?->id ?: $request->ip()));
+
+        // Tight limiter for login to blunt credential brute-force (per email + IP).
+        RateLimiter::for('auth', fn (Request $request): Limit => Limit::perMinute(6)
+            ->by(strtolower((string) $request->input('email')).'|'.$request->ip()));
+
+        // Public contact form — a few submissions per minute per IP.
+        RateLimiter::for('contact', fn (Request $request): Limit => Limit::perMinute(5)
+            ->by($request->ip()));
+
+        // Public analytics beacon — generous but bounded to stop flooding.
+        RateLimiter::for('page-views', fn (Request $request): Limit => Limit::perMinute(30)
+            ->by($request->ip()));
     }
 }

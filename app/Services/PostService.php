@@ -64,7 +64,7 @@ class PostService
     public function create(array $data, int $authorId): Post
     {
         $data['user_id'] = $authorId;
-        $data['slug'] = $this->uniqueSlug($data['title']);
+        $data['slug'] = $this->uniqueSlug($this->titleString($data['title']));
 
         return $this->repository->create($data);
     }
@@ -76,8 +76,8 @@ class PostService
     {
         $post = $this->findById($id);
 
-        if (isset($data['title']) && $data['title'] !== $post->title) {
-            $data['slug'] = $this->uniqueSlug($data['title'], $post->id);
+        if (isset($data['title'])) {
+            $data['slug'] = $this->uniqueSlug($this->titleString($data['title']), $post->id);
         }
 
         return $this->repository->update($post, $data);
@@ -88,6 +88,22 @@ class PostService
         $post = $this->findById($id);
 
         $this->repository->delete($post);
+    }
+
+    /**
+     * Resolve a plain string from a translatable title (default locale first).
+     *
+     * @param  array<string, string>|string  $title
+     */
+    private function titleString(array|string $title): string
+    {
+        if (is_array($title)) {
+            $values = array_filter($title, static fn ($v) => is_string($v) && $v !== '');
+
+            return (string) ($title['en'] ?? (array_values($values)[0] ?? ''));
+        }
+
+        return $title;
     }
 
     private function uniqueSlug(string $title, ?int $ignoreId = null): string

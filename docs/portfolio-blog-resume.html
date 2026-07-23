@@ -1,0 +1,388 @@
+<title>sobirjonswe.uz — Blog & Resume</title>
+<meta name="description" content="Blog list, blog post, and resume pages — naimur-style, blue theme." />
+<style>
+  :root {
+    --bg: #0a0b0f; --bg-2: #0d0f15; --surface: #101219; --surface-2: #161a24;
+    --line: rgba(255,255,255,0.08); --line-2: rgba(255,255,255,0.13);
+    --text: #e8eaf0; --muted: #8b93a4; --faint: #59606e; --ghost: rgba(255,255,255,0.05);
+    --accent: #4c8dff; --accent-2: #7db0ff; --accent-deep: #2f6bf0;
+    --accent-soft: rgba(76,141,255,0.12); --accent-line: rgba(76,141,255,0.28); --ok: #35c98a;
+    --mono: ui-monospace, "Cascadia Code", "JetBrains Mono", "SF Mono", Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --maxw: 1120px;
+  }
+  :root[data-theme="light"] {
+    --bg: #f6f7f9; --bg-2: #eef1f6; --surface: #fff; --surface-2: #eef2f8;
+    --line: rgba(10,20,40,0.09); --line-2: rgba(10,20,40,0.15);
+    --text: #10131a; --muted: #56606f; --faint: #98a1b1; --ghost: rgba(10,20,40,0.05);
+    --accent: #2f6bf0; --accent-2: #4c8dff; --accent-deep: #2560e0;
+    --accent-soft: rgba(47,107,240,0.09); --accent-line: rgba(47,107,240,0.22);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.65; -webkit-font-smoothing: antialiased; overflow-x: clip; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+  .narrow { max-width: 900px; }
+
+  .navbar { position: fixed; z-index: 60; top: 18px; left: 0; right: 0; display: flex; justify-content: center; padding: 0 16px; }
+  .nav-pill { display: flex; align-items: center; gap: 2px; padding: 5px; border: 1px solid var(--line-2); background: color-mix(in srgb, var(--bg) 78%, transparent); backdrop-filter: blur(14px); border-radius: 999px; box-shadow: 0 10px 40px -22px #000; }
+  .nav-pill a { position: relative; font-family: var(--mono); font-size: 12.5px; color: var(--muted); padding: 8px 14px; border-radius: 999px; transition: color .2s; cursor: pointer; }
+  .nav-pill a:hover { color: var(--text); }
+  .nav-pill a.active { color: var(--text); }
+  .nav-pill a.active::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 999px; background: var(--accent-soft); }
+  .nav-pill a.active::after { content: ""; position: absolute; top: -6px; left: 50%; transform: translateX(-50%); width: 22px; height: 2px; border-radius: 2px; background: var(--accent); box-shadow: 0 0 10px 1px var(--accent); }
+  .nav-tools { display: flex; align-items: center; gap: 6px; margin-left: 4px; padding-left: 8px; border-left: 1px solid var(--line); }
+  .theme-btn { border: none; background: transparent; color: var(--muted); width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 13px; }
+  .theme-btn:hover { color: var(--accent); }
+  @media (max-width: 760px) { .nav-pill a.desk { display: none; } }
+
+  .page { display: none; padding-top: 120px; padding-bottom: 60px; }
+  .page.on { display: block; animation: fade .4s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+  /* blog list (img_9) */
+  .blog-head { text-align: center; margin-bottom: 26px; }
+  .blog-head h1 { font-size: clamp(2.2rem, 6vw, 3.4rem); font-weight: 780; letter-spacing: -0.03em; margin: 0 0 12px; }
+  .blog-head h1 .ac { color: var(--accent); }
+  .blog-head p { color: var(--muted); max-width: 60ch; margin: 0 auto; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 24px 0 34px; }
+  .filters button { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.03em; color: var(--muted); background: var(--surface); border: 1px solid var(--line-2); border-radius: 999px; padding: 7px 14px; cursor: pointer; transition: .2s; }
+  .filters button:hover { color: var(--text); border-color: var(--accent-line); }
+  .filters button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .post-card { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--surface); cursor: pointer; transition: transform .25s, border-color .25s; display: flex; flex-direction: column; }
+  .post-card:hover { transform: translateY(-5px); border-color: var(--accent-line); }
+  .post-card .cover { min-height: 150px; position: relative; display: flex; align-items: flex-end; padding: 14px; }
+  .post-card .cover .ttl { color: #fff; font-weight: 800; font-size: 1.1rem; line-height: 1.1; letter-spacing: -0.01em; z-index: 1; }
+  .post-card .cover .ttl .em { color: var(--pc, #ffb37d); }
+  .post-card .body { padding: 18px; display: flex; flex-direction: column; flex: 1; }
+  .post-card .cats { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .post-card .cats span { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent-line); border-radius: 5px; padding: 3px 7px; }
+  .post-card h3 { margin: 0 0 8px; font-size: 1.05rem; font-weight: 680; letter-spacing: -0.01em; }
+  .post-card p { margin: 0 0 14px; font-size: 0.85rem; color: var(--muted); flex: 1; }
+  .post-card .foot { display: flex; align-items: center; gap: 14px; font-family: var(--mono); font-size: 11px; color: var(--faint); }
+  .post-card .foot span { display: inline-flex; align-items: center; gap: 5px; }
+
+  /* blog post (img_8) */
+  .post-layout { display: grid; grid-template-columns: 1fr 220px; gap: 40px; align-items: start; }
+  .post-main .back { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12.5px; color: var(--muted); border: 1px solid var(--line-2); border-radius: 999px; padding: 7px 14px; cursor: pointer; margin-bottom: 22px; }
+  .post-main .back:hover { color: var(--accent); border-color: var(--accent-line); }
+  .post-main .cats { display: flex; gap: 6px; margin-bottom: 14px; }
+  .post-main .cats span { font-family: var(--mono); font-size: 10px; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent-line); border-radius: 5px; padding: 3px 8px; }
+  .post-main h1 { font-size: clamp(1.8rem, 4.4vw, 2.7rem); font-weight: 780; letter-spacing: -0.03em; margin: 0 0 14px; line-height: 1.1; }
+  .post-main .pmeta { display: flex; gap: 16px; font-family: var(--mono); font-size: 12px; color: var(--faint); margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+  .post-main h2 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; margin: 34px 0 12px; scroll-margin-top: 110px; }
+  .post-main p { color: var(--muted); margin: 0 0 16px; }
+  .post-main p .ac, .post-main a.ac { color: var(--accent); }
+  .post-main .quote { border-left: 2px solid var(--accent); padding: 4px 0 4px 18px; margin: 22px 0; font-family: var(--mono); font-size: 0.92rem; color: var(--faint); background: var(--surface); border-radius: 0 10px 10px 0; padding: 16px 18px; }
+  .post-main ul.plist { margin: 0 0 16px; padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .post-main ul.plist li { display: flex; gap: 10px; color: var(--muted); font-size: 0.95rem; }
+  .post-main ul.plist li::before { content: "▹"; color: var(--accent); }
+  .toc { position: sticky; top: 110px; }
+  .toc .t { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); margin-bottom: 14px; }
+  .toc a { display: block; font-size: 12.5px; color: var(--muted); padding: 6px 0 6px 12px; border-left: 1px solid var(--line); transition: .2s; }
+  .toc a:hover, .toc a.on { color: var(--accent); border-color: var(--accent); }
+
+  /* resume (img_10) */
+  .back-home { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12.5px; color: var(--muted); border: 1px solid var(--line-2); border-radius: 999px; padding: 7px 14px; cursor: pointer; margin-bottom: 24px; }
+  .back-home:hover { color: var(--accent); border-color: var(--accent-line); }
+  .res-wrap { display: grid; grid-template-columns: 440px 1fr; gap: 24px; align-items: start; }
+  .res-left { border: 1px solid var(--line); border-radius: 20px; background: var(--surface); padding: 32px; }
+  .res-left h1 { font-size: clamp(2rem, 4vw, 2.9rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; margin: 0; }
+  .res-left h1 .name { color: var(--accent); display: block; }
+  .res-left .desc { color: var(--muted); font-size: 0.98rem; margin: 20px 0 26px; }
+  .res-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 22px; }
+  .res-meta .m { border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); padding: 15px 16px; }
+  .res-meta .m .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); margin-bottom: 7px; }
+  .res-meta .m .v { font-size: 0.92rem; font-weight: 600; }
+  .res-file { display: flex; gap: 14px; align-items: flex-start; border: 1px solid var(--line-2); border-radius: 14px; background: var(--surface-2); padding: 18px; margin-bottom: 18px; }
+  .res-file .fi { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: var(--accent-soft); border: 1px solid var(--accent-line); color: var(--accent); flex-shrink: 0; }
+  .res-file .fn { font-weight: 620; font-size: 0.98rem; }
+  .res-file .fm { font-family: var(--mono); font-size: 11.5px; color: var(--faint); margin-top: 5px; line-height: 1.5; }
+  .res-actions { display: grid; grid-template-columns: 1.4fr 1fr; gap: 12px; }
+  .res-actions a { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--mono); font-size: 12.5px; padding: 13px; border-radius: 12px; cursor: pointer; }
+  .res-actions a.dl { background: var(--accent); color: #fff; }
+  .res-actions a.dl:hover { background: var(--accent-deep); }
+  .res-actions a.open { border: 1px solid var(--line-2); color: var(--muted); }
+  .res-actions a.open:hover { border-color: var(--accent-line); color: var(--accent); }
+
+  .res-preview { border: 1px solid var(--line-2); border-radius: 18px; overflow: hidden; background: var(--surface); box-shadow: 0 40px 80px -50px #000; }
+  .res-preview .rtb { display: flex; align-items: center; gap: 10px; padding: 13px 18px; border-bottom: 1px solid var(--line); }
+  .res-preview .rtb .dots { display: flex; gap: 6px; }
+  .res-preview .rtb .dots i { width: 11px; height: 11px; border-radius: 50%; }
+  .res-preview .rtb .dots i:nth-child(1) { background: #ff5f57; } .res-preview .rtb .dots i:nth-child(2) { background: #febc2e; } .res-preview .rtb .dots i:nth-child(3) { background: #28c840; }
+  .res-preview .rtb .lbl { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .res-preview .rtb .full { margin-left: auto; font-family: var(--mono); font-size: 11.5px; color: var(--accent); }
+  .res-preview .rbody { padding: 22px; max-height: 660px; overflow-y: auto; background: color-mix(in srgb, var(--bg) 60%, #000 5%); }
+  /* the white paper — stays light in both themes */
+  .paper { background: #fff; color: #1a1a1a; border-radius: 6px; padding: 34px 38px; font-size: 12.5px; line-height: 1.5; box-shadow: 0 10px 40px -20px rgba(0,0,0,.6); }
+  .paper .p-name { text-align: center; font-size: 1.5rem; font-weight: 800; letter-spacing: 0.02em; }
+  .paper .p-role { text-align: center; color: #444; font-size: 0.92rem; margin-top: 2px; }
+  .paper .p-contact { text-align: center; font-size: 11px; color: #2f6bf0; margin-top: 8px; }
+  .paper .p-contact a { color: #2f6bf0; text-decoration: underline; }
+  .paper .p-sec { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: #111; border-bottom: 1px solid #ddd; padding-bottom: 4px; margin: 20px 0 10px; }
+  .paper .p-role-row { display: flex; justify-content: space-between; gap: 12px; }
+  .paper .p-role-row .r { font-weight: 700; }
+  .paper .p-role-row .r span { font-weight: 400; color: #555; }
+  .paper .p-role-row .d { color: #666; font-style: italic; font-size: 11px; white-space: nowrap; }
+  .paper ul { margin: 6px 0 12px; padding-left: 18px; color: #333; }
+  .paper ul li { margin-bottom: 3px; }
+  .paper .p-stack { font-size: 11px; color: #555; font-style: italic; margin: 2px 0 12px; }
+  .paper .p-stack b { font-style: normal; color: #333; }
+  .paper .p-proj { font-weight: 700; }
+  .paper .p-proj span { font-weight: 400; color: #555; }
+  .paper p.p-body { color: #333; margin: 8px 0 12px; }
+  .paper .p-skill-row { margin-bottom: 5px; }
+  .paper .p-skill-row b { color: #111; }
+
+  footer { border-top: 1px solid var(--line); padding: 34px 0; text-align: center; font-family: var(--mono); font-size: 12px; color: var(--faint); margin-top: 40px; }
+  footer b { color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+  @media (max-width: 900px) { .res-wrap { grid-template-columns: 1fr; } .res-left { max-width: 520px; } }
+  @media (max-width: 820px) { .blog-grid { grid-template-columns: 1fr 1fr; } .post-layout { grid-template-columns: 1fr; } .toc { display: none; } }
+  @media (max-width: 560px) { .blog-grid { grid-template-columns: 1fr; } }
+</style>
+
+<nav class="navbar">
+  <div class="nav-pill">
+    <a href="#" class="desk" onclick="return false">Home</a>
+    <a href="#" class="desk" onclick="return false">Work</a>
+    <a href="#" class="desk" onclick="return false">About</a>
+    <a data-page="resume" class="desk">Resume</a>
+    <a data-page="blog" class="active">Blog</a>
+    <a href="#" class="desk" onclick="return false">More</a>
+    <div class="nav-tools"><button class="theme-btn" id="themeToggle" aria-label="Toggle theme">◐</button></div>
+  </div>
+</nav>
+
+<!-- BLOG LIST -->
+<main class="page on" id="page-blog">
+  <div class="wrap">
+    <div class="blog-head">
+      <h1>The Tech <span class="ac">Blog</span></h1>
+      <p>Notes on Laravel, React, clean architecture and shipping real products — what I learn while building.</p>
+    </div>
+    <div class="filters" id="filters"></div>
+    <div class="blog-grid" id="blogGrid"></div>
+  </div>
+</main>
+
+<!-- BLOG POST -->
+<main class="page" id="page-post">
+  <div class="wrap narrow" id="postBody"></div>
+</main>
+
+<!-- RESUME (img_10) -->
+<main class="page" id="page-resume">
+  <div class="wrap">
+    <span class="back-home" onclick="return false">← Back to Home</span>
+    <div class="res-wrap">
+      <div class="res-left">
+        <h1>Resume of <span class="name">Sobirjon Qurbonov</span></h1>
+        <p class="desc">Full-stack engineer focused on building production-ready web applications — clean React front-ends, secure layered Laravel APIs, and real PostgreSQL performance work.</p>
+        <div class="res-meta">
+          <div class="m"><div class="k">Role</div><div class="v">Full-stack Engineer</div></div>
+          <div class="m"><div class="k">Location</div><div class="v">Uzbekistan</div></div>
+          <div class="m"><div class="k">Stack</div><div class="v">Laravel · React · PostgreSQL</div></div>
+          <div class="m"><div class="k">Availability</div><div class="v">Full-time / Freelance</div></div>
+        </div>
+        <div class="res-file">
+          <div class="fi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg></div>
+          <div>
+            <div class="fn">Sobirjon Qurbonov — Resume</div>
+            <div class="fm">Sobirjon_Qurbonov_Full_Stack_2026.pdf · 268 KB ·<br>Updated July 23, 2026 · v1</div>
+          </div>
+        </div>
+        <div class="res-actions">
+          <a class="dl" onclick="return false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> Download Resume</a>
+          <a class="open" onclick="return false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg> Open File</a>
+        </div>
+      </div>
+
+      <div class="res-preview">
+        <div class="rtb"><span class="dots"><i></i><i></i><i></i></span><span class="lbl">Resume Preview</span><span class="full">Open full screen ↗</span></div>
+        <div class="rbody">
+          <div class="paper">
+            <div class="p-name">SOBIRJON QURBONOV</div>
+            <div class="p-role">Full-stack Engineer</div>
+            <div class="p-contact">sobirjon.swe@gmail.com &nbsp;|&nbsp; @sobirjonswe &nbsp;|&nbsp; <a>GitHub</a> &nbsp;|&nbsp; <a>LinkedIn</a> &nbsp;|&nbsp; <a>Portfolio</a></div>
+
+            <div class="p-sec">PROFILE</div>
+            <p class="p-body">Full-stack engineer with hands-on experience building scalable web apps with Laravel, PostgreSQL and React. Strong in layered architecture (Controller → Service → Repository), REST API design and query performance. Backend-focused, and actively building production React front-ends. Speaks Uzbek, Russian and English.</p>
+
+            <div class="p-sec">PROFESSIONAL EXPERIENCE</div>
+            <div class="p-role-row"><span class="r">Full-stack Engineer <span>· DOCCO PARTNERS</span></span><span class="d">2024 — Present</span></div>
+            <ul>
+              <li>Built internal CRM and analytics tools on a layered Laravel + PostgreSQL backend.</li>
+              <li>Designed REST APIs with a clean Controller → Service → Repository separation and Sanctum auth.</li>
+              <li>Shipped React front-ends and improved PostgreSQL query performance through indexing.</li>
+            </ul>
+            <div class="p-role-row"><span class="r">Backend Developer <span>· Freelance / Product work</span></span><span class="d">2022 — 2024</span></div>
+            <ul>
+              <li>Delivered PHP/Laravel APIs and PostgreSQL schemas for client web products.</li>
+              <li>Learned to ship reliable features to production and work with clients directly.</li>
+            </ul>
+
+            <div class="p-sec">PROJECTS</div>
+            <div class="p-proj">Portfolio Platform <span>— trilingual portfolio with a lead engine</span></div>
+            <ul>
+              <li>Layered Laravel API with EN/UZ/RU content and dynamic projects.</li>
+              <li>Contact form → instant Telegram alert → admin list with Excel export.</li>
+            </ul>
+            <div class="p-stack"><b>Stack:</b> Laravel, PHP, PostgreSQL, React, Tailwind, Sanctum</div>
+            <div class="p-proj">CRM System <span>— internal client & deal management</span></div>
+            <ul>
+              <li>Client/deal pipeline with role-based access control and reporting.</li>
+              <li>Vue dashboard on a Laravel + PostgreSQL backend.</li>
+            </ul>
+            <div class="p-stack"><b>Stack:</b> Laravel, PostgreSQL, Vue, Sanctum, Redis</div>
+
+            <div class="p-sec">SKILLS</div>
+            <div class="p-skill-row"><b>Backend:</b> Laravel, PHP, REST APIs, Sanctum, Queues</div>
+            <div class="p-skill-row"><b>Frontend:</b> React, TypeScript, Tailwind CSS, Vite</div>
+            <div class="p-skill-row"><b>Database &amp; Caching:</b> PostgreSQL, MySQL, Redis</div>
+            <div class="p-skill-row"><b>Tools &amp; DevOps:</b> Docker, Git, Nginx, GitHub Actions</div>
+
+            <div class="p-sec">LANGUAGES</div>
+            <div class="p-skill-row">Uzbek (Native) &nbsp;·&nbsp; Russian (Fluent) &nbsp;·&nbsp; English (Professional)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="wrap">© 2026 <b>Sobirjon Qurbonov</b> · Blog &amp; Resume · sobirjonswe.uz</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    if (!root.getAttribute('data-theme')) root.setAttribute('data-theme', 'dark');
+    document.getElementById('themeToggle').addEventListener('click', function () {
+      root.setAttribute('data-theme', root.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+    });
+
+    var posts = [
+      { id:'portfolio', cats:['Laravel','React'], grad:'linear-gradient(150deg,#0f1b33,#2f6bf0)', pc:'#7db0ff',
+        short:'Building My', em:'Portfolio', title:'How I Built My Portfolio with Laravel + React',
+        date:'Jul 2026', read:'6 min',
+        excerpt:'A behind-the-scenes breakdown of how I rebuilt my portfolio as a modern full-stack product: layered Laravel API, React front-end, and a trilingual lead engine.',
+        toc:['Why rebuild from scratch','The layered backend','Trilingual content','The lead pipeline','Final thoughts'],
+        body:[
+          {h:'Why rebuild from scratch', p:['I wanted my portfolio to be more than a résumé — it had to <span class="ac">capture leads</span>, work in three languages, and stay easy to update from an admin panel.']},
+          {h:'The layered backend', p:['The API follows a strict chain: <span class="ac">Controller → Service → Repository → Model</span>. Controllers stay thin, business rules live in services, and data access hides behind repository interfaces.']},
+          {h:'Trilingual content', p:['Content is stored as JSON columns with spatie/laravel-translatable. A SetLocale middleware reads Accept-Language and the Resource returns the right language automatically.'], quote:'i18n is a data-model decision, not an afterthought you bolt on later.'},
+          {h:'The lead pipeline', p:['Every contact submission is saved, fires a queued Telegram notification to me instantly, and lands in an admin list I can export to Excel.'],
+            list:['Form → POST /api/v1/messages','Saved → queued Telegram alert','Admin list → Excel export']},
+          {h:'Final thoughts', p:['Treating my portfolio as a real product — with an API, tests and a lead engine — taught me more than any tutorial. It also turned the site into a <span class="ac">sales channel</span>.']}
+        ] },
+      { id:'architecture', cats:['Architecture'], grad:'linear-gradient(150deg,#101b2e,#1e293b)', pc:'#7db0ff',
+        short:'Clean', em:'Architecture', title:'Controller → Service → Repository in Laravel',
+        date:'Jun 2026', read:'8 min',
+        excerpt:'Why I split every Laravel feature into a layered chain, how it keeps controllers thin, and what it does for testing.',
+        toc:['The problem with fat controllers','The three layers','Testing each layer','When it is overkill'],
+        body:[
+          {h:'The problem with fat controllers', p:['Fat controllers mix validation, business rules and data access — impossible to test, painful to change.']},
+          {h:'The three layers', p:['<span class="ac">Controllers</span> handle transport. <span class="ac">Services</span> hold business rules. <span class="ac">Repositories</span> hide the database behind an interface.'], quote:'Depend on interfaces, not on Eloquent — your tests will thank you.'},
+          {h:'Testing each layer', p:['Services are tested without HTTP; repositories are mocked; controllers only test transport and validation.']},
+          {h:'When it is overkill', p:['For a tiny CRUD toy, this is too much. For a product that will grow, it pays for itself fast.']}
+        ] },
+      { id:'i18n', cats:['Laravel'], grad:'linear-gradient(150deg,#0d2430,#0891b2)', pc:'#67e8f9',
+        short:'Trilingual', em:'Content', title:'i18n Done Right: Trilingual Content in Laravel',
+        date:'May 2026', read:'5 min',
+        excerpt:'How I serve EN / UZ / RU content from one API using JSON columns, a locale middleware, and API Resources.',
+        toc:['Two layers of i18n','JSON translation columns','The SetLocale middleware','Validation per language'],
+        body:[
+          {h:'Two layers of i18n', p:['UI strings live in the React app (react-i18next). Content lives in the backend, translated per row.']},
+          {h:'JSON translation columns', p:['Title and description become JSON: {"en":"…","uz":"…","ru":"…"}. spatie/laravel-translatable handles the rest.']},
+          {h:'The SetLocale middleware', p:['Accept-Language (or ?lang=uz) sets app locale, so every Resource returns the right language with zero extra code.'], quote:'One request, one language — decided at the boundary, not in every query.'},
+          {h:'Validation per language', p:['Store/Update requests validate title.en, title.uz, title.ru so no translation is silently missing.']}
+        ] },
+      { id:'leetcode', cats:['Laravel','Career'], grad:'linear-gradient(150deg,#1a1330,#7c3aed)', pc:'#c4b5fd',
+        short:'Caching a', em:'Stats Proxy', title:'Caching a LeetCode Stats Proxy in Laravel',
+        date:'Apr 2026', read:'4 min',
+        excerpt:'How I proxy and cache LeetCode stats through my backend so the widget is fast and never rate-limited.',
+        toc:['Why proxy at all','Caching for 6 hours','Graceful fallback'],
+        body:[
+          {h:'Why proxy at all', p:['Calling LeetCode from the browser is slow and rate-limited. A backend proxy fixes both and hides the source.']},
+          {h:'Caching for 6 hours', p:['The GET /api/v1/leetcode endpoint caches the response for 6 hours — fresh enough, and effectively free.'], quote:'Cache the boring stuff aggressively; spend your requests where they matter.'},
+          {h:'Graceful fallback', p:['If the upstream fails, the endpoint serves the last cached value instead of an error.']}
+        ] },
+      { id:'career', cats:['Career'], grad:'linear-gradient(150deg,#2a1a10,#b45309)', pc:'#fdba74',
+        short:'Backend to', em:'Full-stack', title:'From Backend to Full-stack: My Roadmap',
+        date:'Mar 2026', read:'7 min',
+        excerpt:'I started backend-first. Here is how I am becoming a well-rounded full-stack engineer without faking front-end skills.',
+        toc:['Backend is my base','Learning React honestly','Shipping to prove it'],
+        body:[
+          {h:'Backend is my base', p:['Laravel, PostgreSQL and clean architecture are my strength — I lead with them, not with buzzwords.']},
+          {h:'Learning React honestly', p:['I am building real React front-ends (this portfolio included) instead of claiming expertise I do not have yet.'], quote:'I would rather under-promise and ship than over-claim and stall.'},
+          {h:'Shipping to prove it', p:['Every project I finish is proof — the roadmap is direction, not a finished destination.']}
+        ] }
+    ];
+
+    var cats = ['All','Laravel','React','Architecture','Career'];
+    var current = 'All';
+    var filters = document.getElementById('filters');
+    filters.innerHTML = cats.map(function (c) { return '<button data-c="'+c+'"'+(c==='All'?' class="on"':'')+'>'+c+'</button>'; }).join('');
+    filters.querySelectorAll('button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        filters.querySelectorAll('button').forEach(function (x){ x.classList.remove('on'); });
+        b.classList.add('on'); current = b.getAttribute('data-c'); renderGrid();
+      });
+    });
+
+    var grid = document.getElementById('blogGrid');
+    function renderGrid() {
+      var list = current === 'All' ? posts : posts.filter(function (p){ return p.cats.indexOf(current) > -1; });
+      grid.innerHTML = list.map(function (p) {
+        return '<article class="post-card" data-id="'+p.id+'">'+
+          '<div class="cover" style="background:'+p.grad+'"><div class="ttl" style="--pc:'+p.pc+'">'+p.short+' <span class="em">'+p.em+'</span></div></div>'+
+          '<div class="body">'+
+            '<div class="cats">'+p.cats.map(function (c){ return '<span>'+c+'</span>'; }).join('')+'</div>'+
+            '<h3>'+p.title+'</h3><p>'+p.excerpt+'</p>'+
+            '<div class="foot"><span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>'+p.date+'</span><span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'+p.read+'</span></div>'+
+          '</div></article>';
+      }).join('');
+      grid.querySelectorAll('.post-card').forEach(function (el) {
+        el.addEventListener('click', function () { openPost(el.getAttribute('data-id')); });
+      });
+    }
+    renderGrid();
+
+    function slug(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g,'-'); }
+    function openPost(id) {
+      var p = posts.filter(function (x){ return x.id === id; })[0]; if (!p) return;
+      var sections = p.body.map(function (s) {
+        var html = '<h2 id="'+slug(s.h)+'">'+s.h+'</h2>';
+        (s.p||[]).forEach(function (para){ html += '<p>'+para+'</p>'; });
+        if (s.list) html += '<ul class="plist">'+s.list.map(function (x){ return '<li>'+x+'</li>'; }).join('')+'</ul>';
+        if (s.quote) html += '<div class="quote">'+s.quote+'</div>';
+        return html;
+      }).join('');
+      var toc = '<div class="toc"><div class="t">On this page</div>'+p.body.map(function (s){ return '<a href="#'+slug(s.h)+'">'+s.h+'</a>'; }).join('')+'</div>';
+      document.getElementById('postBody').innerHTML =
+        '<div class="post-layout"><div class="post-main">'+
+          '<span class="back" id="backBtn">← Back to Blog</span>'+
+          '<div class="cats">'+p.cats.map(function (c){ return '<span>'+c+'</span>'; }).join('')+'</div>'+
+          '<h1>'+p.title+'</h1>'+
+          '<div class="pmeta"><span>Sobirjon Qurbonov</span><span>'+p.date+'</span><span>'+p.read+' read</span></div>'+
+          sections +
+        '</div>'+toc+'</div>';
+      document.getElementById('backBtn').addEventListener('click', function () { show('blog'); window.scrollTo(0,0); });
+      show('post'); window.scrollTo(0, 0);
+    }
+
+    function show(name) {
+      document.querySelectorAll('.page').forEach(function (pg){ pg.classList.remove('on'); });
+      document.getElementById('page-' + name).classList.add('on');
+      document.querySelectorAll('.nav-pill a[data-page]').forEach(function (a){ a.classList.remove('active'); });
+      var key = (name === 'post') ? 'blog' : name;
+      var link = document.querySelector('.nav-pill a[data-page="'+key+'"]');
+      if (link) link.classList.add('active');
+    }
+    document.querySelectorAll('.nav-pill a[data-page]').forEach(function (a) {
+      a.addEventListener('click', function () { show(a.getAttribute('data-page')); window.scrollTo(0,0); });
+    });
+  })();
+</script>

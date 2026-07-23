@@ -53,8 +53,8 @@ class PostTest extends TestCase
         Sanctum::actingAs($user);
 
         $response = $this->postJson('/api/v1/posts', [
-            'title' => 'My First Post',
-            'content' => 'Some content.',
+            'title' => ['en' => 'My First Post'],
+            'content' => ['en' => 'Some content.'],
         ]);
 
         $response->assertCreated()
@@ -83,7 +83,7 @@ class PostTest extends TestCase
         Sanctum::actingAs(User::factory()->create());
         $post = Post::factory()->create(['title' => 'Old Title', 'slug' => 'old-title']);
 
-        $this->patchJson("/api/v1/posts/{$post->id}", ['title' => 'New Shiny Title'])
+        $this->patchJson("/api/v1/posts/{$post->id}", ['title' => ['en' => 'New Shiny Title']])
             ->assertOk()
             ->assertJsonPath('data.slug', 'new-shiny-title');
     }

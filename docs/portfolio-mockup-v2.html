@@ -1,0 +1,840 @@
+<title>sobirjonswe.uz — Portfolio v2 (naimur-style)</title>
+<meta name="description" content="Sobirjon Qurbonov — full-stack engineer. naimur-reza-style layout, blue theme, trilingual." />
+<style>
+  :root {
+    --bg: #08090d;
+    --bg-2: #0b0d13;
+    --surface: #0f1219;
+    --surface-2: #141824;
+    --border: #20263400;
+    --line: rgba(255,255,255,0.09);
+    --line-2: rgba(255,255,255,0.14);
+    --text: #eef1f6;
+    --muted: #9aa3b2;
+    --faint: #626b7a;
+    --accent: #4c8dff;
+    --accent-2: #7db0ff;
+    --accent-deep: #2f6bf0;
+    --accent-soft: rgba(76,141,255,0.14);
+    --accent-line: rgba(76,141,255,0.30);
+    --ok: #35c98a;
+    --easy: #35c98a; --medium: #e2a33c; --hard: #e5595b;
+    --grad: linear-gradient(90deg, #7db0ff, #4c8dff, #2f6bf0);
+    --mono: ui-monospace, "Cascadia Code", "JetBrains Mono", "SF Mono", Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --maxw: 1180px;
+  }
+  :root[data-theme="light"] {
+    --bg: #f5f7fa; --bg-2: #eef1f6; --surface: #ffffff; --surface-2: #eef2f8;
+    --line: rgba(10,20,40,0.10); --line-2: rgba(10,20,40,0.16);
+    --text: #0d1017; --muted: #55606f; --faint: #8b95a5;
+    --accent: #2f6bf0; --accent-2: #4c8dff; --accent-deep: #2560e0;
+    --accent-soft: rgba(47,107,240,0.10); --accent-line: rgba(47,107,240,0.24);
+    --grad: linear-gradient(90deg, #4c8dff, #2f6bf0, #2560e0);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 110px; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: var(--sans); line-height: 1.6; -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 22px; }
+  .section { position: relative; padding: 40px 0 70px; }
+
+  /* ambient orbs */
+  .orb { position: absolute; border-radius: 50%; filter: blur(120px); z-index: -1; pointer-events: none; opacity: .5; }
+
+  /* ---------------- floating nav ---------------- */
+  .navbar { position: fixed; z-index: 60; top: 18px; left: 0; right: 0; display: flex; justify-content: center; padding: 0 16px; }
+  .nav-pill {
+    display: flex; align-items: center; gap: 4px; padding: 6px;
+    border: 1px solid var(--line-2); background: color-mix(in srgb, var(--bg) 55%, transparent);
+    backdrop-filter: blur(14px); border-radius: 999px; box-shadow: 0 10px 40px -20px #000;
+  }
+  .nav-pill a {
+    position: relative; font-size: 13.5px; font-weight: 560; color: var(--muted);
+    padding: 8px 15px; border-radius: 999px; transition: color .2s;
+  }
+  .nav-pill a:hover { color: var(--text); }
+  .nav-pill a.active { color: var(--text); }
+  .nav-pill a.active::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 999px; background: var(--accent-soft);
+  }
+  .nav-pill a.active::after {
+    content: ""; position: absolute; top: -7px; left: 50%; transform: translateX(-50%);
+    width: 26px; height: 3px; border-radius: 3px; background: var(--accent); box-shadow: 0 0 12px 2px var(--accent);
+  }
+  .nav-tools { display: flex; align-items: center; gap: 6px; margin-left: 4px; padding-left: 8px; border-left: 1px solid var(--line); }
+  .langs { display: flex; gap: 1px; }
+  .langs button { font-family: var(--mono); font-size: 11px; border: none; background: transparent; color: var(--faint); padding: 5px 7px; border-radius: 999px; cursor: pointer; transition: .18s; }
+  .langs button.on { background: var(--accent); color: #fff; }
+  .langs button:not(.on):hover { color: var(--text); }
+  .theme-btn { border: none; background: transparent; color: var(--muted); width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 14px; transition: .18s; }
+  .theme-btn:hover { color: var(--accent); }
+  @media (max-width: 760px) { .nav-pill a.desk { display: none; } .nav-pill a.home { display: inline-block; } }
+
+  /* ---------------- section header (ghost title) ---------------- */
+  .head { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 46px 0 34px; }
+  .ghost { position: relative; display: grid; place-items: center; width: 100%; }
+  .ghost .big {
+    font-size: clamp(4rem, 15vw, 10rem); font-weight: 800; letter-spacing: -0.05em; line-height: .9;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--text) 12%, transparent), transparent 85%);
+    -webkit-background-clip: text; background-clip: text; color: transparent; user-select: none; white-space: nowrap;
+  }
+  .ghost .real {
+    position: absolute; font-size: clamp(1.9rem, 5vw, 3.4rem); font-weight: 750; letter-spacing: -0.03em;
+    background: linear-gradient(120deg, var(--text), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .divider { display: flex; align-items: center; gap: 14px; margin: 14px 0 10px; }
+  .divider .ln { height: 1px; width: 46px; background: linear-gradient(90deg, transparent, var(--accent-line)); }
+  .divider .ln.r { background: linear-gradient(-90deg, transparent, var(--accent-line)); }
+  .divider .dt { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .caption { font-size: 12.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+
+  /* ---------------- hero ---------------- */
+  .hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .capsule { position: absolute; border-radius: 999px; border: 1px solid var(--line-2); backdrop-filter: blur(2px); box-shadow: inset 0 1px 12px rgba(255,255,255,.06); }
+  .cap1 { left: -6%; top: 18%; width: 560px; height: 130px; transform: rotate(12deg); background: linear-gradient(90deg, var(--accent-soft), transparent); }
+  .cap2 { right: -4%; top: 66%; width: 480px; height: 116px; transform: rotate(-15deg); background: linear-gradient(90deg, rgba(125,176,255,.10), transparent); }
+  .cap3 { left: 8%; bottom: 8%; width: 300px; height: 78px; transform: rotate(-8deg); background: linear-gradient(90deg, rgba(255,255,255,.05), transparent); }
+  .cap4 { right: 20%; top: 12%; width: 190px; height: 58px; transform: rotate(20deg); background: linear-gradient(90deg, var(--accent-soft), transparent); }
+  .hero-inner { position: relative; z-index: 2; text-align: center; padding: 100px 22px 60px; max-width: 900px; }
+  .badge { display: inline-flex; align-items: center; gap: 8px; padding: 5px 6px 5px 6px; border: 1px solid var(--line-2); background: rgba(255,255,255,.03); border-radius: 999px; font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+  .badge .tag { background: var(--accent); color: #fff; font-family: var(--mono); font-size: 11px; padding: 2px 8px; border-radius: 999px; }
+  .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); animation: pulse 2.4s infinite; margin-right: 2px; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 55%, transparent); } 70% { box-shadow: 0 0 0 7px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+  .hero h1 { font-size: clamp(2.8rem, 8vw, 5.5rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.0; margin: 0 0 22px; }
+  .hero h1 .x { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero .sub { font-size: clamp(1rem, 2.4vw, 1.25rem); color: var(--muted); max-width: 44ch; margin: 0 auto 36px; font-weight: 500; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 22px; align-items: center; justify-content: center; }
+  .pill-btn {
+    position: relative; display: inline-flex; align-items: center; gap: 2px; overflow: hidden;
+    border: 1px solid var(--line-2); background: rgba(255,255,255,.08); border-radius: 999px;
+    padding: 4px 4px 4px 18px; font-weight: 560; transition: background .3s; cursor: pointer;
+  }
+  .pill-btn:hover { background: transparent; }
+  .pill-btn .lbl { z-index: 2; padding-right: 12px; transition: color .3s; }
+  .pill-btn:hover .lbl { color: var(--text); }
+  .pill-btn .circ { z-index: 2; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: #fff; color: #000; transition: transform .3s; }
+  .pill-btn:hover .circ { transform: translateX(3px); }
+  .copy-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14.5px; background: none; border: none; cursor: pointer; transition: color .2s; }
+  .copy-btn:hover { color: var(--text); }
+  .copy-btn svg { width: 17px; height: 17px; }
+  .hero-fade { position: absolute; left: 0; right: 0; bottom: 0; height: 180px; background: linear-gradient(to top, var(--bg), transparent); z-index: 1; pointer-events: none; }
+
+  /* ---------------- services ---------------- */
+  .svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .svc { position: relative; border: 1px solid var(--line); border-radius: 20px; padding: 26px; background: linear-gradient(180deg, var(--surface), var(--bg-2)); overflow: hidden; transition: transform .3s, border-color .3s; }
+  .svc:hover { transform: translateY(-6px); border-color: var(--accent-line); }
+  .svc::before { content: ""; position: absolute; right: -30px; top: -30px; width: 120px; height: 120px; border-radius: 50%; background: var(--accent-soft); filter: blur(30px); opacity: 0; transition: opacity .3s; }
+  .svc:hover::before { opacity: 1; }
+  .svc .ic { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); border: 1px solid var(--accent-line); color: var(--accent); margin-bottom: 16px; }
+  .svc .ic svg { width: 22px; height: 22px; }
+  .svc h3 { margin: 0 0 9px; font-size: 1.18rem; font-weight: 660; letter-spacing: -0.01em; }
+  .svc p { margin: 0 0 16px; font-size: 0.93rem; color: var(--muted); }
+  .svc .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .svc .tags span { font-family: var(--mono); font-size: 10.5px; color: var(--faint); border: 1px solid var(--line); border-radius: 6px; padding: 3px 8px; }
+  .svc-cta { display: flex; justify-content: center; gap: 18px; align-items: center; flex-wrap: wrap; margin-top: 34px; }
+
+  /* ---------------- work (naimur sticky-detail) ---------------- */
+  .work-layout { display: grid; grid-template-columns: 1fr 0.82fr; gap: 40px; align-items: start; }
+  .work-cards { display: flex; flex-direction: column; gap: 90px; }
+  .pcard { scroll-margin-top: 140px; }
+  .pcard .frame {
+    position: relative; border-radius: 22px; border: 1px solid var(--line-2); padding: 8px; overflow: hidden;
+    box-shadow: 0 40px 80px -50px #000; transition: transform .4s;
+  }
+  .pcard .frame::before { content: ""; position: absolute; inset-inline: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.85), transparent); }
+  .pcard .win { position: relative; border-radius: 16px; overflow: hidden; }
+  .pcard .win .titlebar { height: 34px; display: flex; align-items: center; gap: 6px; padding: 0 14px; background: rgba(0,0,0,.25); border-bottom: 1px solid rgba(255,255,255,.08); }
+  .pcard .win .titlebar i { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.25); }
+  .pcard .win .screen { position: relative; aspect-ratio: 16/10; display: grid; place-items: center; transform: rotate(-3deg) translateY(10px) scale(1.05); transition: transform .4s; }
+  .pcard:hover .win .screen { transform: rotate(0deg) translateY(0) scale(1); }
+  .pcard .win .screen .mock { font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,.9); text-align: center; padding: 20px; }
+  .pcard .win .screen .mock b { display: block; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .pcard .m-info { display: none; }
+
+  .work-detail { position: sticky; top: 130px; }
+  .wd-inner { border-left: 2px solid var(--accent); padding-left: 22px; transition: border-color .4s; }
+  .wd-type { font-family: var(--mono); font-size: 12px; color: var(--muted); margin: 0 0 6px; }
+  .wd-title { font-size: 1.9rem; font-weight: 750; letter-spacing: -0.025em; margin: 0 0 12px; }
+  .wd-desc { color: var(--muted); font-size: 0.98rem; margin: 0 0 20px; }
+  .wd-feats { list-style: none; padding: 0; margin: 0 0 22px; display: flex; flex-direction: column; gap: 11px; }
+  .wd-feats li { display: flex; gap: 10px; font-size: 0.92rem; color: var(--text); }
+  .wd-feats li svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; color: var(--accent); transition: color .4s; }
+  .wd-stack { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 20px; }
+  .wd-stack span { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px solid var(--line-2); border-radius: 7px; padding: 5px 10px; }
+  .wd-links { display: flex; gap: 12px; }
+  .wd-links a { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 560; padding: 10px 16px; border-radius: 11px; border: 1px solid var(--line-2); transition: .2s; }
+  .wd-links a.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .wd-links a.primary:hover { background: var(--accent-deep); }
+  .wd-links a.ghost:hover { border-color: var(--accent-line); color: var(--accent); }
+  .see-more { display: flex; justify-content: center; margin-top: 60px; }
+  .see-more a { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); transition: color .2s; }
+  .see-more a:hover { color: var(--text); }
+
+  /* ---------------- experience ---------------- */
+  .timeline { max-width: 780px; margin: 0 auto; position: relative; }
+  .timeline::before { content: ""; position: absolute; left: 19px; top: 20px; bottom: 20px; width: 1px; background: linear-gradient(180deg, var(--accent), transparent); }
+  .exp { position: relative; padding-left: 58px; margin-bottom: 22px; }
+  .exp .node { position: absolute; left: 8px; top: 26px; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--bg); border: 1px solid var(--accent-line); box-shadow: 0 0 22px var(--accent-soft); }
+  .exp .node span { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .exp .box { border: 1px solid var(--line); border-radius: 20px; padding: 24px; background: linear-gradient(180deg, var(--surface), var(--bg-2)); transition: border-color .3s, transform .3s; }
+  .exp .box:hover { border-color: var(--accent-line); transform: translateY(-3px); }
+  .exp .top { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; align-items: flex-start; }
+  .exp .role-badge { display: inline-flex; align-items: center; gap: 7px; font-size: 11.5px; color: var(--accent); background: var(--accent-soft); border: 1px solid var(--accent-line); padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; }
+  .exp h3 { margin: 0; font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
+  .exp .org { margin-top: 5px; font-weight: 600; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .exp .date { display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 12px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; white-space: nowrap; }
+  .exp ul { list-style: none; padding: 0; margin: 16px 0 0; display: flex; flex-direction: column; gap: 9px; }
+  .exp ul li { display: flex; gap: 10px; font-size: 0.9rem; color: var(--muted); }
+  .exp ul li svg { width: 17px; height: 17px; flex-shrink: 0; margin-top: 2px; color: var(--accent); }
+
+  /* ---------------- stack ---------------- */
+  .chips-wrap { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 800px; margin: 0 auto; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line-2); background: var(--surface);
+    border-radius: 12px; padding: 9px 15px; font-size: 0.92rem; transition: .25s; cursor: default;
+  }
+  .chip:hover { transform: translateY(-3px); border-color: var(--accent-line); color: var(--accent); }
+  .chip .d { width: 8px; height: 8px; border-radius: 3px; background: var(--accent); opacity: .7; }
+  .marquee { margin-top: 44px; overflow: hidden; transform: rotate(-2.5deg); border-top: 1px solid var(--accent-line); border-bottom: 1px solid var(--accent-line); background: linear-gradient(90deg, var(--accent-deep), var(--accent)); }
+  .marquee .track { display: flex; gap: 0; width: max-content; animation: scroll-x 28s linear infinite; padding: 12px 0; }
+  .marquee .track span { display: inline-flex; align-items: center; gap: 14px; padding: 0 22px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.95rem; color: #fff; white-space: nowrap; }
+  .marquee .track span::after { content: "✦"; color: rgba(255,255,255,.7); font-size: .8rem; }
+  @keyframes scroll-x { to { transform: translateX(-50%); } }
+
+  /* ---------------- stats / leetcode ---------------- */
+  .stats-wrap { max-width: 860px; margin: 0 auto; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(180deg, var(--surface), var(--bg-2)); overflow: hidden; }
+  .stats-head { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--faint); }
+  .stats-head .who { color: var(--accent); }
+  .stats-body { display: grid; grid-template-columns: 220px 1fr; gap: 34px; padding: 32px; align-items: center; }
+  .ring-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .ring { position: relative; width: 172px; height: 172px; }
+  .ring svg { transform: rotate(-90deg); }
+  .ring .track { stroke: var(--surface-2); }
+  .ring .prog { stroke: var(--accent); stroke-linecap: round; transition: stroke-dashoffset 1.5s cubic-bezier(.16,1,.3,1); filter: drop-shadow(0 0 6px var(--accent-soft)); }
+  .ring .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .ring .center .total { font-family: var(--mono); font-size: 2.1rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .ring .center .label { font-family: var(--mono); font-size: 10px; color: var(--faint); letter-spacing: 0.14em; text-transform: uppercase; margin-top: 2px; }
+  .ring-sub { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+  .diffs { display: flex; flex-direction: column; gap: 18px; }
+  .diff .diff-top { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12.5px; margin-bottom: 7px; }
+  .diff .diff-top .n { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .diff .bar { height: 8px; border-radius: 5px; background: var(--surface-2); overflow: hidden; }
+  .diff .bar i { display: block; height: 100%; border-radius: 5px; width: 0; transition: width 1.4s cubic-bezier(.16,1,.3,1); }
+  .stat-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; border-top: 1px solid var(--line); padding: 22px 32px; }
+  .tile { text-align: center; }
+  .tile .big { font-family: var(--mono); font-size: 1.5rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tile .big.accent { color: var(--accent); }
+  .tile .small { font-family: var(--mono); font-size: 10px; color: var(--faint); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
+
+  /* ---------------- about ---------------- */
+  .about { display: grid; grid-template-columns: 300px 1fr; gap: 48px; align-items: center; max-width: 960px; margin: 0 auto; }
+  .about-vis { position: relative; }
+  .about-vis .glow { position: absolute; inset: -14px; border-radius: 50%; background: var(--grad); filter: blur(26px); opacity: .35; z-index: -1; }
+  .about-vis .circle { aspect-ratio: 1; border-radius: 50%; border: 3px solid var(--line-2); background: radial-gradient(120% 120% at 30% 20%, var(--accent-soft), var(--surface-2)); display: grid; place-items: center; overflow: hidden; }
+  .about-vis .circle .mono { font-family: var(--mono); font-weight: 800; font-size: 4.5rem; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .about-vis .flag { position: absolute; top: -12px; right: -8px; background: var(--grad); color: #fff; font-size: 12.5px; font-weight: 600; padding: 6px 13px; border-radius: 999px; box-shadow: 0 8px 20px -8px var(--accent); }
+  .about-vis .flag2 { position: absolute; bottom: 2px; left: -14px; background: var(--surface); color: var(--accent); border: 1px solid var(--accent-line); font-size: 12px; font-weight: 500; padding: 6px 12px; border-radius: 999px; }
+  .about-text h3 { font-size: 1.6rem; font-weight: 720; letter-spacing: -0.02em; margin: 0 0 14px; }
+  .about-text h3 b { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .about-text p { color: var(--muted); font-size: 1rem; margin: 0 0 14px; }
+  .about-do { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  .about-do span { display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 7px 13px; color: var(--muted); }
+
+  /* ---------------- contact ---------------- */
+  .contact { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; max-width: 980px; margin: 0 auto; align-items: center; }
+  .c-left h3 { font-size: 1.9rem; font-weight: 740; letter-spacing: -0.02em; margin: 0 0 16px; }
+  .c-left p { color: var(--muted); margin: 0 0 12px; }
+  .c-facts { list-style: none; padding: 0; margin: 22px 0 0; display: flex; flex-direction: column; gap: 12px; }
+  .c-facts li { display: flex; align-items: center; gap: 11px; font-family: var(--mono); font-size: 0.9rem; color: var(--muted); }
+  .c-facts li b { color: var(--accent); font-weight: 500; }
+  .form { border: 1px solid var(--line-2); border-radius: 22px; padding: 28px; background: linear-gradient(180deg, var(--surface), var(--bg-2)); box-shadow: 0 40px 80px -50px #000; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; }
+  .field label { font-size: 12.5px; color: var(--muted); }
+  .field input, .field select, .field textarea {
+    background: rgba(255,255,255,.03); border: 1px solid var(--line-2); border-radius: 12px; padding: 12px 14px;
+    color: var(--text); font-size: 0.92rem; font-family: var(--sans); transition: border-color .18s, box-shadow .18s;
+  }
+  :root[data-theme="light"] .field input, :root[data-theme="light"] .field select, :root[data-theme="light"] .field textarea { background: #fff; }
+  .field textarea { min-height: 100px; resize: vertical; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .field input::placeholder, .field textarea::placeholder { color: var(--faint); }
+  .honeypot { position: absolute; left: -9999px; opacity: 0; }
+  .send { width: 100%; margin-top: 6px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 14px; border: none; border-radius: 12px; background: var(--grad); color: #fff; font-weight: 620; font-size: 0.95rem; cursor: pointer; transition: filter .2s, transform .2s; }
+  .send:hover { filter: brightness(1.08); transform: translateY(-2px); }
+  .flow { margin-top: 14px; display: flex; gap: 7px; flex-wrap: wrap; font-family: var(--mono); font-size: 11px; color: var(--faint); }
+  .flow b { color: var(--ok); }
+
+  /* ---------------- footer ---------------- */
+  footer { border-top: 1px solid var(--line); padding: 44px 0 60px; }
+  .f-inner { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .f-socials { display: flex; gap: 12px; }
+  .f-socials a { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--surface); border: 1px solid var(--line); color: var(--muted); transition: .25s; }
+  .f-socials a:hover { color: var(--accent); border-color: var(--accent-line); transform: translateY(-3px); }
+  .f-socials a svg { width: 19px; height: 19px; }
+  .f-div { display: flex; align-items: center; gap: 12px; width: 220px; }
+  .f-div .l { height: 1px; flex: 1; background: linear-gradient(90deg, transparent, var(--line-2)); }
+  .f-div .d { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); opacity: .6; }
+  .f-copy { font-size: 13px; color: var(--faint); }
+  .f-copy b { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  /* reveal */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .badge .dot, .marquee .track { animation: none; }
+    .ring .prog, .diff .bar i { transition: none; }
+  }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+
+  @media (max-width: 900px) {
+    .work-layout { grid-template-columns: 1fr; }
+    .work-detail { display: none; }
+    .work-cards { gap: 30px; }
+    .pcard .m-info { display: block; margin-top: 18px; }
+    .about, .contact { grid-template-columns: 1fr; }
+    .about-vis { max-width: 240px; margin: 0 auto; }
+  }
+  @media (max-width: 640px) {
+    .svc-grid { grid-template-columns: 1fr; }
+    .stats-body { grid-template-columns: 1fr; }
+    .stat-tiles { grid-template-columns: repeat(2,1fr); }
+    .form-row { grid-template-columns: 1fr; }
+  }
+  /* mobile project info */
+  .pcard .m-info h3 { font-size: 1.2rem; font-weight: 700; margin: 0 0 4px; display: flex; align-items: center; gap: 10px; }
+  .pcard .m-info h3 .accent-line { width: 28px; height: 3px; border-radius: 3px; }
+  .pcard .m-info .type { font-size: 12px; color: var(--faint); font-family: var(--mono); margin: 0 0 10px; }
+  .pcard .m-info p { color: var(--muted); font-size: 0.9rem; margin: 0 0 12px; }
+  .pcard .m-info .mtags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .pcard .m-info .mtags span { font-family: var(--mono); font-size: 10.5px; color: var(--muted); border: 1px solid var(--line-2); border-radius: 6px; padding: 3px 8px; }
+</style>
+
+<nav class="navbar">
+  <div class="nav-pill">
+    <a href="#top" class="home active" data-nav="top">Home</a>
+    <a href="#services" class="desk" data-nav="services" data-i18n="nav_services">Services</a>
+    <a href="#work" class="desk" data-nav="work" data-i18n="nav_work">Work</a>
+    <a href="#experience" class="desk" data-nav="experience" data-i18n="nav_exp">Experience</a>
+    <a href="#stats" class="desk" data-nav="stats" data-i18n="nav_stats">Stats</a>
+    <a href="#contact" class="desk" data-nav="contact" data-i18n="nav_contact">Contact</a>
+    <div class="nav-tools">
+      <div class="langs" role="group" aria-label="Language">
+        <button data-lang="en" class="on">EN</button>
+        <button data-lang="uz">UZ</button>
+        <button data-lang="ru">RU</button>
+      </div>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">◐</button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <span class="capsule cap1"></span><span class="capsule cap2"></span><span class="capsule cap3"></span><span class="capsule cap4"></span>
+  <div class="orb" style="width:520px;height:520px;background:var(--accent);top:-10%;right:-5%;"></div>
+  <div class="orb" style="width:420px;height:420px;background:#7db0ff;bottom:-8%;left:-6%;"></div>
+  <div class="hero-inner">
+    <span class="badge"><span class="dot"></span><span class="tag">2026</span><span data-i18n="status">Available for work</span></span>
+    <h1><span data-i18n="hero_a">Backend</span> <span class="x">×</span> <span data-i18n="hero_b">Craft</span></h1>
+    <p class="sub" data-i18n="hero_sub">Hi, I'm Sobirjon Qurbonov — a full-stack engineer building fast, reliable web products for local and international clients.</p>
+    <div class="hero-cta">
+      <a href="#contact" class="pill-btn"><span class="lbl" data-i18n="cta_start">Start a project</span><span class="circ" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></a>
+      <button class="copy-btn" id="copyEmail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span id="copyText">sobirjon.swe@gmail.com</span></button>
+    </div>
+  </div>
+  <div class="hero-fade"></div>
+</header>
+
+<!-- SERVICES -->
+<section class="section" id="services">
+  <div class="orb" style="width:360px;height:360px;background:var(--accent);top:10%;right:8%;opacity:.25;"></div>
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="ghost"><span class="big">SERVICES</span><span class="real" data-i18n="services_real">Services</span></div>
+      <div class="divider"><span class="ln"></span><span class="dt"></span><span class="ln r"></span></div>
+      <p class="caption" data-i18n="services_cap">What I can build for you</p>
+    </div>
+    <div class="svc-grid reveal">
+      <article class="svc">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+        <h3 data-i18n="svc1_t">Web Development</h3>
+        <p data-i18n="svc1_p">Responsive marketing sites and web apps in React — fast, SEO-ready and accessible by default.</p>
+        <div class="tags"><span>React</span><span>Vite</span><span>Tailwind</span><span>SEO</span></div>
+      </article>
+      <article class="svc">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5M3 12a9 3 0 0 0 18 0"/></svg></div>
+        <h3 data-i18n="svc2_t">Backend &amp; APIs</h3>
+        <p data-i18n="svc2_p">Laravel REST APIs with clean layered architecture, PostgreSQL, auth and integrations.</p>
+        <div class="tags"><span>Laravel</span><span>PostgreSQL</span><span>Sanctum</span><span>Queues</span></div>
+      </article>
+      <article class="svc">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg></div>
+        <h3 data-i18n="svc3_t">Full-stack Delivery</h3>
+        <p data-i18n="svc3_p">End-to-end product build — from database schema to a polished, shipping interface.</p>
+        <div class="tags"><span>Full-stack</span><span>CI/CD</span><span>Deploy</span></div>
+      </article>
+    </div>
+    <div class="svc-cta reveal">
+      <a href="#contact" class="pill-btn"><span class="lbl" data-i18n="cta_start2">Start a project</span><span class="circ" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></a>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section class="section" id="work">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="ghost"><span class="big">PROJECTS</span><span class="real" data-i18n="work_real">Projects</span></div>
+      <div class="divider"><span class="ln"></span><span class="dt"></span><span class="ln r"></span></div>
+      <p class="caption" data-i18n="work_cap">Featured case studies</p>
+    </div>
+    <div class="work-layout">
+      <div class="work-cards">
+        <!-- Project 1 -->
+        <article class="pcard" id="p1" data-accent="#4c8dff" data-type="Full-stack · Personal">
+          <div class="frame" style="background:linear-gradient(188deg,#111a2e 50%,#2563eb 90%,#4c8dff 115%)">
+            <div class="win"><div class="titlebar"><i></i><i></i><i></i></div>
+              <div class="screen"><div class="mock"><b>Portfolio Platform</b>GET /api/v1/projects · 200<br>lead → Telegram → Excel · EN/UZ/RU</div></div>
+            </div>
+          </div>
+          <div class="m-info"><h3><span>Portfolio Platform</span><span class="accent-line" style="background:#4c8dff"></span></h3><p class="type">Full-stack · Personal</p><p>Trilingual portfolio with a lead engine: contact → Telegram alert → Excel export.</p><div class="mtags"><span>Laravel</span><span>React</span><span>PostgreSQL</span><span>i18n</span></div></div>
+        </article>
+        <!-- Project 2 -->
+        <article class="pcard" id="p2" data-accent="#6366f1" data-type="Backend · DOCCO PARTNERS">
+          <div class="frame" style="background:linear-gradient(188deg,#15132e 50%,#4f46e5 90%,#818cf8 115%)">
+            <div class="win"><div class="titlebar"><i></i><i></i><i></i></div>
+              <div class="screen"><div class="mock"><b>CRM System</b>client pipeline · role-based access<br>reports · reminders · dashboards</div></div>
+            </div>
+          </div>
+          <div class="m-info"><h3><span>CRM System</span><span class="accent-line" style="background:#6366f1"></span></h3><p class="type">Backend · DOCCO PARTNERS</p><p>Internal CRM for managing clients, deals and role-based team access.</p><div class="mtags"><span>Laravel</span><span>PostgreSQL</span><span>Vue</span></div></div>
+        </article>
+        <!-- Project 3 -->
+        <article class="pcard" id="p3" data-accent="#22b8cf" data-type="Frontend · DOCCO PARTNERS">
+          <div class="frame" style="background:linear-gradient(188deg,#0d2430 50%,#0891b2 90%,#22d3ee 115%)">
+            <div class="win"><div class="titlebar"><i></i><i></i><i></i></div>
+              <div class="screen"><div class="mock"><b>Analytics Dashboard</b>real-time charts · URL filters<br>server-state caching</div></div>
+            </div>
+          </div>
+          <div class="m-info"><h3><span>Analytics Dashboard</span><span class="accent-line" style="background:#22b8cf"></span></h3><p class="type">Frontend · DOCCO PARTNERS</p><p>Real-time analytics dashboard with cached server state and URL-persisted filters.</p><div class="mtags"><span>React</span><span>TanStack Query</span><span>Recharts</span></div></div>
+        </article>
+      </div>
+
+      <aside class="work-detail">
+        <div class="wd-inner" id="wdInner">
+          <p class="wd-type" id="wdType">Full-stack · Personal</p>
+          <h2 class="wd-title" id="wdTitle">Portfolio Platform</h2>
+          <p class="wd-desc" id="wdDesc">A trilingual portfolio with a built-in lead engine — every contact submission is saved, fires an instant Telegram alert, and drops into an admin list you can export to Excel.</p>
+          <ul class="wd-feats" id="wdFeats"></ul>
+          <div class="wd-stack" id="wdStack"></div>
+          <div class="wd-links"><a href="#" class="primary">↗ Live</a><a href="#" class="ghost">GitHub</a></div>
+        </div>
+      </aside>
+    </div>
+    <div class="see-more reveal"><a href="#" data-i18n="see_more">See more projects →</a></div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="section" id="experience">
+  <div class="orb" style="width:420px;height:420px;background:var(--accent);top:20%;left:50%;transform:translateX(-50%);opacity:.18;"></div>
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="ghost"><span class="big">EXPERIENCE</span><span class="real" data-i18n="exp_real">Experience</span></div>
+      <div class="divider"><span class="ln"></span><span class="dt"></span><span class="ln r"></span></div>
+      <p class="caption" data-i18n="exp_cap">Where I have worked</p>
+    </div>
+    <div class="timeline reveal">
+      <div class="exp">
+        <div class="node"><span></span></div>
+        <div class="box">
+          <div class="top">
+            <div>
+              <span class="role-badge"><span data-i18n="exp_current">Current role</span></span>
+              <h3>Full-stack Engineer</h3>
+              <div class="org">DOCCO PARTNERS</div>
+            </div>
+            <span class="date">2024 — Present</span>
+          </div>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span data-i18n="exp1a">Built internal CRM and analytics tools on a layered Laravel + PostgreSQL backend.</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span data-i18n="exp1b">Designed REST APIs with clean Controller → Service → Repository separation.</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span data-i18n="exp1c">Shipped React front-ends and improved query performance across products.</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="exp">
+        <div class="node"><span></span></div>
+        <div class="box">
+          <div class="top">
+            <div>
+              <span class="role-badge"><span data-i18n="exp_prev">Previous role</span></span>
+              <h3>Backend Developer</h3>
+              <div class="org">Freelance / Product work</div>
+            </div>
+            <span class="date">2022 — 2024</span>
+          </div>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span data-i18n="exp2a">Delivered PHP/Laravel APIs and PostgreSQL schemas for client web products.</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span data-i18n="exp2b">Learned to ship reliable features to production and work with clients directly.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STACK -->
+<section class="section" id="stack">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="ghost"><span class="big">SKILLS</span><span class="real" data-i18n="stack_real">Skills</span></div>
+      <div class="divider"><span class="ln"></span><span class="dt"></span><span class="ln r"></span></div>
+      <p class="caption" data-i18n="stack_cap">Tools I reach for</p>
+    </div>
+    <div class="chips-wrap reveal">
+      <span class="chip"><span class="d"></span>Laravel</span>
+      <span class="chip"><span class="d"></span>PHP</span>
+      <span class="chip"><span class="d"></span>PostgreSQL</span>
+      <span class="chip"><span class="d"></span>React</span>
+      <span class="chip"><span class="d"></span>TypeScript</span>
+      <span class="chip"><span class="d"></span>Tailwind CSS</span>
+      <span class="chip"><span class="d"></span>Redis</span>
+      <span class="chip"><span class="d"></span>Docker</span>
+      <span class="chip"><span class="d"></span>REST APIs</span>
+      <span class="chip"><span class="d"></span>Git</span>
+      <span class="chip"><span class="d"></span>Nginx</span>
+      <span class="chip"><span class="d"></span>CI/CD</span>
+    </div>
+  </div>
+  <div class="marquee reveal" aria-hidden="true">
+    <div class="track">
+      <span>Full-stack Engineer</span><span>Backend Developer</span><span>API Design</span><span>Laravel Expert</span><span>PostgreSQL</span><span>React</span><span>Clean Architecture</span>
+      <span>Full-stack Engineer</span><span>Backend Developer</span><span>API Design</span><span>Laravel Expert</span><span>PostgreSQL</span><span>React</span><span>Clean Architecture</span>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="section" id="stats">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="ghost"><span class="big">STATS</span><span class="real" data-i18n="stats_real">Coding stats</span></div>
+      <div class="divider"><span class="ln"></span><span class="dt"></span><span class="ln r"></span></div>
+      <p class="caption" data-i18n="stats_cap">LeetCode · live from the backend</p>
+    </div>
+    <div class="stats-wrap reveal">
+      <div class="stats-head"><span>leetcode.com/<span class="who">Sobirjon-swe</span></span><span>GET /api/v1/leetcode · cached 6h</span></div>
+      <div class="stats-body">
+        <div class="ring-wrap">
+          <div class="ring">
+            <svg width="172" height="172" viewBox="0 0 172 172">
+              <circle class="track" cx="86" cy="86" r="74" fill="none" stroke-width="11"/>
+              <circle class="prog" id="ring" cx="86" cy="86" r="74" fill="none" stroke-width="11" stroke-dasharray="465" stroke-dashoffset="465"/>
+            </svg>
+            <div class="center"><span class="total" id="totalSolved">0</span><span class="label" data-i18n="solved">Solved</span></div>
+          </div>
+          <div class="ring-sub" data-i18n="ring_sub">Acceptance 64% · Top 12%</div>
+        </div>
+        <div class="diffs">
+          <div class="diff"><div class="diff-top"><span style="color:var(--easy)">Easy</span><span class="n">198 / 850</span></div><div class="bar"><i data-w="82%" style="background:var(--easy)"></i></div></div>
+          <div class="diff"><div class="diff-top"><span style="color:var(--medium)">Medium</span><span class="n">176 / 1790</span></div><div class="bar"><i data-w="55%" style="background:var(--medium)"></i></div></div>
+          <div class="diff"><div class="diff-top"><span style="color:var(--hard)">Hard</span><span class="n">38 / 780</span></div><div class="bar"><i data-w="24%" style="background:var(--hard)"></i></div></div>
+        </div>
+      </div>
+      <div class="stat-tiles">
+        <div class="tile"><div class="big accent" id="t1">412</div><div class="small" data-i18n="t_solved">Total solved</div></div>
+        <div class="tile"><div class="big" id="t2">128</div><div class="small" data-i18n="t_streak">Day streak</div></div>
+        <div class="tile"><div class="big">64%</div><div class="small" data-i18n="t_acc">Acceptance</div></div>
+        <div class="tile"><div class="big">1.4k</div><div class="small" data-i18n="t_contrib">GitHub contribs</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="ghost"><span class="big">ABOUT</span><span class="real" data-i18n="about_real">About me</span></div>
+      <div class="divider"><span class="ln"></span><span class="dt"></span><span class="ln r"></span></div>
+      <p class="caption" data-i18n="about_cap">More about me</p>
+    </div>
+    <div class="about reveal">
+      <div class="about-vis">
+        <div class="glow"></div>
+        <div class="circle"><span class="mono">SQ</span></div>
+        <span class="flag" data-i18n="about_flag">Engineer</span>
+        <span class="flag2">🇺🇿 Uzbekistan</span>
+      </div>
+      <div class="about-text">
+        <h3 data-i18n="about_h">Hey! I'm <b>Sobirjon</b></h3>
+        <p data-i18n="about_1">A full-stack engineer based in Uzbekistan. I build products that are fast to load, easy to maintain, and pleasant to use — for founders here and clients abroad.</p>
+        <p data-i18n="about_2">I care about clean architecture, honest performance, and actually shipping. Most of my work pairs a Laravel API with a React front-end.</p>
+        <div class="about-do">
+          <span>💬 <span data-i18n="about_lang">UZ · RU · EN</span></span>
+          <span>⚙️ <span data-i18n="about_do1">Backend &amp; APIs</span></span>
+          <span>🎨 <span data-i18n="about_do2">Frontend</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section" id="contact">
+  <div class="orb" style="width:380px;height:380px;background:var(--accent);top:0;right:10%;opacity:.2;"></div>
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="ghost"><span class="big">CONTACT</span><span class="real" data-i18n="contact_real">Contact</span></div>
+      <div class="divider"><span class="ln"></span><span class="dt"></span><span class="ln r"></span></div>
+      <p class="caption" data-i18n="contact_cap">Get in touch</p>
+    </div>
+    <div class="contact reveal">
+      <div class="c-left">
+        <h3 data-i18n="c_title">Let's work together</h3>
+        <p data-i18n="c_p1">Tell me what you're building. A short message is enough to start.</p>
+        <p data-i18n="c_p2">Every submission reaches me instantly on Telegram — I reply within a day.</p>
+        <ul class="c-facts">
+          <li>📍 <span data-i18n="c_loc">Tashkent, Uzbekistan (GMT+5)</span></li>
+          <li>✉️ <b>sobirjon.swe@gmail.com</b></li>
+          <li>💬 <b>@sobirjonswe</b></li>
+          <li>🕑 <span data-i18n="c_resp">Replies within 24 hours</span></li>
+        </ul>
+      </div>
+      <form class="form" id="leadForm" novalidate>
+        <div class="form-row">
+          <div class="field"><label data-i18n="l_name">Your Name</label><input type="text" placeholder="Anvar Karimov" autocomplete="name"/></div>
+          <div class="field"><label data-i18n="l_email">Your Email</label><input type="email" placeholder="anvar@company.uz" autocomplete="email"/></div>
+        </div>
+        <div class="field"><label data-i18n="l_budget">Budget (optional)</label>
+          <select><option data-i18n="b_pick">Pick a range…</option><option>&lt; $1,000</option><option>$1,000 – $3,000</option><option>$3,000 – $8,000</option><option>$8,000 +</option><option data-i18n="b_ns">Not sure yet</option></select>
+        </div>
+        <div class="field"><label data-i18n="l_msg">Message</label><textarea placeholder="Salom! We need a website for our company…"></textarea></div>
+        <input class="honeypot" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"/>
+        <button type="submit" class="send"><span data-i18n="l_send">Send message</span><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 21.7a.5.5 0 0 0 .9 0l6.5-19a.5.5 0 0 0-.6-.6l-19 6.5a.5.5 0 0 0 0 .9l7.9 3.2a2 2 0 0 1 1.1 1.1z"/><path d="m21.9 2.1-11 11"/></svg></button>
+        <div class="flow"><span data-i18n="fn_saved">saved</span> → <b>🔔 Telegram</b> → <span data-i18n="fn_admin">admin list</span> → ⬇ Excel</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap f-inner">
+    <div class="f-socials">
+      <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 2 12c0 4.4 2.9 8.2 6.8 9.5.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.1-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0 0 22 12 10 10 0 0 0 12 2z"/></svg></a>
+      <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.4 20.4h-3.5v-5.6c0-1.3 0-3-1.9-3s-2.1 1.4-2.1 2.9v5.7H9.4V9h3.4v1.6h.1c.5-.9 1.6-1.9 3.4-1.9 3.6 0 4.3 2.4 4.3 5.5v6.2zM5.3 7.4a2 2 0 1 1 0-4.1 2 2 0 0 1 0 4.1zM7.1 20.4H3.6V9h3.5v11.4zM22.2 0H1.8C.8 0 0 .8 0 1.7v20.6c0 .9.8 1.7 1.8 1.7h20.4c1 0 1.8-.8 1.8-1.7V1.7C24 .8 23.2 0 22.2 0z"/></svg></a>
+      <a href="#" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 3 2 10.5l5.5 2L18 6 9.5 14v4.5L13 15l4 3 5-15z"/></svg></a>
+      <a href="#" aria-label="LeetCode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4 6 12l8 8M8 12h11"/></svg></a>
+    </div>
+    <div class="f-div"><span class="l"></span><span class="d"></span><span class="l" style="background:linear-gradient(-90deg,transparent,var(--line-2))"></span></div>
+    <p class="f-copy">© 2026 <b>Sobirjon Qurbonov</b> · Laravel + React · EN / UZ / RU</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+
+    /* theme */
+    document.getElementById('themeToggle').addEventListener('click', function () {
+      var cur = root.getAttribute('data-theme');
+      if (!cur) cur = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      root.setAttribute('data-theme', cur === 'light' ? 'dark' : 'light');
+    });
+    if (!matchMedia('(prefers-color-scheme: dark)').matches && !root.getAttribute('data-theme')) {
+      /* keep dark as the designed default */
+      root.setAttribute('data-theme', 'dark');
+    }
+
+    /* copy email */
+    var copyBtn = document.getElementById('copyEmail'), copyText = document.getElementById('copyText');
+    copyBtn.addEventListener('click', function () {
+      var email = 'sobirjon.swe@gmail.com';
+      if (navigator.clipboard) navigator.clipboard.writeText(email).catch(function(){});
+      var old = copyText.textContent; copyText.textContent = '✓ Copied!';
+      setTimeout(function () { copyText.textContent = old; }, 1500);
+    });
+
+    /* project detail data */
+    var projects = {
+      p1: { type:'Full-stack · Personal', title:'Portfolio Platform', accent:'#4c8dff',
+        desc:'A trilingual portfolio with a built-in lead engine — every contact submission is saved, fires an instant Telegram alert, and drops into an admin list you can export to Excel.',
+        feats:['Trilingual content (EN / UZ / RU) from the backend','Contact form → instant Telegram alert','Admin lead list with Excel export','Layered Laravel API — Controller → Service → Repository'],
+        stack:['Laravel','React','PostgreSQL','i18n','Telegram'] },
+      p2: { type:'Backend · DOCCO PARTNERS', title:'CRM System', accent:'#6366f1',
+        desc:'An internal CRM to manage clients, deals and team access — built on a clean Laravel + PostgreSQL backend with role-based permissions.',
+        feats:['Client & deal pipeline management','Role-based access control','Reporting and reminders','Audited, layered service architecture'],
+        stack:['Laravel','PostgreSQL','Vue','Sanctum'] },
+      p3: { type:'Frontend · DOCCO PARTNERS', title:'Analytics Dashboard', accent:'#22b8cf',
+        desc:'A real-time analytics dashboard with cached server state, URL-persisted filters, and data visualization that matches the design system.',
+        feats:['Real-time charts and KPIs','Filters persisted in the URL','Server-state caching (stale-while-revalidate)','Responsive, accessible UI'],
+        stack:['React','TanStack Query','Recharts','TypeScript'] }
+    };
+    var wdType=document.getElementById('wdType'), wdTitle=document.getElementById('wdTitle'),
+        wdDesc=document.getElementById('wdDesc'), wdFeats=document.getElementById('wdFeats'),
+        wdStack=document.getElementById('wdStack'), wdInner=document.getElementById('wdInner');
+    function renderProject(id) {
+      var p = projects[id]; if (!p) return;
+      wdType.textContent = p.type; wdTitle.textContent = p.title; wdDesc.textContent = p.desc;
+      wdInner.style.borderColor = p.accent;
+      root.style.setProperty('--accent', p.accent);
+      wdFeats.innerHTML = p.feats.map(function (f) {
+        return '<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 15 9l7 .5-5.5 4.5L18 21l-6-3.7L6 21l1.5-7L2 9.5 9 9z"/></svg><span>'+f+'</span></li>';
+      }).join('');
+      wdStack.innerHTML = p.stack.map(function (s) { return '<span>'+s+'</span>'; }).join('');
+    }
+    renderProject('p1');
+    var pio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) renderProject(e.target.id); });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    ['p1','p2','p3'].forEach(function (id) { var el = document.getElementById(id); if (el) pio.observe(el); });
+
+    /* reveal */
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+
+    /* active nav */
+    var navLinks = {};
+    document.querySelectorAll('.nav-pill a').forEach(function (a) { navLinks[a.getAttribute('data-nav')] = a; });
+    var nio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          Object.values(navLinks).forEach(function (a) { a.classList.remove('active'); });
+          var l = navLinks[e.target.id]; if (l) l.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    ['top','services','work','experience','stats','contact'].forEach(function (id) { var s = document.getElementById(id); if (s) nio.observe(s); });
+
+    /* leetcode animation */
+    var done = false;
+    var sio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting && !done) {
+          done = true;
+          var C = 465, solved = 412, denom = 3420;
+          document.getElementById('ring').style.strokeDashoffset = String(C - C * (solved / denom) * 3.2);
+          document.querySelectorAll('.diff .bar i').forEach(function (i) { i.style.width = i.getAttribute('data-w'); });
+          countUp(document.getElementById('totalSolved'), 412);
+          countUp(document.getElementById('t1'), 412);
+          countUp(document.getElementById('t2'), 128);
+        }
+      });
+    }, { threshold: 0.3 });
+    sio.observe(document.getElementById('stats'));
+    function countUp(el, target) {
+      if (!el) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = target; return; }
+      var t0 = performance.now(), dur = 1200;
+      requestAnimationFrame(function step(now) {
+        var p = Math.min((now - t0) / dur, 1), eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(target * eased);
+        if (p < 1) requestAnimationFrame(step);
+      });
+    }
+
+    /* i18n */
+    var i18n = {
+      en: {}, /* English is the source markup */
+      uz: {
+        nav_services:"Xizmatlar", nav_work:"Loyihalar", nav_exp:"Tajriba", nav_stats:"Statistika", nav_contact:"Aloqa",
+        status:"Ishga tayyor", hero_a:"Backend", hero_b:"Mahorat",
+        hero_sub:"Salom, men Sobirjon Qurbonov — mahalliy va xalqaro mijozlar uchun tez, ishonchli veb-mahsulotlar quruvchi full-stack muhandis.",
+        cta_start:"Loyiha boshlash", cta_start2:"Loyiha boshlash",
+        services_real:"Xizmatlar", services_cap:"Men nima qura olaman",
+        svc1_t:"Veb-dasturlash", svc1_p:"React'da tez, SEO va foydalanishga qulay moslashuvchan saytlar va veb-ilovalar.",
+        svc2_t:"Backend va API", svc2_p:"Toza qatlamli arxitektura, PostgreSQL va integratsiyalar bilan Laravel REST API'lar.",
+        svc3_t:"To'liq yetkazish", svc3_p:"Boshdan-oxir mahsulot — ma'lumotlar bazasidan sayqallangan interfeysgacha.",
+        work_real:"Loyihalar", work_cap:"Tanlangan ishlar", see_more:"Ko'proq loyihalar →",
+        exp_real:"Tajriba", exp_cap:"Qayerda ishlaganman", exp_current:"Hozirgi", exp_prev:"Oldingi",
+        exp1a:"Qatlamli Laravel + PostgreSQL backend'da ichki CRM va analitika vositalarini yaratdim.",
+        exp1b:"Controller → Service → Repository toza ajratmasi bilan REST API'lar loyihaladim.",
+        exp1c:"React interfeyslar ishga tushirdim va so'rovlar tezligini oshirdim.",
+        exp2a:"Mijoz veb-mahsulotlari uchun PHP/Laravel API va PostgreSQL sxemalarini yetkazdim.",
+        exp2b:"Ishonchli funksiyalarni ishlab chiqarishga chiqarishni va mijozlar bilan ishlashni o'rgandim.",
+        stack_real:"Ko'nikmalar", stack_cap:"Men ishlatadigan vositalar",
+        stats_real:"Kodlash statistikasi", stats_cap:"LeetCode · backend'dan jonli", solved:"Yechilgan",
+        ring_sub:"Qabul 64% · Top 12%", t_solved:"Jami yechilgan", t_streak:"Kunlik seriya", t_acc:"Qabul", t_contrib:"GitHub hissa",
+        about_real:"Men haqimda", about_cap:"Men haqimda ko'proq", about_flag:"Muhandis",
+        about_h:"Salom! Men <b>Sobirjon</b>", about_1:"O'zbekistonda faoliyat yurituvchi full-stack muhandis. Tez yuklanadigan, oson qo'llab-quvvatlanadigan mahsulotlar yarataman.",
+        about_2:"Toza arxitektura, halol tezkorlik va ishga tushirishni qadrlayman. Ishlarim Laravel API'ni React bilan birlashtiradi.",
+        about_lang:"UZ · RU · EN", about_do1:"Backend va API", about_do2:"Frontend",
+        contact_real:"Aloqa", contact_cap:"Bog'laning", c_title:"Keling, birga ishlaymiz",
+        c_p1:"Nima qurayotganingizni ayting. Boshlash uchun qisqa xabar kifoya.",
+        c_p2:"Har bir so'rov menga Telegram orqali darhol yetadi — bir kun ichida javob beraman.",
+        c_loc:"Toshkent, O'zbekiston (GMT+5)", c_resp:"24 soat ichida javob",
+        l_name:"Ismingiz", l_email:"Email", l_budget:"Budjet (ixtiyoriy)", b_pick:"Diapazonni tanlang…", b_ns:"Hali aniq emas",
+        l_msg:"Xabar", l_send:"Xabar yuborish", fn_saved:"saqlandi", fn_admin:"admin ro'yxati"
+      },
+      ru: {
+        nav_services:"Услуги", nav_work:"Работы", nav_exp:"Опыт", nav_stats:"Статистика", nav_contact:"Контакт",
+        status:"Открыт к работе", hero_a:"Backend", hero_b:"Мастерство",
+        hero_sub:"Привет, я Собиржон Курбонов — full-stack инженер, создаю быстрые и надёжные веб-продукты для локальных и международных клиентов.",
+        cta_start:"Начать проект", cta_start2:"Начать проект",
+        services_real:"Услуги", services_cap:"Что я могу построить",
+        svc1_t:"Веб-разработка", svc1_p:"Адаптивные сайты и веб-приложения на React — быстрые, готовые к SEO и доступные.",
+        svc2_t:"Backend и API", svc2_p:"Laravel REST API с чистой слоистой архитектурой, PostgreSQL и интеграциями.",
+        svc3_t:"Full-stack доставка", svc3_p:"Продукт под ключ — от схемы базы данных до отточенного интерфейса.",
+        work_real:"Работы", work_cap:"Избранные кейсы", see_more:"Больше проектов →",
+        exp_real:"Опыт", exp_cap:"Где я работал", exp_current:"Сейчас", exp_prev:"Ранее",
+        exp1a:"Создавал внутренние CRM и аналитику на слоистом backend Laravel + PostgreSQL.",
+        exp1b:"Проектировал REST API с чистым разделением Controller → Service → Repository.",
+        exp1c:"Выпускал React-фронтенды и улучшал производительность запросов.",
+        exp2a:"Разрабатывал PHP/Laravel API и схемы PostgreSQL для клиентских веб-продуктов.",
+        exp2b:"Научился надёжно выпускать фичи в продакшн и работать с клиентами напрямую.",
+        stack_real:"Навыки", stack_cap:"Инструменты, к которым тянусь",
+        stats_real:"Статистика кода", stats_cap:"LeetCode · вживую из backend", solved:"Решено",
+        ring_sub:"Принятие 64% · Топ 12%", t_solved:"Всего решено", t_streak:"Дней подряд", t_acc:"Принятие", t_contrib:"GitHub вклад",
+        about_real:"Обо мне", about_cap:"Больше обо мне", about_flag:"Инженер",
+        about_h:"Привет! Я <b>Собиржон</b>", about_1:"Full-stack инженер из Узбекистана. Создаю продукты, которые быстро грузятся и легко поддерживаются.",
+        about_2:"Ценю чистую архитектуру, честную производительность и реальный запуск. Связываю Laravel API с React.",
+        about_lang:"UZ · RU · EN", about_do1:"Backend и API", about_do2:"Frontend",
+        contact_real:"Контакт", contact_cap:"Связаться", c_title:"Давайте работать вместе",
+        c_p1:"Расскажите, что вы создаёте. Достаточно короткого сообщения.",
+        c_p2:"Каждая заявка мгновенно приходит мне в Telegram — отвечаю в течение дня.",
+        c_loc:"Ташкент, Узбекистан (GMT+5)", c_resp:"Отвечаю в течение 24 часов",
+        l_name:"Ваше имя", l_email:"Email", l_budget:"Бюджет (необязательно)", b_pick:"Выберите диапазон…", b_ns:"Пока не знаю",
+        l_msg:"Сообщение", l_send:"Отправить", fn_saved:"сохранено", fn_admin:"список админа"
+      }
+    };
+    /* snapshot English source */
+    var en = {};
+    document.querySelectorAll('[data-i18n]').forEach(function (el) { en[el.getAttribute('data-i18n')] = el.innerHTML; });
+    i18n.en = en;
+    var htmlKeys = { about_h:1 };
+    function setLang(lang) {
+      var dict = i18n[lang] || {};
+      root.setAttribute('lang', lang);
+      document.querySelectorAll('[data-i18n]').forEach(function (el) {
+        var k = el.getAttribute('data-i18n');
+        var v = dict[k] != null ? dict[k] : en[k];
+        if (v == null) return;
+        el.innerHTML = v; /* all our source values are safe, controlled strings */
+      });
+    }
+    document.querySelectorAll('.langs button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        document.querySelectorAll('.langs button').forEach(function (x) { x.classList.remove('on'); });
+        b.classList.add('on');
+        setLang(b.getAttribute('data-lang'));
+      });
+    });
+
+    /* lead form */
+    document.getElementById('leadForm').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var btn = this.querySelector('.send span');
+      if (btn) btn.textContent = '✓ ' + (i18n[root.getAttribute('lang')||'en'].fn_saved || 'Sent');
+    });
+  })();
+</script>

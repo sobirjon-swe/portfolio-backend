@@ -18,11 +18,13 @@ class PostResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $allLocales = $request->boolean('all_locales');
+
         return [
             'id' => $this->id,
-            'title' => $this->title,
+            'title' => $allLocales ? $this->getTranslations('title') : $this->title,
             'slug' => $this->slug,
-            'content' => $this->content,
+            'content' => $allLocales ? $this->getTranslations('content') : $this->content,
             'cover_image' => $this->cover_image,
             'is_published' => $this->isPublished(),
             'published_at' => $this->published_at?->toIso8601String(),

@@ -10,12 +10,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\Translatable\HasTranslations;
 
 #[Fillable(['user_id', 'title', 'slug', 'description', 'cover_image', 'github_url', 'live_url', 'is_featured'])]
 class Project extends Model
 {
     /** @use HasFactory<ProjectFactory> */
-    use HasFactory;
+    use HasFactory, HasTranslations;
+
+    /** @var list<string> */
+    public array $translatable = ['title', 'description'];
 
     /**
      * @return array<string, string>

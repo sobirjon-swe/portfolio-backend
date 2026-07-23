@@ -18,11 +18,13 @@ class ExperienceResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $allLocales = $request->boolean('all_locales');
+
         return [
             'id' => $this->id,
             'company' => $this->company,
-            'role' => $this->role,
-            'description' => $this->description,
+            'role' => $allLocales ? $this->getTranslations('role') : $this->role,
+            'description' => $allLocales ? $this->getTranslations('description') : $this->description,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
             'url' => $this->url,
