@@ -1,0 +1,42 @@
+name: Deploy backend
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-backend
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          port: ${{ secrets.VPS_PORT }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+            cd /var/www/portfolio-backend
+
+            git fetch --depth 1 origin main
+            git reset --hard origin/main
+
+            composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+            php artisan migrate --force
+
+            # Rebuild caches from the new code. `config:cache` must run after
+            # composer install so freshly published package configs are included.
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+
+            # Clear the compiled OPcache/php-fpm view of the old files.
+            sudo systemctl reload php8.4-fpm
