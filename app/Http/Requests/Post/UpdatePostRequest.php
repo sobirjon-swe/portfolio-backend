@@ -29,7 +29,6 @@ class UpdatePostRequest extends FormRequest
             'content.en' => ['required_with:content', 'string'],
             'content.uz' => ['nullable', 'string'],
             'content.ru' => ['nullable', 'string'],
-            'cover_image' => ['sometimes', 'nullable', 'string', 'max:255'],
             'published_at' => ['sometimes', 'nullable', 'date'],
         ];
     }

@@ -28,7 +28,6 @@ class PostFactory extends Factory
             'title' => $title,
             'slug' => Str::slug($title).'-'.fake()->unique()->numberBetween(1, 100000),
             'content' => fake()->paragraphs(3, true),
-            'cover_image' => null,
             'published_at' => fake()->dateTimeBetween('-1 year', 'now'),
         ];
     }

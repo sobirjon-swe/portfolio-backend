@@ -28,7 +28,6 @@ class ProjectFactory extends Factory
             'title' => $title,
             'slug' => Str::slug($title).'-'.fake()->unique()->numberBetween(1, 100000),
             'description' => fake()->paragraph(),
-            'cover_image' => null,
             'github_url' => fake()->optional()->url(),
             'live_url' => fake()->optional()->url(),
             'is_featured' => fake()->boolean(20),

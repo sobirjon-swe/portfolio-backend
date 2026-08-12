@@ -26,6 +26,7 @@ class PostResource extends JsonResource
             'slug' => $this->slug,
             'content' => $allLocales ? $this->getTranslations('content') : $this->content,
             'cover_image' => $this->cover_image,
+            'images' => ImageResource::collection($this->whenLoaded('images')),
             'is_published' => $this->isPublished(),
             'published_at' => $this->published_at?->toIso8601String(),
             'created_at' => $this->created_at?->toIso8601String(),

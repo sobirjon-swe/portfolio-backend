@@ -13,7 +13,7 @@ class ProjectRepository implements ProjectRepositoryInterface
     public function all(): Collection
     {
         return Project::query()
-            ->with('technologies')
+            ->with(['technologies', 'images'])
             ->latest()
             ->get();
     }
@@ -21,7 +21,7 @@ class ProjectRepository implements ProjectRepositoryInterface
     public function findById(int $id): ?Project
     {
         return Project::query()
-            ->with('technologies')
+            ->with(['technologies', 'images'])
             ->find($id);
     }
 
@@ -31,7 +31,7 @@ class ProjectRepository implements ProjectRepositoryInterface
 
         $project->technologies()->sync($technologyIds);
 
-        return $project->load('technologies');
+        return $project->load(['technologies', 'images']);
     }
 
     public function update(Project $project, array $data, ?array $technologyIds = null): Project

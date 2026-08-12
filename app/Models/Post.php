@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\HasImages;
 use Database\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,11 +13,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Translatable\HasTranslations;
 
-#[Fillable(['user_id', 'title', 'slug', 'content', 'cover_image', 'published_at'])]
+#[Fillable(['user_id', 'title', 'slug', 'content', 'published_at'])]
 class Post extends Model
 {
     /** @use HasFactory<PostFactory> */
-    use HasFactory, HasTranslations;
+    use HasFactory, HasImages, HasTranslations;
 
     /** @var list<string> */
     public array $translatable = ['title', 'content'];

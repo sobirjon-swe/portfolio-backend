@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ExperienceController;
+use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\LeetCodeController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\PageViewController;
@@ -56,6 +57,11 @@ Route::prefix('v1')->group(function () {
      * Admin write endpoints (token-protected).
      */
     Route::middleware('auth:sanctum')->group(function () {
+        // Bulk-add from the admin's logo picker. Declared before the {id}
+        // routes so "bulk" is never read as an id.
+        Route::post('technologies/bulk', [TechnologyController::class, 'bulkStore']);
+        Route::post('skills/bulk', [SkillController::class, 'bulkStore']);
+
         Route::post('technologies', [TechnologyController::class, 'store']);
         Route::patch('technologies/{id}', [TechnologyController::class, 'update'])->whereNumber('id');
         Route::delete('technologies/{id}', [TechnologyController::class, 'destroy'])->whereNumber('id');
@@ -87,5 +93,16 @@ Route::prefix('v1')->group(function () {
         // Project inquiries (leads).
         Route::get('messages', [MessageController::class, 'index']);
         Route::delete('messages/{id}', [MessageController::class, 'destroy'])->whereNumber('id');
+
+        /*
+         * Galleries. The owner type is a route segment constrained to the
+         * types ImageController knows, so a client cannot aim an upload at an
+         * arbitrary model.
+         */
+        Route::post('{type}/{id}/images', [ImageController::class, 'store'])
+            ->whereIn('type', ['projects', 'posts'])->whereNumber('id');
+        Route::patch('{type}/{id}/images/order', [ImageController::class, 'reorder'])
+            ->whereIn('type', ['projects', 'posts'])->whereNumber('id');
+        Route::delete('images/{id}', [ImageController::class, 'destroy'])->whereNumber('id');
     });
 });

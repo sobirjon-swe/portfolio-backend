@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\HasImages;
 use Database\Factories\ProjectFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,11 +13,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Translatable\HasTranslations;
 
-#[Fillable(['user_id', 'title', 'slug', 'description', 'cover_image', 'github_url', 'live_url', 'is_featured'])]
+#[Fillable(['user_id', 'title', 'slug', 'description', 'github_url', 'live_url', 'is_featured'])]
 class Project extends Model
 {
     /** @use HasFactory<ProjectFactory> */
-    use HasFactory, HasTranslations;
+    use HasFactory, HasImages, HasTranslations;
 
     /** @var list<string> */
     public array $translatable = ['title', 'description'];

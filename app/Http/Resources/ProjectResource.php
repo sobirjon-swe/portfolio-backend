@@ -25,7 +25,10 @@ class ProjectResource extends JsonResource
             'title' => $allLocales ? $this->getTranslations('title') : $this->title,
             'slug' => $this->slug,
             'description' => $allLocales ? $this->getTranslations('description') : $this->description,
+            // Accessor over the first gallery image — kept under its original
+            // name so existing consumers (cards, OG tags) keep working.
             'cover_image' => $this->cover_image,
+            'images' => ImageResource::collection($this->whenLoaded('images')),
             'github_url' => $this->github_url,
             'live_url' => $this->live_url,
             'is_featured' => $this->is_featured,

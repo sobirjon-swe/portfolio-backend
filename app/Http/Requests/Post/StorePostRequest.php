@@ -27,7 +27,6 @@ class StorePostRequest extends FormRequest
             'content.en' => ['required', 'string'],
             'content.uz' => ['nullable', 'string'],
             'content.ru' => ['nullable', 'string'],
-            'cover_image' => ['nullable', 'string', 'max:255'],
             'published_at' => ['nullable', 'date'], // null = draft
         ];
     }

@@ -28,7 +28,6 @@ class StoreProjectRequest extends FormRequest
             'description.en' => ['required', 'string'],
             'description.uz' => ['nullable', 'string'],
             'description.ru' => ['nullable', 'string'],
-            'cover_image' => ['nullable', 'string', 'max:255'],
             'github_url' => ['nullable', 'url', 'max:255'],
             'live_url' => ['nullable', 'url', 'max:255'],
             'is_featured' => ['sometimes', 'boolean'],

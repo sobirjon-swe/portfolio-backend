@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BulkCatalogRequest;
 use App\Http\Requests\Skill\StoreSkillRequest;
 use App\Http\Requests\Skill\UpdateSkillRequest;
 use App\Http\Resources\SkillResource;
+use App\Services\CatalogImportService;
 use App\Services\SkillService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -47,6 +49,20 @@ class SkillController extends Controller
             ->additional(['message' => 'Skill updated.'])
             ->response()
             ->setStatusCode(Response::HTTP_OK);
+    }
+
+    /**
+     * Add several skills at once from the admin's logo picker.
+     * Names that already exist are skipped rather than duplicated.
+     */
+    public function bulkStore(BulkCatalogRequest $request, CatalogImportService $import): JsonResponse
+    {
+        $created = $import->importSkills($request->validated('items'));
+
+        return SkillResource::collection($created)
+            ->additional(['message' => "{$created->count()} ta ko‘nikma qo‘shildi."])
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 
     public function destroy(int $id): Response

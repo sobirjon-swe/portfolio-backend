@@ -30,7 +30,6 @@ class UpdateProjectRequest extends FormRequest
             'description.en' => ['required_with:description', 'string'],
             'description.uz' => ['nullable', 'string'],
             'description.ru' => ['nullable', 'string'],
-            'cover_image' => ['sometimes', 'nullable', 'string', 'max:255'],
             'github_url' => ['sometimes', 'nullable', 'url', 'max:255'],
             'live_url' => ['sometimes', 'nullable', 'url', 'max:255'],
             'is_featured' => ['sometimes', 'boolean'],

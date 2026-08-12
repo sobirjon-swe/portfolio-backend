@@ -14,26 +14,28 @@ class PostRepository implements PostRepositoryInterface
     {
         return Post::query()
             ->published()
+            ->with('images')
             ->latest('published_at')
             ->get();
     }
 
     public function all(): Collection
     {
-        return Post::query()->latest('created_at')->get();
+        return Post::query()->with('images')->latest('created_at')->get();
     }
 
     public function findPublishedBySlug(string $slug): ?Post
     {
         return Post::query()
             ->published()
+            ->with('images')
             ->where('slug', $slug)
             ->first();
     }
 
     public function findById(int $id): ?Post
     {
-        return Post::query()->find($id);
+        return Post::query()->with('images')->find($id);
     }
 
     public function create(array $data): Post
@@ -45,7 +47,7 @@ class PostRepository implements PostRepositoryInterface
     {
         $post->update($data);
 
-        return $post->refresh();
+        return $post->refresh()->load('images');
     }
 
     public function delete(Post $post): void
