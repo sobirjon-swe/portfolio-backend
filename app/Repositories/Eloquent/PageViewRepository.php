@@ -6,6 +6,7 @@ namespace App\Repositories\Eloquent;
 
 use App\Models\PageView;
 use App\Repositories\Contracts\PageViewRepositoryInterface;
+use DateTimeInterface;
 
 class PageViewRepository implements PageViewRepositoryInterface
 {
@@ -31,5 +32,12 @@ class PageViewRepository implements PageViewRepositoryInterface
                 'views' => (int) $row->views,
             ])
             ->all();
+    }
+
+    public function deleteOlderThan(DateTimeInterface $cutoff): int
+    {
+        return PageView::query()
+            ->where('created_at', '<', $cutoff)
+            ->delete();
     }
 }

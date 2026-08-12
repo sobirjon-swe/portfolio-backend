@@ -9,6 +9,7 @@ use App\Http\Requests\Message\StoreMessageRequest;
 use App\Http\Resources\MessageResource;
 use App\Services\MessageService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,11 +32,15 @@ class MessageController extends Controller
     }
 
     /**
-     * Admin: list all inquiries.
+     * Admin: list inquiries, newest first, paginated.
      */
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
-        return MessageResource::collection($this->service->list());
+        $perPage = $request->has('per_page')
+            ? (int) $request->input('per_page')
+            : null;
+
+        return MessageResource::collection($this->service->list($perPage));
     }
 
     public function destroy(int $id): Response

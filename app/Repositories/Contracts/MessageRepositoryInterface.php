@@ -5,14 +5,19 @@ declare(strict_types=1);
 namespace App\Repositories\Contracts;
 
 use App\Models\Message;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface MessageRepositoryInterface
 {
     /**
-     * @return Collection<int, Message>
+     * Newest inquiries first, one page at a time.
+     *
+     * Unlike the owner-authored content tables, this one is fed by a public
+     * endpoint and grows with traffic (and spam), so it is never loaded whole.
+     *
+     * @return LengthAwarePaginator<int, Message>
      */
-    public function all(): Collection;
+    public function paginate(int $perPage): LengthAwarePaginator;
 
     public function findById(int $id): ?Message;
 

@@ -6,21 +6,33 @@ namespace App\Services;
 
 use App\Models\Message;
 use App\Repositories\Contracts\MessageRepositoryInterface;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class MessageService
 {
+    /**
+     * Rows per page when the caller does not ask for a specific size.
+     */
+    public const DEFAULT_PER_PAGE = 20;
+
+    /**
+     * Upper bound so a crafted ?per_page= cannot pull the whole table.
+     */
+    public const MAX_PER_PAGE = 100;
+
     public function __construct(
         private readonly MessageRepositoryInterface $repository,
     ) {}
 
     /**
-     * @return Collection<int, Message>
+     * @return LengthAwarePaginator<int, Message>
      */
-    public function list(): Collection
+    public function list(?int $perPage = null): LengthAwarePaginator
     {
-        return $this->repository->all();
+        $perPage = max(1, min($perPage ?? self::DEFAULT_PER_PAGE, self::MAX_PER_PAGE));
+
+        return $this->repository->paginate($perPage);
     }
 
     /**

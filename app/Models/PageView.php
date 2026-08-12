@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['page', 'ip_address', 'user_agent'])]
+#[Fillable(['page', 'ip_hash', 'user_agent'])]
 class PageView extends Model
 {
     /** @use HasFactory<PageViewFactory> */

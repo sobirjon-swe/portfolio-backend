@@ -6,13 +6,13 @@ namespace App\Repositories\Eloquent;
 
 use App\Models\Message;
 use App\Repositories\Contracts\MessageRepositoryInterface;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class MessageRepository implements MessageRepositoryInterface
 {
-    public function all(): Collection
+    public function paginate(int $perPage): LengthAwarePaginator
     {
-        return Message::query()->latest()->get();
+        return Message::query()->latest()->paginate($perPage);
     }
 
     public function findById(int $id): ?Message

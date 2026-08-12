@@ -21,7 +21,7 @@ class PageViewFactory extends Factory
     {
         return [
             'page' => fake()->randomElement(['/', '/blog', '/projects']),
-            'ip_address' => fake()->ipv4(),
+            'ip_hash' => hash('sha256', fake()->ipv4()),
             'user_agent' => fake()->userAgent(),
         ];
     }

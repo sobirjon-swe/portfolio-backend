@@ -36,7 +36,9 @@ return [
     ],
 
     'leetcode' => [
-        'username' => env('LEETCODE_USERNAME', 'Sobirjon-swe'),
+        // `?:` rather than an env() default: a present-but-empty LEETCODE_USERNAME
+        // resolves to '' and would silently disable the stats endpoint.
+        'username' => env('LEETCODE_USERNAME') ?: 'Sobirjon-swe',
     ],
 
 ];
