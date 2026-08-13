@@ -9,6 +9,8 @@ use App\Http\Requests\StoreResumeRequest;
 use App\Http\Resources\ResumeResource;
 use App\Services\ResumeService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResumeController extends Controller
@@ -18,35 +20,53 @@ class ResumeController extends Controller
     ) {}
 
     /**
-     * Public: details of the current CV, or 404 before one is uploaded.
+     * Public: the CV in the language the visitor is reading, falling back to
+     * another language rather than offering nothing.
+     *
+     * The locale comes from the SetLocale middleware (?lang or Accept-Language).
      */
-    public function show(): JsonResponse
+    public function show(Request $request): JsonResponse
     {
-        $resume = $this->service->current();
+        $requested = app()->getLocale();
+        $resume = $this->service->forLocale($requested);
 
         if ($resume === null) {
             return response()->json(['message' => 'Rezyume hali yuklanmagan.'], Response::HTTP_NOT_FOUND);
         }
 
+        // Lets the resource report whether this is the requested language.
+        $request->attributes->set('resume_requested_locale', $requested);
+
         return response()->json(['data' => ResumeResource::make($resume)]);
     }
 
     /**
-     * Admin: upload a CV, replacing the previous one.
+     * Admin: every published language, for the upload slots.
+     */
+    public function index(): AnonymousResourceCollection
+    {
+        return ResumeResource::collection($this->service->all());
+    }
+
+    /**
+     * Admin: upload the CV for one language, replacing that language only.
      */
     public function store(StoreResumeRequest $request): JsonResponse
     {
-        $resume = $this->service->replace($request->file('file'));
+        $resume = $this->service->replace(
+            $request->file('file'),
+            $request->string('locale')->toString(),
+        );
 
         return response()->json([
             'data' => ResumeResource::make($resume),
-            'message' => 'Rezyume yangilandi.',
+            'message' => "Rezyume ({$resume->locale}) yangilandi.",
         ], Response::HTTP_CREATED);
     }
 
-    public function destroy(): Response
+    public function destroy(string $locale): Response
     {
-        $this->service->delete();
+        $this->service->delete($locale);
 
         return response()->noContent();
     }

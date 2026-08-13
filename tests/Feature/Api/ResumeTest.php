@@ -32,59 +32,171 @@ class ResumeTest extends TestCase
         );
     }
 
+    private function upload(string $locale, string $name = 'cv.pdf'): void
+    {
+        $this->postJson('/api/v1/resume', ['file' => $this->pdf($name), 'locale' => $locale])
+            ->assertCreated();
+    }
+
+    /** Ask as a visitor reading in `$locale`. */
+    private function fetchAs(string $locale)
+    {
+        return $this->getJson('/api/v1/resume', ['Accept-Language' => $locale]);
+    }
+
+    // ------------------------------------------------------------- uploading --
+
     public function test_there_is_no_resume_until_one_is_uploaded(): void
     {
         $this->getJson('/api/v1/resume')->assertNotFound();
     }
 
-    public function test_an_admin_can_upload_a_resume(): void
+    public function test_an_admin_can_upload_a_resume_per_language(): void
     {
         Sanctum::actingAs(User::factory()->create());
 
-        $this->postJson('/api/v1/resume', ['file' => $this->pdf('Sobirjon_CV.pdf')])
-            ->assertCreated()
-            ->assertJsonPath('data.filename', 'Sobirjon_CV.pdf')
-            ->assertJsonPath('data.version', 1);
+        $this->upload('en', 'CV_en.pdf');
+        $this->upload('uz', 'CV_uz.pdf');
+        $this->upload('ru', 'CV_ru.pdf');
 
-        Storage::disk('public')->assertExists(Resume::query()->sole()->path);
+        $this->assertSame(3, Resume::query()->count());
+        $this->assertEqualsCanonicalizing(
+            ['en', 'uz', 'ru'],
+            Resume::query()->pluck('locale')->all(),
+        );
+    }
+
+    public function test_the_locale_is_required_and_restricted(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->postJson('/api/v1/resume', ['file' => $this->pdf()])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrorFor('locale');
+
+        $this->postJson('/api/v1/resume', ['file' => $this->pdf(), 'locale' => 'de'])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrorFor('locale');
+    }
+
+    public function test_uploading_one_language_leaves_the_others_alone(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->upload('en', 'CV_en.pdf');
+        $this->upload('uz', 'CV_uz_v1.pdf');
+        $englishPath = Resume::query()->where('locale', 'en')->sole()->path;
+
+        $this->upload('uz', 'CV_uz_v2.pdf');
+
+        $this->assertSame('CV_en.pdf', Resume::query()->where('locale', 'en')->sole()->original_name);
+        Storage::disk('public')->assertExists($englishPath);
+
+        $uz = Resume::query()->where('locale', 'uz')->sole();
+        $this->assertSame('CV_uz_v2.pdf', $uz->original_name);
+        // Version counts per language, and only one Uzbek row survives.
+        $this->assertSame(2, $uz->version);
+        $this->assertSame(1, Resume::query()->where('locale', 'uz')->count());
+    }
+
+    public function test_replacing_a_language_deletes_its_old_file(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->upload('uz', 'v1.pdf');
+        $first = Resume::query()->where('locale', 'uz')->sole()->path;
+
+        $this->upload('uz', 'v2.pdf');
+
+        Storage::disk('public')->assertMissing($first);
+    }
+
+    // -------------------------------------------------------------- serving --
+
+    public function test_a_visitor_gets_the_cv_in_their_own_language(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+        $this->upload('en', 'CV_en.pdf');
+        $this->upload('uz', 'CV_uz.pdf');
+        $this->upload('ru', 'CV_ru.pdf');
+
+        foreach (['en' => 'CV_en.pdf', 'uz' => 'CV_uz.pdf', 'ru' => 'CV_ru.pdf'] as $locale => $expected) {
+            $this->fetchAs($locale)
+                ->assertOk()
+                ->assertJsonPath('data.locale', $locale)
+                ->assertJsonPath('data.filename', $expected)
+                ->assertJsonPath('data.is_fallback', false);
+        }
+    }
+
+    public function test_the_lang_query_parameter_also_selects_the_language(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+        $this->upload('en', 'CV_en.pdf');
+        $this->upload('ru', 'CV_ru.pdf');
+
+        $this->getJson('/api/v1/resume?lang=ru')
+            ->assertOk()
+            ->assertJsonPath('data.locale', 'ru');
+    }
+
+    public function test_a_missing_language_falls_back_rather_than_404s(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+        // Only English published.
+        $this->upload('en', 'CV_en.pdf');
+
+        $this->fetchAs('uz')
+            ->assertOk()
+            ->assertJsonPath('data.locale', 'en')
+            // The page can tell the visitor this is not their language.
+            ->assertJsonPath('data.is_fallback', true);
+    }
+
+    public function test_the_fallback_uses_whatever_is_published(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+        // Neither the requested language nor the app fallback exists.
+        $this->upload('ru', 'CV_ru.pdf');
+
+        $this->fetchAs('uz')
+            ->assertOk()
+            ->assertJsonPath('data.locale', 'ru')
+            ->assertJsonPath('data.is_fallback', true);
     }
 
     public function test_the_public_endpoint_reports_real_metadata(): void
     {
         Sanctum::actingAs(User::factory()->create());
-        $this->postJson('/api/v1/resume', ['file' => $this->pdf('cv.pdf', 200)])->assertCreated();
+        $this->postJson('/api/v1/resume', ['file' => $this->pdf('cv.pdf', 200), 'locale' => 'en'])
+            ->assertCreated();
 
-        $response = $this->getJson('/api/v1/resume')->assertOk();
+        $response = $this->fetchAs('en')->assertOk();
 
         $this->assertNotEmpty($response->json('data.url'));
-        $this->assertSame('cv.pdf', $response->json('data.filename'));
         $this->assertGreaterThan(0, $response->json('data.size'));
         // The page used to print a hardcoded "268 KB"; this is measured.
         $this->assertMatchesRegularExpression('/^\d+(\.\d+)? (B|KB|MB)$/', $response->json('data.size_human'));
     }
 
-    public function test_uploading_again_replaces_the_file_and_bumps_the_version(): void
+    public function test_an_admin_can_list_every_published_language(): void
     {
         Sanctum::actingAs(User::factory()->create());
+        $this->upload('en');
+        $this->upload('uz');
 
-        $this->postJson('/api/v1/resume', ['file' => $this->pdf('v1.pdf')])->assertCreated();
-        $first = Resume::query()->sole();
-
-        $this->postJson('/api/v1/resume', ['file' => $this->pdf('v2.pdf')])
-            ->assertCreated()
-            ->assertJsonPath('data.version', 2)
-            ->assertJsonPath('data.filename', 'v2.pdf');
-
-        // Only one row, and the superseded PDF is gone from disk.
-        $this->assertSame(1, Resume::query()->count());
-        Storage::disk('public')->assertMissing($first->path);
+        $this->getJson('/api/v1/resumes')
+            ->assertOk()
+            ->assertJsonCount(2, 'data');
     }
+
+    // ------------------------------------------------------------ rejection --
 
     public function test_a_non_pdf_is_rejected(): void
     {
         Sanctum::actingAs(User::factory()->create());
 
-        $this->postJson('/api/v1/resume', ['file' => UploadedFile::fake()->image('photo.jpg')])
+        $this->postJson('/api/v1/resume', ['file' => UploadedFile::fake()->image('photo.jpg'), 'locale' => 'en'])
             ->assertUnprocessable()
             ->assertJsonValidationErrorFor('file');
     }
@@ -103,6 +215,7 @@ class ResumeTest extends TestCase
         try {
             $this->postJson('/api/v1/resume', [
                 'file' => new UploadedFile($path, 'cv.pdf', null, null, true),
+                'locale' => 'en',
             ])
                 ->assertUnprocessable()
                 ->assertJsonValidationErrorFor('file');
@@ -119,7 +232,7 @@ class ResumeTest extends TestCase
 
         $tooBig = (int) config('documents.max_kilobytes') + 1;
 
-        $this->postJson('/api/v1/resume', ['file' => $this->pdf()->size($tooBig)])
+        $this->postJson('/api/v1/resume', ['file' => $this->pdf()->size($tooBig), 'locale' => 'en'])
             ->assertUnprocessable()
             ->assertJsonValidationErrorFor('file');
     }
@@ -128,28 +241,34 @@ class ResumeTest extends TestCase
     {
         Sanctum::actingAs(User::factory()->create());
 
-        $this->postJson('/api/v1/resume', ['file' => $this->pdf('../../evil name.pdf')])->assertCreated();
+        $this->upload('en', '../../evil name.pdf');
 
         $path = Resume::query()->sole()->path;
         $this->assertStringNotContainsString('evil', $path);
         $this->assertStringNotContainsString('..', $path);
     }
 
-    public function test_guests_cannot_upload_or_delete(): void
+    // ----------------------------------------------------------------- auth --
+
+    public function test_guests_cannot_upload_list_or_delete(): void
     {
-        $this->postJson('/api/v1/resume', ['file' => $this->pdf()])->assertUnauthorized();
-        $this->deleteJson('/api/v1/resume')->assertUnauthorized();
+        $this->postJson('/api/v1/resume', ['file' => $this->pdf(), 'locale' => 'en'])->assertUnauthorized();
+        $this->getJson('/api/v1/resumes')->assertUnauthorized();
+        $this->deleteJson('/api/v1/resume/en')->assertUnauthorized();
     }
 
-    public function test_an_admin_can_delete_the_resume_and_its_file(): void
+    public function test_an_admin_can_delete_one_language(): void
     {
         Sanctum::actingAs(User::factory()->create());
-        $this->postJson('/api/v1/resume', ['file' => $this->pdf()])->assertCreated();
-        $path = Resume::query()->sole()->path;
+        $this->upload('en', 'CV_en.pdf');
+        $this->upload('uz', 'CV_uz.pdf');
+        $uzPath = Resume::query()->where('locale', 'uz')->sole()->path;
 
-        $this->deleteJson('/api/v1/resume')->assertNoContent();
+        $this->deleteJson('/api/v1/resume/uz')->assertNoContent();
 
-        Storage::disk('public')->assertMissing($path);
-        $this->getJson('/api/v1/resume')->assertNotFound();
+        Storage::disk('public')->assertMissing($uzPath);
+        $this->assertSame(1, Resume::query()->count());
+        // The Uzbek visitor now falls back to English rather than getting a 404.
+        $this->fetchAs('uz')->assertOk()->assertJsonPath('data.locale', 'en');
     }
 }

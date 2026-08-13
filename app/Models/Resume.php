@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * The downloadable CV. At most one row exists at a time — see ResumeService.
+ * The downloadable CV. One row per published language — see ResumeService.
  */
-#[Fillable(['path', 'original_name', 'size', 'version'])]
+#[Fillable(['locale', 'path', 'original_name', 'size', 'version'])]
 class Resume extends Model
 {
     protected static function booted(): void

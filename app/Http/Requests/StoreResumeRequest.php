@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Services\ResumeService;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreResumeRequest extends FormRequest
 {
@@ -25,6 +27,7 @@ class StoreResumeRequest extends FormRequest
             // `mimetypes` checks the sniffed content type, not the extension,
             // so a renamed file does not pass.
             'file' => ['required', 'file', 'mimetypes:application/pdf', 'mimes:pdf', "max:{$maxKb}"],
+            'locale' => ['required', 'string', Rule::in(ResumeService::LOCALES)],
         ];
     }
 

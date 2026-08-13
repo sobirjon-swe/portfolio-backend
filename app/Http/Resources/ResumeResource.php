@@ -19,6 +19,13 @@ class ResumeResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'locale' => $this->locale,
+            // True when the visitor's language has no CV of its own and this
+            // is a stand-in, so the page can say which language it handed over.
+            'is_fallback' => $this->when(
+                $request->attributes->has('resume_requested_locale'),
+                fn (): bool => $this->locale !== $request->attributes->get('resume_requested_locale'),
+            ),
             'url' => $this->url,
             'filename' => $this->original_name,
             'size' => $this->size,

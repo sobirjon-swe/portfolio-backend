@@ -122,8 +122,10 @@ Route::prefix('v1')->group(function () {
         Route::patch('comments/{id}/approve', [CommentController::class, 'approve'])->whereNumber('id');
         Route::delete('comments/{id}', [CommentController::class, 'destroy'])->whereNumber('id');
 
-        // Resume upload.
+        // Resume upload, one file per language.
+        Route::get('resumes', [ResumeController::class, 'index']);
         Route::post('resume', [ResumeController::class, 'store']);
-        Route::delete('resume', [ResumeController::class, 'destroy']);
+        Route::delete('resume/{locale}', [ResumeController::class, 'destroy'])
+            ->whereIn('locale', ['en', 'uz', 'ru']);
     });
 });
