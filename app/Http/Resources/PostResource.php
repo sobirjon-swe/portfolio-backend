@@ -27,6 +27,12 @@ class PostResource extends JsonResource
             'content' => $allLocales ? $this->getTranslations('content') : $this->content,
             'cover_image' => $this->cover_image,
             'images' => ImageResource::collection($this->whenLoaded('images')),
+            // Counts come from withCount, so a listing stays one query.
+            'likes_count' => (int) ($this->likes_count ?? 0),
+            'comments_count' => (int) ($this->comments_count ?? 0),
+            // Whether *this* visitor liked it is only resolved for a single
+            // post — doing it per row in a listing would be a query each.
+            'liked' => $this->when(isset($this->liked), fn (): bool => (bool) $this->liked),
             'is_published' => $this->isPublished(),
             'published_at' => $this->published_at?->toIso8601String(),
             'created_at' => $this->created_at?->toIso8601String(),

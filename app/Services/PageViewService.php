@@ -6,12 +6,14 @@ namespace App\Services;
 
 use App\Models\PageView;
 use App\Repositories\Contracts\PageViewRepositoryInterface;
+use App\Support\IpHasher;
 use Illuminate\Support\Carbon;
 
 class PageViewService
 {
     public function __construct(
         private readonly PageViewRepositoryInterface $repository,
+        private readonly IpHasher $ipHasher,
     ) {}
 
     /**
@@ -21,7 +23,7 @@ class PageViewService
     {
         return $this->repository->record([
             'page' => $page,
-            'ip_hash' => $this->hashIp($ipAddress),
+            'ip_hash' => $this->ipHasher->hash($ipAddress),
             'user_agent' => $userAgent,
         ]);
     }
@@ -53,21 +55,5 @@ class PageViewService
         }
 
         return $this->repository->deleteOlderThan(Carbon::now()->subDays($days));
-    }
-
-    /**
-     * Turn an IP into a keyed digest.
-     *
-     * The whole IPv4 space is only ~4 billion addresses, so a plain hash is
-     * reversible by brute force in minutes. Keying with APP_KEY means the
-     * digests are worthless to anyone without the application secret.
-     */
-    private function hashIp(?string $ipAddress): ?string
-    {
-        if ($ipAddress === null || $ipAddress === '') {
-            return null;
-        }
-
-        return hash_hmac('sha256', $ipAddress, (string) config('app.key'));
     }
 }

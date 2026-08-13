@@ -1,13 +1,16 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\ExperienceController;
 use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\LeetCodeController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\PageViewController;
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\PostLikeController;
 use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\ResumeController;
 use App\Http\Controllers\Api\SkillController;
 use App\Http\Controllers\Api\SocialLinkController;
 use App\Http\Controllers\Api\TechnologyController;
@@ -33,7 +36,16 @@ Route::prefix('v1')->group(function () {
     Route::get('projects/{id}', [ProjectController::class, 'show'])->whereNumber('id');
 
     Route::get('posts', [PostController::class, 'index']);
+
+    // Declared before posts/{slug} so "…/comments" is not read as a slug.
+    Route::get('posts/{slug}/comments', [CommentController::class, 'index']);
+    Route::post('posts/{slug}/comments', [CommentController::class, 'store'])->middleware('throttle:comments');
+    Route::post('posts/{slug}/like', [PostLikeController::class, 'toggle'])->middleware('throttle:likes');
+
     Route::get('posts/{slug}', [PostController::class, 'show']); // fetched by slug for SEO
+
+    // The downloadable CV.
+    Route::get('resume', [ResumeController::class, 'show']);
 
     Route::get('skills', [SkillController::class, 'index']);
     Route::get('skills/{id}', [SkillController::class, 'show'])->whereNumber('id');
@@ -104,5 +116,14 @@ Route::prefix('v1')->group(function () {
         Route::patch('{type}/{id}/images/order', [ImageController::class, 'reorder'])
             ->whereIn('type', ['projects', 'posts'])->whereNumber('id');
         Route::delete('images/{id}', [ImageController::class, 'destroy'])->whereNumber('id');
+
+        // Comment moderation.
+        Route::get('comments', [CommentController::class, 'adminIndex']);
+        Route::patch('comments/{id}/approve', [CommentController::class, 'approve'])->whereNumber('id');
+        Route::delete('comments/{id}', [CommentController::class, 'destroy'])->whereNumber('id');
+
+        // Resume upload.
+        Route::post('resume', [ResumeController::class, 'store']);
+        Route::delete('resume', [ResumeController::class, 'destroy']);
     });
 });

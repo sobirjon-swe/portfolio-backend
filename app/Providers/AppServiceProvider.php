@@ -37,5 +37,15 @@ class AppServiceProvider extends ServiceProvider
         // Public analytics beacon — generous but bounded to stop flooding.
         RateLimiter::for('page-views', fn (Request $request): Limit => Limit::perMinute(30)
             ->by($request->ip()));
+
+        // Comments are held for moderation anyway, but a tight limit keeps a
+        // bot from filling the queue faster than it can be emptied.
+        RateLimiter::for('comments', fn (Request $request): Limit => Limit::perMinute(3)
+            ->by($request->ip()));
+
+        // Likes are a toggle, so repeated calls are legitimate — this only
+        // stops someone hammering the endpoint.
+        RateLimiter::for('likes', fn (Request $request): Limit => Limit::perMinute(20)
+            ->by($request->ip()));
     }
 }

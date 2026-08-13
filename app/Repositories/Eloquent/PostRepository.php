@@ -15,13 +15,15 @@ class PostRepository implements PostRepositoryInterface
         return Post::query()
             ->published()
             ->with('images')
+            ->withCount(['likes', 'comments' => fn ($query) => $query->where('is_approved', true)])
             ->latest('published_at')
             ->get();
     }
 
     public function all(): Collection
     {
-        return Post::query()->with('images')->latest('created_at')->get();
+        return Post::query()->with('images')
+            ->withCount(['likes', 'comments' => fn ($query) => $query->where('is_approved', true)])->latest('created_at')->get();
     }
 
     public function findPublishedBySlug(string $slug): ?Post
@@ -29,13 +31,15 @@ class PostRepository implements PostRepositoryInterface
         return Post::query()
             ->published()
             ->with('images')
+            ->withCount(['likes', 'comments' => fn ($query) => $query->where('is_approved', true)])
             ->where('slug', $slug)
             ->first();
     }
 
     public function findById(int $id): ?Post
     {
-        return Post::query()->with('images')->find($id);
+        return Post::query()->with('images')
+            ->withCount(['likes', 'comments' => fn ($query) => $query->where('is_approved', true)])->find($id);
     }
 
     public function create(array $data): Post
