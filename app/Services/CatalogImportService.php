@@ -16,13 +16,10 @@ use Illuminate\Support\Facades\DB;
  * Matching is by name, case-insensitively, so re-running the picker tops up the
  * list instead of creating a second "React" next to the existing one. Records
  * that already exist are left exactly as they are — the picker never overwrites
- * a proficiency or category the user has since edited by hand.
+ * a category the user has since edited by hand.
  */
 class CatalogImportService
 {
-    /** Proficiency given to a freshly picked skill, for the user to adjust. */
-    private const DEFAULT_PROFICIENCY = 60;
-
     /**
      * @param  array<int, array<string, mixed>>  $items
      * @return Collection<int, Technology>
@@ -46,7 +43,6 @@ class CatalogImportService
             'name' => $item['name'],
             'icon' => $item['icon'] ?? null,
             'category' => $item['category'] ?? null,
-            'proficiency' => $item['proficiency'] ?? self::DEFAULT_PROFICIENCY,
         ]);
     }
 

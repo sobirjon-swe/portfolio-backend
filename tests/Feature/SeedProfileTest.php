@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Models\Experience;
+use App\Models\Skill;
 use App\Models\SocialLink;
 use App\Models\Technology;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -20,6 +21,7 @@ class SeedProfileTest extends TestCase
 
         $this->assertSame(3, Experience::query()->count());
         $this->assertSame(12, Technology::query()->count());
+        $this->assertSame(10, Skill::query()->count());
         $this->assertSame(4, SocialLink::query()->count());
     }
 
@@ -56,6 +58,7 @@ class SeedProfileTest extends TestCase
 
         $this->assertSame(3, Experience::query()->count());
         $this->assertSame(12, Technology::query()->count());
+        $this->assertSame(10, Skill::query()->count());
         $this->assertSame(4, SocialLink::query()->count());
     }
 

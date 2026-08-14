@@ -12,7 +12,9 @@ class SkillRepository implements SkillRepositoryInterface
 {
     public function all(): Collection
     {
-        return Skill::query()->orderByDesc('proficiency')->get();
+        // Grouped by area on the site, so hand them over in a stable order
+        // rather than one derived from a number that no longer exists.
+        return Skill::query()->orderBy('category')->orderBy('id')->get();
     }
 
     public function findById(int $id): ?Skill

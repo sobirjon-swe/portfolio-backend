@@ -21,7 +21,6 @@ class SkillFactory extends Factory
     {
         return [
             'name' => fake()->unique()->word(),
-            'proficiency' => fake()->numberBetween(0, 100),
             'category' => fake()->randomElement(['backend', 'frontend', 'tools']),
         ];
     }

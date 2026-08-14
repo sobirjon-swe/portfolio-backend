@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['name', 'icon', 'proficiency', 'category'])]
+#[Fillable(['name', 'icon', 'category'])]
 class Skill extends Model
 {
     /** @use HasFactory<SkillFactory> */
@@ -21,7 +21,6 @@ class Skill extends Model
     protected function casts(): array
     {
         return [
-            'proficiency' => 'integer',
         ];
     }
 }

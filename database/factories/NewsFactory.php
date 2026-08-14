@@ -27,7 +27,6 @@ class NewsFactory extends Factory
             'user_id' => User::factory(),
             'title' => $title,
             'slug' => Str::slug($title).'-'.fake()->unique()->numberBetween(1, 100000),
-            'excerpt' => fake()->sentence(12),
             'content' => fake()->paragraphs(2, true),
             'published_at' => fake()->dateTimeBetween('-1 year', 'now'),
         ];

@@ -35,7 +35,6 @@ class BulkCatalogRequest extends FormRequest
             'items.*.icon' => ['nullable', 'string', 'max:255'],
             'items.*.category' => ['nullable', 'string', 'max:255'],
             // Only meaningful for skills; ignored when creating technologies.
-            'items.*.proficiency' => ['sometimes', 'integer', 'min:0', 'max:100'],
         ];
     }
 }

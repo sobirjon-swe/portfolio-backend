@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use App\Models\Experience;
+use App\Models\Skill;
 use App\Models\SocialLink;
 use App\Models\Technology;
 use Illuminate\Console\Command;
@@ -34,6 +35,7 @@ class SeedProfile extends Command
         $created = [
             'experiences' => $this->seedExperiences(),
             'technologies' => $this->seedTechnologies(),
+            'skills' => $this->seedSkills(),
             'social links' => $this->seedSocialLinks(),
         ];
 
@@ -80,6 +82,22 @@ class SeedProfile extends Command
             }
 
             Technology::query()->create(['name' => $name, 'icon' => $icon, 'category' => $category]);
+            $created++;
+        }
+
+        return $created;
+    }
+
+    private function seedSkills(): int
+    {
+        $created = 0;
+
+        foreach ($this->skills() as [$name, $category]) {
+            if (Skill::query()->where('name', $name)->exists()) {
+                continue;
+            }
+
+            Skill::query()->create(['name' => $name, 'category' => $category]);
             $created++;
         }
 
@@ -221,6 +239,30 @@ class SeedProfile extends Command
             ['Vue.js', 'vue.js', 'frontend'],
             ['JavaScript', 'javascript', 'frontend'],
             ['Tailwind CSS', 'tailwind css', 'frontend'],
+        ];
+    }
+
+    /**
+     * What I can do, as opposed to what I use — the tech list above answers the
+     * second question and a recruiter needs both. Deliberately kept in English:
+     * these are the terms a CV and a job ad share, and translating "query
+     * optimization" only makes it harder to match.
+     *
+     * @return list<array{0: string, 1: string}>
+     */
+    private function skills(): array
+    {
+        return [
+            ['REST API design & development', 'backend'],
+            ['Layered architecture (Controller → Service → Repository)', 'backend'],
+            ['Authentication & authorization', 'backend'],
+            ['Caching strategy', 'backend'],
+            ['Database design & indexing', 'data'],
+            ['Query optimization', 'data'],
+            ['Automated testing', 'quality'],
+            ['Logging, monitoring & error tracking', 'quality'],
+            ['CI/CD pipelines', 'delivery'],
+            ['Containerized deployment', 'delivery'],
         ];
     }
 

@@ -111,7 +111,6 @@ class NewsTest extends TestCase
 
         $id = $this->postJson('/api/v1/news', [
             'title' => ['en' => 'Release', 'uz' => 'Chiqarildi', 'ru' => 'Релиз'],
-            'excerpt' => ['en' => 'Short summary.'],
             'content' => ['en' => 'Long text.', 'uz' => 'Uzun matn.'],
         ])->assertCreated()->json('data.id');
 

@@ -18,7 +18,7 @@ use Spatie\Translatable\HasTranslations;
  * Unlike Post it carries no comments, likes or gallery: those invite a
  * conversation, and an announcement is not one.
  */
-#[Fillable(['user_id', 'title', 'slug', 'excerpt', 'content', 'published_at'])]
+#[Fillable(['user_id', 'title', 'slug', 'content', 'published_at'])]
 class News extends Model
 {
     /** @use HasFactory<NewsFactory> */
@@ -31,7 +31,7 @@ class News extends Model
     protected $table = 'news';
 
     /** @var list<string> */
-    public array $translatable = ['title', 'excerpt', 'content'];
+    public array $translatable = ['title', 'content'];
 
     /**
      * @return array<string, string>

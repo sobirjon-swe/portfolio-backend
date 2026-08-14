@@ -14,20 +14,21 @@ class SkillTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_it_lists_skills_publicly_ordered_by_proficiency(): void
+    public function test_it_lists_skills_publicly_grouped_by_category(): void
     {
-        Skill::factory()->create(['name' => 'Low', 'proficiency' => 30]);
-        Skill::factory()->create(['name' => 'High', 'proficiency' => 90]);
+        Skill::factory()->create(['name' => 'Caching strategy', 'category' => 'backend']);
+        Skill::factory()->create(['name' => 'Query optimization', 'category' => 'data']);
 
         $this->getJson('/api/v1/skills')
             ->assertOk()
             ->assertJsonCount(2, 'data')
-            ->assertJsonPath('data.0.name', 'High'); // highest first
+            // Alphabetical by category keeps the order stable between requests.
+            ->assertJsonPath('data.0.category', 'backend');
     }
 
     public function test_guests_cannot_create_skills(): void
     {
-        $this->postJson('/api/v1/skills', ['name' => 'PHP', 'proficiency' => 80])
+        $this->postJson('/api/v1/skills', ['name' => 'REST API design'])
             ->assertUnauthorized();
     }
 
@@ -35,20 +36,25 @@ class SkillTest extends TestCase
     {
         Sanctum::actingAs(User::factory()->create());
 
-        $this->postJson('/api/v1/skills', ['name' => 'PHP', 'proficiency' => 85, 'category' => 'backend'])
+        $this->postJson('/api/v1/skills', ['name' => 'REST API design', 'category' => 'backend'])
             ->assertCreated()
-            ->assertJsonPath('data.proficiency', 85);
+            ->assertJsonPath('data.name', 'REST API design');
 
-        $this->assertDatabaseHas('skills', ['name' => 'PHP', 'proficiency' => 85]);
+        $this->assertDatabaseHas('skills', ['name' => 'REST API design', 'category' => 'backend']);
     }
 
-    public function test_proficiency_must_be_between_0_and_100(): void
+    /**
+     * A skill is something I can do, not a number out of a hundred — the
+     * percentage was dropped rather than moved, so sending one is simply
+     * ignored instead of quietly stored.
+     */
+    public function test_a_percentage_is_no_longer_accepted_or_stored(): void
     {
         Sanctum::actingAs(User::factory()->create());
 
-        $this->postJson('/api/v1/skills', ['name' => 'PHP', 'proficiency' => 150])
-            ->assertUnprocessable()
-            ->assertJsonValidationErrorFor('proficiency');
+        $this->postJson('/api/v1/skills', ['name' => 'Testing', 'proficiency' => 150])
+            ->assertCreated()
+            ->assertJsonMissingPath('data.proficiency');
     }
 
     public function test_authenticated_user_can_delete_a_skill(): void

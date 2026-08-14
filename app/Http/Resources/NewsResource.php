@@ -26,7 +26,6 @@ class NewsResource extends JsonResource
             'id' => $this->id,
             'title' => $allLocales ? $this->getTranslations('title') : $this->title,
             'slug' => $this->slug,
-            'excerpt' => $allLocales ? $this->getTranslations('excerpt') : $this->excerpt,
             'content' => $allLocales ? $this->getTranslations('content') : $this->content,
             'is_published' => $this->isPublished(),
             'published_at' => $this->published_at?->toIso8601String(),

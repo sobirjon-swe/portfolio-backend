@@ -21,7 +21,6 @@ class UpdateSkillRequest extends FormRequest
         return [
             'name' => ['sometimes', 'required', 'string', 'max:255'],
             'icon' => ['nullable', 'string', 'max:255'],
-            'proficiency' => ['sometimes', 'required', 'integer', 'min:0', 'max:100'],
             'category' => ['sometimes', 'nullable', 'string', 'max:255'],
         ];
     }
