@@ -18,6 +18,7 @@ class CommentService
 
     public function __construct(
         private readonly IpHasher $ipHasher,
+        private readonly TelegramNotifier $telegram,
     ) {}
 
     /**
@@ -38,12 +39,21 @@ class CommentService
      */
     public function create(Post $post, array $data, ?string $ipAddress): Comment
     {
-        return $post->comments()->create([
+        $comment = $post->comments()->create([
             'author_name' => $data['author_name'],
             'body' => $data['body'],
             'is_approved' => false,
             'ip_hash' => $this->ipHasher->hash($ipAddress),
         ]);
+
+        // A pending comment is invisible until it is approved, so without an
+        // alert it waits for someone to open the moderation queue.
+        $this->telegram->notify('💬 Yangi izoh (tasdiq kutmoqda)', [
+            'Muallif' => $comment->author_name,
+            'Post' => (string) $post->title,
+        ], $comment->body);
+
+        return $comment;
     }
 
     /**

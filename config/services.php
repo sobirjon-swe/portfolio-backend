@@ -35,6 +35,20 @@ return [
         ],
     ],
 
+    /*
+     * Private Telegram chat that receives "new enquiry / new comment" alerts.
+     * Both values must be set for anything to be sent; with either missing the
+     * notifier stays quiet instead of erroring.
+     *
+     * bot_token: from @BotFather.
+     * chat_id:   your own numeric id — message the bot once, then read
+     *            https://api.telegram.org/bot<TOKEN>/getUpdates
+     */
+    'telegram' => [
+        'bot_token' => env('TELEGRAM_BOT_TOKEN'),
+        'chat_id' => env('TELEGRAM_CHAT_ID'),
+    ],
+
     'leetcode' => [
         // `?:` rather than an env() default: a present-but-empty LEETCODE_USERNAME
         // resolves to '' and would silently disable the stats endpoint.

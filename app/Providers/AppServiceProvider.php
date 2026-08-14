@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\TelegramNotifier;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -14,7 +15,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Credentials are read once here rather than inside the notifier, so
+        // tests can bind a differently-configured instance.
+        $this->app->singleton(TelegramNotifier::class, fn (): TelegramNotifier => new TelegramNotifier(
+            config('services.telegram.bot_token'),
+            config('services.telegram.chat_id'),
+        ));
     }
 
     /**

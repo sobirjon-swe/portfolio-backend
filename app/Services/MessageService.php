@@ -23,6 +23,7 @@ class MessageService
 
     public function __construct(
         private readonly MessageRepositoryInterface $repository,
+        private readonly TelegramNotifier $telegram,
     ) {}
 
     /**
@@ -40,7 +41,17 @@ class MessageService
      */
     public function create(array $data): Message
     {
-        return $this->repository->create($data);
+        $message = $this->repository->create($data);
+
+        // After the save, never before: the visitor's submission must succeed
+        // whether or not the alert gets through.
+        $this->telegram->notify('📬 Yangi xabar', [
+            'Ism' => $message->name,
+            'Email' => $message->email,
+            'Budjet' => (string) ($message->budget ?? ''),
+        ], $message->body);
+
+        return $message;
     }
 
     public function delete(int $id): void
