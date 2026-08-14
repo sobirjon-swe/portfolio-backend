@@ -12,7 +12,13 @@ class TechnologyRepository implements TechnologyRepositoryInterface
 {
     public function all(): Collection
     {
-        return Technology::query()->latest()->get();
+        // Strongest first within the group the stack section renders, with
+        // the unrated ones after them rather than treated as zero.
+        return Technology::query()
+            ->orderByRaw('proficiency IS NULL')
+            ->orderByDesc('proficiency')
+            ->orderBy('name')
+            ->get();
     }
 
     public function findById(int $id): ?Technology

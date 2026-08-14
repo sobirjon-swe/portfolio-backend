@@ -25,6 +25,7 @@ class UpdateTechnologyRequest extends FormRequest
             'name' => ['sometimes', 'required', 'string', 'max:255'],
             'icon' => ['sometimes', 'nullable', 'string', 'max:255'],
             'category' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'proficiency' => ['sometimes', 'nullable', 'integer', 'min:0', 'max:100'],
         ];
     }
 }

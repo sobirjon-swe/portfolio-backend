@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Models\Skill;
 use App\Models\Technology;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Adds technologies or skills in one go from the admin's logo picker.
+ * Adds technologies in one go from the admin's logo picker.
  *
  * Matching is by name, case-insensitively, so re-running the picker tops up the
  * list instead of creating a second "React" next to the existing one. Records
@@ -27,19 +26,6 @@ class CatalogImportService
     public function importTechnologies(array $items): Collection
     {
         return $this->import(Technology::class, $items, fn (array $item): array => [
-            'name' => $item['name'],
-            'icon' => $item['icon'] ?? null,
-            'category' => $item['category'] ?? null,
-        ]);
-    }
-
-    /**
-     * @param  array<int, array<string, mixed>>  $items
-     * @return Collection<int, Skill>
-     */
-    public function importSkills(array $items): Collection
-    {
-        return $this->import(Skill::class, $items, fn (array $item): array => [
             'name' => $item['name'],
             'icon' => $item['icon'] ?? null,
             'category' => $item['category'] ?? null,

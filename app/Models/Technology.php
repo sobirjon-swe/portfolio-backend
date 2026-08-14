@@ -10,11 +10,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-#[Fillable(['name', 'icon', 'category'])]
+#[Fillable(['name', 'icon', 'category', 'proficiency'])]
 class Technology extends Model
 {
     /** @use HasFactory<TechnologyFactory> */
     use HasFactory;
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'proficiency' => 'integer',
+        ];
+    }
 
     /**
      * The projects that use this technology.

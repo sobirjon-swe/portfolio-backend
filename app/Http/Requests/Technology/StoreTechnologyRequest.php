@@ -23,6 +23,7 @@ class StoreTechnologyRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'icon' => ['nullable', 'string', 'max:255'],
             'category' => ['nullable', 'string', 'max:255'],
+            'proficiency' => ['nullable', 'integer', 'min:0', 'max:100'],
         ];
     }
 }

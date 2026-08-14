@@ -82,7 +82,6 @@ Route::prefix('v1')->group(function () {
         // Bulk-add from the admin's logo picker. Declared before the {id}
         // routes so "bulk" is never read as an id.
         Route::post('technologies/bulk', [TechnologyController::class, 'bulkStore']);
-        Route::post('skills/bulk', [SkillController::class, 'bulkStore']);
 
         Route::post('technologies', [TechnologyController::class, 'store']);
         Route::patch('technologies/{id}', [TechnologyController::class, 'update'])->whereNumber('id');

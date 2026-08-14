@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['name', 'icon', 'category'])]
+#[Fillable(['name', 'category'])]
 class Skill extends Model
 {
     /** @use HasFactory<SkillFactory> */

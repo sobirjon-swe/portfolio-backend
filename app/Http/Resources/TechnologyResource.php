@@ -23,6 +23,7 @@ class TechnologyResource extends JsonResource
             'name' => $this->name,
             'icon' => $this->icon,
             'category' => $this->category,
+            'proficiency' => $this->proficiency,
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
         ];
