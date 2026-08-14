@@ -6,12 +6,14 @@ namespace App\Services;
 
 use App\Models\Post;
 use App\Repositories\Contracts\PostRepositoryInterface;
+use App\Services\Concerns\GeneratesUniqueSlug;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Str;
 
 class PostService
 {
+    use GeneratesUniqueSlug;
+
     public function __construct(
         private readonly PostRepositoryInterface $repository,
     ) {}
@@ -64,7 +66,7 @@ class PostService
     public function create(array $data, int $authorId): Post
     {
         $data['user_id'] = $authorId;
-        $data['slug'] = $this->uniqueSlug($this->titleString($data['title']));
+        $data['slug'] = $this->uniqueSlugFor(Post::class, $data['title']);
 
         return $this->repository->create($data);
     }
@@ -77,7 +79,7 @@ class PostService
         $post = $this->findById($id);
 
         if (isset($data['title'])) {
-            $data['slug'] = $this->uniqueSlug($this->titleString($data['title']), $post->id);
+            $data['slug'] = $this->uniqueSlugFor(Post::class, $data['title'], $post->id);
         }
 
         return $this->repository->update($post, $data);
@@ -88,39 +90,5 @@ class PostService
         $post = $this->findById($id);
 
         $this->repository->delete($post);
-    }
-
-    /**
-     * Resolve a plain string from a translatable title (default locale first).
-     *
-     * @param  array<string, string>|string  $title
-     */
-    private function titleString(array|string $title): string
-    {
-        if (is_array($title)) {
-            $values = array_filter($title, static fn ($v) => is_string($v) && $v !== '');
-
-            return (string) ($title['en'] ?? (array_values($values)[0] ?? ''));
-        }
-
-        return $title;
-    }
-
-    private function uniqueSlug(string $title, ?int $ignoreId = null): string
-    {
-        $base = Str::slug($title);
-        $slug = $base;
-        $suffix = 2;
-
-        while (Post::query()
-            ->where('slug', $slug)
-            ->when($ignoreId !== null, fn ($query) => $query->whereKeyNot($ignoreId))
-            ->exists()
-        ) {
-            $slug = "{$base}-{$suffix}";
-            $suffix++;
-        }
-
-        return $slug;
     }
 }

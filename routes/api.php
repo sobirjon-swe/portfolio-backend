@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ExperienceController;
 use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\LeetCodeController;
 use App\Http\Controllers\Api\MessageController;
+use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\PageViewController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\PostLikeController;
@@ -43,6 +44,9 @@ Route::prefix('v1')->group(function () {
     Route::post('posts/{slug}/like', [PostLikeController::class, 'toggle'])->middleware('throttle:likes');
 
     Route::get('posts/{slug}', [PostController::class, 'show']); // fetched by slug for SEO
+
+    Route::get('news', [NewsController::class, 'index']);
+    Route::get('news/{slug}', [NewsController::class, 'show']); // fetched by slug for SEO
 
     // The downloadable CV.
     Route::get('resume', [ResumeController::class, 'show']);
@@ -86,6 +90,11 @@ Route::prefix('v1')->group(function () {
         Route::post('posts', [PostController::class, 'store']);
         Route::patch('posts/{id}', [PostController::class, 'update'])->whereNumber('id');
         Route::delete('posts/{id}', [PostController::class, 'destroy'])->whereNumber('id');
+
+        Route::get('admin/news', [NewsController::class, 'adminIndex']);
+        Route::post('news', [NewsController::class, 'store']);
+        Route::patch('news/{id}', [NewsController::class, 'update'])->whereNumber('id');
+        Route::delete('news/{id}', [NewsController::class, 'destroy'])->whereNumber('id');
 
         Route::post('skills', [SkillController::class, 'store']);
         Route::patch('skills/{id}', [SkillController::class, 'update'])->whereNumber('id');
