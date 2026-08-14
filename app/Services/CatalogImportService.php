@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Models\Skill;
 use App\Models\Technology;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -28,6 +29,21 @@ class CatalogImportService
         return $this->import(Technology::class, $items, fn (array $item): array => [
             'name' => $item['name'],
             'icon' => $item['icon'] ?? null,
+            'category' => $item['category'] ?? null,
+        ]);
+    }
+
+    /**
+     * Skills come from their own catalog of phrases, so there is no icon to
+     * carry — one is dropped rather than stored even if the client sends it.
+     *
+     * @param  array<int, array<string, mixed>>  $items
+     * @return Collection<int, Skill>
+     */
+    public function importSkills(array $items): Collection
+    {
+        return $this->import(Skill::class, $items, fn (array $item): array => [
+            'name' => $item['name'],
             'category' => $item['category'] ?? null,
         ]);
     }

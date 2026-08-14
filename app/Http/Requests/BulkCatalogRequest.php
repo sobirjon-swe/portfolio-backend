@@ -7,8 +7,12 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Payload for adding several technologies or skills at once from the admin's
- * logo picker.
+ * Payload for adding several catalog entries at once from an admin picker.
+ *
+ * Shared by both pickers, but the two importers read different fields: a
+ * technology keeps its icon key, a skill has no logo and the importer drops it.
+ * Validating the field here rather than rejecting it keeps one request class
+ * for both, and the mapper decides what is actually stored.
  */
 class BulkCatalogRequest extends FormRequest
 {
@@ -34,7 +38,6 @@ class BulkCatalogRequest extends FormRequest
             'items.*.name' => ['required', 'string', 'max:255'],
             'items.*.icon' => ['nullable', 'string', 'max:255'],
             'items.*.category' => ['nullable', 'string', 'max:255'],
-            // Only meaningful for skills; ignored when creating technologies.
         ];
     }
 }

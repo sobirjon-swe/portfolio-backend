@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api;
 
+use App\Models\Skill;
 use App\Models\Technology;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -148,14 +149,37 @@ class TechnologyTest extends TestCase
     }
 
     /**
-     * The picker belongs to technologies alone. Offering it on the skills
-     * screen is what filed "Notion" and "WordPress" as things I can do.
+     * Both screens have a picker, but they draw from different catalogs — the
+     * logo grid is what filed "Notion" and "WordPress" as things I can do, so
+     * an icon sent to the skills importer is dropped rather than stored.
      */
-    public function test_skills_have_no_bulk_import_endpoint(): void
+    public function test_the_skill_importer_never_stores_an_icon(): void
     {
         Sanctum::actingAs(User::factory()->create());
 
-        $this->postJson('/api/v1/skills/bulk', ['items' => [['name' => 'React']]])
-            ->assertNotFound();
+        $this->postJson('/api/v1/skills/bulk', [
+            'items' => [['name' => 'Query optimization', 'icon' => 'react', 'category' => 'data']],
+        ])
+            ->assertCreated()
+            ->assertJsonMissingPath('data.0.icon');
+
+        $this->assertDatabaseHas('skills', ['name' => 'Query optimization', 'category' => 'data']);
+    }
+
+    public function test_the_skill_importer_skips_names_that_already_exist(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+        Skill::factory()->create(['name' => 'Automated testing']);
+
+        $this->postJson('/api/v1/skills/bulk', [
+            'items' => [
+                ['name' => 'Automated testing', 'category' => 'quality'],
+                ['name' => 'Code review', 'category' => 'quality'],
+            ],
+        ])
+            ->assertCreated()
+            ->assertJsonCount(1, 'data');
+
+        $this->assertSame(2, Skill::query()->count());
     }
 }
