@@ -119,6 +119,26 @@ class TelegramNotificationTest extends TestCase
         Http::assertSent(fn (Request $request): bool => ! str_contains($request['text'], 'Budjet'));
     }
 
+    public function test_a_new_recommendation_is_pushed_to_telegram(): void
+    {
+        $this->configureTelegram();
+        Http::fake(['api.telegram.org/*' => Http::response(['ok' => true])]);
+
+        $this->postJson('/api/v1/recommendations', [
+            'author_name' => 'Dilnoza Karimova',
+            'author_role' => 'CTO',
+            'author_company' => 'Acme',
+            'relationship' => 'manager',
+            'body' => 'He owned the payments module end to end and shipped it on time.',
+        ])->assertCreated();
+
+        Http::assertSent(function (Request $request): bool {
+            return str_contains($request['text'], 'Dilnoza Karimova')
+                && str_contains($request['text'], 'CTO')
+                && str_contains($request['text'], 'Acme');
+        });
+    }
+
     public function test_a_new_comment_is_pushed_to_telegram(): void
     {
         $this->configureTelegram();

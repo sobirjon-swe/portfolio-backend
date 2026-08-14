@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\PageViewController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\PostLikeController;
 use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\RecommendationController;
 use App\Http\Controllers\Api\ResumeController;
 use App\Http\Controllers\Api\SkillController;
 use App\Http\Controllers\Api\SocialLinkController;
@@ -69,6 +70,11 @@ Route::prefix('v1')->group(function () {
     // Visitors send project inquiries.
     Route::post('messages', [MessageController::class, 'store'])->middleware('throttle:contact');
 
+    // Vouches from people who have worked with me. Held for moderation.
+    Route::get('recommendations', [RecommendationController::class, 'index']);
+    Route::post('recommendations', [RecommendationController::class, 'store'])
+        ->middleware('throttle:recommendations');
+
     /*
      * Admin write endpoints (token-protected).
      */
@@ -125,6 +131,13 @@ Route::prefix('v1')->group(function () {
         Route::patch('{type}/{id}/images/order', [ImageController::class, 'reorder'])
             ->whereIn('type', ['projects', 'posts'])->whereNumber('id');
         Route::delete('images/{id}', [ImageController::class, 'destroy'])->whereNumber('id');
+
+        // Recommendation moderation. `is_approved` on the update is the
+        // moderation gesture, so there is no separate approve route.
+        Route::get('admin/recommendations', [RecommendationController::class, 'adminIndex']);
+        Route::post('admin/recommendations', [RecommendationController::class, 'adminStore']);
+        Route::patch('admin/recommendations/{id}', [RecommendationController::class, 'update'])->whereNumber('id');
+        Route::delete('admin/recommendations/{id}', [RecommendationController::class, 'destroy'])->whereNumber('id');
 
         // Comment moderation.
         Route::get('comments', [CommentController::class, 'adminIndex']);

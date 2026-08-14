@@ -49,6 +49,12 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('comments', fn (Request $request): Limit => Limit::perMinute(3)
             ->by($request->ip()));
 
+        // Recommendations are moderated anyway; this stops a bot filling the
+        // queue faster than it can be emptied. Tighter than comments because a
+        // genuine visitor writes at most one.
+        RateLimiter::for('recommendations', fn (Request $request): Limit => Limit::perMinute(2)
+            ->by($request->ip()));
+
         // Likes are a toggle, so repeated calls are legitimate — this only
         // stops someone hammering the endpoint.
         RateLimiter::for('likes', fn (Request $request): Limit => Limit::perMinute(20)
