@@ -108,4 +108,67 @@ class ExperienceTest extends TestCase
         $this->deleteJson("/api/v1/experiences/{$exp->id}")->assertNoContent();
         $this->assertDatabaseMissing('experiences', ['id' => $exp->id]);
     }
+
+    /**
+     * The admin panel sends every field it renders, so an untouched optional
+     * one arrives as an empty string rather than being absent. Both of the
+     * cases below used to come back 422 and made the form look broken.
+     */
+    public function test_it_accepts_the_form_with_every_optional_field_left_blank(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->postJson('/api/v1/experiences', [
+            'role' => ['en' => 'Backend Developer'],
+            'company' => 'Acme',
+            'description' => [],
+            'start_date' => '2023',
+            'end_date' => '',
+            'url' => '',
+            'sort_order' => null,
+        ])
+            ->assertCreated()
+            ->assertJsonPath('data.sort_order', 0)
+            ->assertJsonPath('data.url', null);
+    }
+
+    public function test_a_company_site_typed_without_a_scheme_is_accepted(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->postJson('/api/v1/experiences', [
+            'role' => ['en' => 'Backend Developer'],
+            'company' => 'Acme',
+            'start_date' => '2023',
+            'url' => 'acme.uz',
+        ])
+            ->assertCreated()
+            ->assertJsonPath('data.url', 'https://acme.uz');
+    }
+
+    public function test_an_address_that_already_has_a_scheme_is_left_alone(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->postJson('/api/v1/experiences', [
+            'role' => ['en' => 'Backend Developer'],
+            'company' => 'Acme',
+            'start_date' => '2023',
+            'url' => 'http://acme.uz/careers',
+        ])
+            ->assertCreated()
+            ->assertJsonPath('data.url', 'http://acme.uz/careers');
+    }
+
+    public function test_a_genuinely_unusable_address_is_still_rejected(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->postJson('/api/v1/experiences', [
+            'role' => ['en' => 'Backend Developer'],
+            'company' => 'Acme',
+            'start_date' => '2023',
+            'url' => 'not a url at all',
+        ])->assertUnprocessable()->assertJsonValidationErrorFor('url');
+    }
 }

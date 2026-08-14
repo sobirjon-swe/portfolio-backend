@@ -4,13 +4,24 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Experience;
 
+use App\Http\Requests\Concerns\NormalizesInput;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreExperienceRequest extends FormRequest
 {
+    use NormalizesInput;
+
     public function authorize(): bool
     {
         return true;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->normalizeUrls(['url']);
+        // The column is NOT NULL with a default of 0; a cleared field means
+        // "no preference", not an error.
+        $this->defaultNumbers(['sort_order' => 0]);
     }
 
     /**

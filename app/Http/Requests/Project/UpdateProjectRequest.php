@@ -4,14 +4,22 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Project;
 
+use App\Http\Requests\Concerns\NormalizesInput;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateProjectRequest extends FormRequest
 {
+    use NormalizesInput;
+
     public function authorize(): bool
     {
         // Access is enforced by the auth:sanctum route middleware.
         return true;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->normalizeUrls(['github_url', 'live_url']);
     }
 
     /**
