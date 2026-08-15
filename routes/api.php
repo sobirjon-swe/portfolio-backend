@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\AwardController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\ExperienceController;
 use App\Http\Controllers\Api\ImageController;
@@ -61,6 +62,11 @@ Route::prefix('v1')->group(function () {
     Route::get('experiences', [ExperienceController::class, 'index']);
     Route::get('experiences/{id}', [ExperienceController::class, 'show'])->whereNumber('id');
 
+    // Awards and certificates — everything published is public, there is no
+    // draft state to hide.
+    Route::get('awards', [AwardController::class, 'index']);
+    Route::get('awards/{id}', [AwardController::class, 'show'])->whereNumber('id');
+
     // Cached LeetCode stats proxy.
     Route::get('leetcode', [LeetCodeController::class, 'stats']);
 
@@ -114,6 +120,10 @@ Route::prefix('v1')->group(function () {
         Route::patch('experiences/{id}', [ExperienceController::class, 'update'])->whereNumber('id');
         Route::delete('experiences/{id}', [ExperienceController::class, 'destroy'])->whereNumber('id');
 
+        Route::post('awards', [AwardController::class, 'store']);
+        Route::patch('awards/{id}', [AwardController::class, 'update'])->whereNumber('id');
+        Route::delete('awards/{id}', [AwardController::class, 'destroy'])->whereNumber('id');
+
         // Aggregated visit statistics.
         Route::get('page-views/stats', [PageViewController::class, 'stats']);
 
@@ -127,9 +137,9 @@ Route::prefix('v1')->group(function () {
          * arbitrary model.
          */
         Route::post('{type}/{id}/images', [ImageController::class, 'store'])
-            ->whereIn('type', ['projects', 'posts'])->whereNumber('id');
+            ->whereIn('type', ['projects', 'posts', 'awards'])->whereNumber('id');
         Route::patch('{type}/{id}/images/order', [ImageController::class, 'reorder'])
-            ->whereIn('type', ['projects', 'posts'])->whereNumber('id');
+            ->whereIn('type', ['projects', 'posts', 'awards'])->whereNumber('id');
         Route::delete('images/{id}', [ImageController::class, 'destroy'])->whereNumber('id');
 
         // Recommendation moderation. `is_approved` on the update is the

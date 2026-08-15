@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Image\ReorderImagesRequest;
 use App\Http\Requests\Image\StoreImageRequest;
 use App\Http\Resources\ImageResource;
+use App\Models\Award;
 use App\Models\Image;
 use App\Models\Post;
 use App\Models\Project;
@@ -29,6 +30,7 @@ class ImageController extends Controller
     private const OWNERS = [
         'projects' => Project::class,
         'posts' => Post::class,
+        'awards' => Award::class,
     ];
 
     public function __construct(

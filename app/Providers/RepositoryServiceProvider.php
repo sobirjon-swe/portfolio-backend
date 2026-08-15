@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Repositories\Contracts\AwardRepositoryInterface;
 use App\Repositories\Contracts\ExperienceRepositoryInterface;
 use App\Repositories\Contracts\MessageRepositoryInterface;
 use App\Repositories\Contracts\NewsRepositoryInterface;
@@ -13,6 +14,7 @@ use App\Repositories\Contracts\ProjectRepositoryInterface;
 use App\Repositories\Contracts\SkillRepositoryInterface;
 use App\Repositories\Contracts\SocialLinkRepositoryInterface;
 use App\Repositories\Contracts\TechnologyRepositoryInterface;
+use App\Repositories\Eloquent\AwardRepository;
 use App\Repositories\Eloquent\ExperienceRepository;
 use App\Repositories\Eloquent\MessageRepository;
 use App\Repositories\Eloquent\NewsRepository;
@@ -41,6 +43,7 @@ class RepositoryServiceProvider extends ServiceProvider
         PageViewRepositoryInterface::class => PageViewRepository::class,
         MessageRepositoryInterface::class => MessageRepository::class,
         ExperienceRepositoryInterface::class => ExperienceRepository::class,
+        AwardRepositoryInterface::class => AwardRepository::class,
     ];
 
     public function register(): void

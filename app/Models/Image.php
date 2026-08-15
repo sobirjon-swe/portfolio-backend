@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * An image attached to a project or a post.
+ * An image attached to a project, a post or an award.
  *
  * Exactly one of `path` (an upload on the configured disk) or `url` (an
  * externally hosted image) is set; `resolved_url` returns whichever it is, so
