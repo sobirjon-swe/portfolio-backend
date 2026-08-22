@@ -8,6 +8,7 @@ use App\Repositories\Contracts\AwardRepositoryInterface;
 use App\Repositories\Contracts\ExperienceRepositoryInterface;
 use App\Repositories\Contracts\MessageRepositoryInterface;
 use App\Repositories\Contracts\NewsRepositoryInterface;
+use App\Repositories\Contracts\PageTextRepositoryInterface;
 use App\Repositories\Contracts\PageViewRepositoryInterface;
 use App\Repositories\Contracts\PostRepositoryInterface;
 use App\Repositories\Contracts\ProjectRepositoryInterface;
@@ -19,6 +20,7 @@ use App\Repositories\Eloquent\AwardRepository;
 use App\Repositories\Eloquent\ExperienceRepository;
 use App\Repositories\Eloquent\MessageRepository;
 use App\Repositories\Eloquent\NewsRepository;
+use App\Repositories\Eloquent\PageTextRepository;
 use App\Repositories\Eloquent\PageViewRepository;
 use App\Repositories\Eloquent\PostRepository;
 use App\Repositories\Eloquent\ProjectRepository;
@@ -47,6 +49,7 @@ class RepositoryServiceProvider extends ServiceProvider
         ExperienceRepositoryInterface::class => ExperienceRepository::class,
         AwardRepositoryInterface::class => AwardRepository::class,
         ServerHitRepositoryInterface::class => ServerHitRepository::class,
+        PageTextRepositoryInterface::class => PageTextRepository::class,
     ];
 
     public function register(): void

@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\LeetCodeController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\NewsController;
+use App\Http\Controllers\Api\PageTextController;
 use App\Http\Controllers\Api\PageViewController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\PostLikeController;
@@ -66,6 +67,9 @@ Route::prefix('v1')->group(function () {
     // draft state to hide.
     Route::get('awards', [AwardController::class, 'index']);
     Route::get('awards/{id}', [AwardController::class, 'show'])->whereNumber('id');
+
+    // Copy the admin has reworded. Empty on a site nobody has customised.
+    Route::get('page-texts', [PageTextController::class, 'index']);
 
     // Cached LeetCode stats proxy.
     Route::get('leetcode', [LeetCodeController::class, 'stats']);
@@ -130,6 +134,10 @@ Route::prefix('v1')->group(function () {
         // Crawler activity, counted from the nginx access log rather than the
         // beacon above — bots do not run the JavaScript that feeds it.
         Route::get('page-views/crawlers', [PageViewController::class, 'crawlers']);
+
+        // Editing the site's own copy.
+        Route::get('admin/page-texts', [PageTextController::class, 'adminIndex']);
+        Route::put('admin/page-texts', [PageTextController::class, 'update']);
 
         // Project inquiries (leads).
         Route::get('messages', [MessageController::class, 'index']);
