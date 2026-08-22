@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['name', 'email', 'budget', 'body', 'is_read'])]
+#[Fillable(['name', 'email', 'telegram', 'phone', 'budget', 'body', 'is_read'])]
 class Message extends Model
 {
     /** @use HasFactory<MessageFactory> */

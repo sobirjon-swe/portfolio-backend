@@ -45,9 +45,13 @@ class MessageService
 
         // After the save, never before: the visitor's submission must succeed
         // whether or not the alert gets through.
+        // Empty values are dropped by the notifier, so the channel the visitor
+        // did not fill in simply does not appear in the alert.
         $this->telegram->notify('📬 Yangi xabar', [
             'Ism' => $message->name,
             'Email' => $message->email,
+            'Telegram' => (string) ($message->telegram ?? ''),
+            'Telefon' => (string) ($message->phone ?? ''),
             'Budjet' => (string) ($message->budget ?? ''),
         ], $message->body);
 

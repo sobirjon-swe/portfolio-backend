@@ -22,6 +22,8 @@ class MessageTest extends TestCase
         return array_merge([
             'name' => 'Aziza Karimova',
             'email' => 'aziza@example.com',
+            // The form now requires a reply channel beyond email.
+            'telegram' => '@aziza_dev',
             'budget' => '$3k–5k',
             'body' => 'Kompaniyamiz uchun landing kerak.',
         ], $overrides);

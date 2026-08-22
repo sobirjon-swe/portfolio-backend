@@ -34,6 +34,7 @@ class TelegramNotificationTest extends TestCase
         return array_merge([
             'name' => 'Anvar Karimov',
             'email' => 'anvar@company.uz',
+            'telegram' => '@anvar_dev',
             'budget' => '$500 – $2000',
             'body' => 'We need an internal dashboard.',
         ], $overrides);
