@@ -89,7 +89,12 @@ class BackfillPageViewAgents extends Command
                 }
             });
 
-        $this->info(sprintf('%s %d row(s), %d would change.', $dryRun ? 'Scanned' : 'Updated', $scanned, $changed));
+        $this->info(sprintf(
+            'Scanned %d row(s), %d %s.',
+            $scanned,
+            $changed,
+            $dryRun ? 'would change' : 'updated',
+        ));
 
         if ($newBots > 0) {
             // Worth calling out: these rows counted as people until now, so

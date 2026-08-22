@@ -87,7 +87,7 @@ class BackfillPageViewAgentsTest extends TestCase
         $this->artisan('analytics:backfill')->assertSuccessful();
 
         $this->artisan('analytics:backfill')
-            ->expectsOutputToContain('0 would change')
+            ->expectsOutputToContain('0 updated')
             ->assertSuccessful();
     }
 
