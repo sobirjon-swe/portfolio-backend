@@ -127,6 +127,10 @@ Route::prefix('v1')->group(function () {
         // Aggregated visit statistics.
         Route::get('page-views/stats', [PageViewController::class, 'stats']);
 
+        // Crawler activity, counted from the nginx access log rather than the
+        // beacon above — bots do not run the JavaScript that feeds it.
+        Route::get('page-views/crawlers', [PageViewController::class, 'crawlers']);
+
         // Project inquiries (leads).
         Route::get('messages', [MessageController::class, 'index']);
         Route::delete('messages/{id}', [MessageController::class, 'destroy'])->whereNumber('id');

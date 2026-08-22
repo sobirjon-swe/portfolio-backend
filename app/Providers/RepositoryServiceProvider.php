@@ -11,6 +11,7 @@ use App\Repositories\Contracts\NewsRepositoryInterface;
 use App\Repositories\Contracts\PageViewRepositoryInterface;
 use App\Repositories\Contracts\PostRepositoryInterface;
 use App\Repositories\Contracts\ProjectRepositoryInterface;
+use App\Repositories\Contracts\ServerHitRepositoryInterface;
 use App\Repositories\Contracts\SkillRepositoryInterface;
 use App\Repositories\Contracts\SocialLinkRepositoryInterface;
 use App\Repositories\Contracts\TechnologyRepositoryInterface;
@@ -21,6 +22,7 @@ use App\Repositories\Eloquent\NewsRepository;
 use App\Repositories\Eloquent\PageViewRepository;
 use App\Repositories\Eloquent\PostRepository;
 use App\Repositories\Eloquent\ProjectRepository;
+use App\Repositories\Eloquent\ServerHitRepository;
 use App\Repositories\Eloquent\SkillRepository;
 use App\Repositories\Eloquent\SocialLinkRepository;
 use App\Repositories\Eloquent\TechnologyRepository;
@@ -44,6 +46,7 @@ class RepositoryServiceProvider extends ServiceProvider
         MessageRepositoryInterface::class => MessageRepository::class,
         ExperienceRepositoryInterface::class => ExperienceRepository::class,
         AwardRepositoryInterface::class => AwardRepository::class,
+        ServerHitRepositoryInterface::class => ServerHitRepository::class,
     ];
 
     public function register(): void

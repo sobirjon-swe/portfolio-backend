@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\TelegramNotifier;
+use App\Support\ReferrerNormalizer;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -20,6 +21,13 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(TelegramNotifier::class, fn (): TelegramNotifier => new TelegramNotifier(
             config('services.telegram.bot_token'),
             config('services.telegram.chat_id'),
+        ));
+
+        // Which hosts count as "our own" — and so as a direct visit rather
+        // than a referral — is deployment configuration, not something the
+        // normalizer should reach out and read for itself.
+        $this->app->singleton(ReferrerNormalizer::class, fn (): ReferrerNormalizer => new ReferrerNormalizer(
+            (array) config('analytics.own_hosts', []),
         ));
     }
 

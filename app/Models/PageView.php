@@ -6,10 +6,11 @@ namespace App\Models;
 
 use Database\Factories\PageViewFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['page', 'ip_hash', 'user_agent'])]
+#[Fillable(['page', 'referrer', 'ip_hash', 'user_agent', 'device', 'browser', 'platform', 'is_bot'])]
 class PageView extends Model
 {
     /** @use HasFactory<PageViewFactory> */
@@ -27,6 +28,19 @@ class PageView extends Model
     {
         return [
             'created_at' => 'datetime',
+            'is_bot' => 'boolean',
         ];
+    }
+
+    /**
+     * Real people only. Every dashboard figure that claims to count visitors
+     * goes through here, so a crawler that does execute JavaScript — some AI
+     * agents now do — cannot quietly inflate the numbers.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<PageView>  $query
+     */
+    public function scopeHumans(Builder $query): void
+    {
+        $query->where('is_bot', false);
     }
 }

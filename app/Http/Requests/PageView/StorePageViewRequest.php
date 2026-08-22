@@ -21,6 +21,12 @@ class StorePageViewRequest extends FormRequest
     {
         return [
             'page' => ['required', 'string', 'max:255'],
+            // Sent by the client rather than read from a header: the browser
+            // attaches Referer to the document request, not to the fetch the
+            // page makes afterwards, so the header is empty by the time this
+            // endpoint sees it. Only the host survives normalization, so an
+            // over-long or hostile URL never reaches storage.
+            'referrer' => ['nullable', 'string', 'max:2048'],
         ];
     }
 }
