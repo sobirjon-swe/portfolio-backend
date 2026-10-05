@@ -8,12 +8,7 @@ use App\Models\Message;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-/**
- * The contact form now asks for a second way to reply. Neither Telegram nor
- * phone is required on its own, but a message that offers neither is exactly
- * what the rule exists to stop — so most of these cover the boundary between
- * "one of the two" and "neither".
- */
+/** Email is sufficient; optional channels remain validated and normalized. */
 class MessageContactChannelTest extends TestCase
 {
     use RefreshDatabase;
@@ -60,26 +55,22 @@ class MessageContactChannelTest extends TestCase
         $this->assertSame('+998901234567', $message->phone);
     }
 
-    public function test_neither_is_refused_and_says_why_in_uzbek(): void
+    public function test_email_is_enough_without_extra_channels(): void
     {
-        $response = $this->postJson('/api/v1/messages', $this->payload())
-            ->assertUnprocessable()
-            ->assertJsonValidationErrorFor('telegram');
-
-        $this->assertSame(
-            'Telegram yoki telefon raqamidan birini kiriting.',
-            $response->json('errors.telegram.0')
-        );
-
-        $this->assertDatabaseCount('messages', 0);
+        $this->postJson('/api/v1/messages', $this->payload())->assertCreated();
+        $message = Message::query()->sole();
+        $this->assertSame('anvar@company.uz', $message->email);
+        $this->assertNull($message->telegram);
+        $this->assertNull($message->phone);
     }
 
-    public function test_blank_strings_count_as_neither(): void
+    public function test_blank_optional_channels_are_accepted(): void
     {
-        // What the form actually posts when both inputs are left untouched.
         $this->postJson('/api/v1/messages', $this->payload(['telegram' => '', 'phone' => '']))
-            ->assertUnprocessable()
-            ->assertJsonValidationErrorFor('telegram');
+            ->assertCreated();
+        $message = Message::query()->sole();
+        $this->assertNull($message->telegram);
+        $this->assertNull($message->phone);
     }
 
     public function test_a_pasted_profile_link_is_reduced_to_the_handle(): void
@@ -114,6 +105,19 @@ class MessageContactChannelTest extends TestCase
         $this->postJson('/api/v1/messages', $this->payload(['phone' => '12345']))
             ->assertUnprocessable()
             ->assertJsonValidationErrorFor('phone');
+    }
+
+    public function test_nonblank_invalid_optional_channels_are_refused(): void
+    {
+        foreach (['abc', '+', '---'] as $phone) {
+            $this->postJson('/api/v1/messages', $this->payload(['phone' => $phone]))
+                ->assertUnprocessable()
+                ->assertJsonValidationErrorFor('phone');
+        }
+        $this->postJson('/api/v1/messages', $this->payload(['telegram' => '@']))
+            ->assertUnprocessable()
+            ->assertJsonValidationErrorFor('telegram');
+        $this->assertDatabaseCount('messages', 0);
     }
 
     public function test_email_is_still_required(): void

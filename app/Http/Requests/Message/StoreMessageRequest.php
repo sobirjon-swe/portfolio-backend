@@ -35,7 +35,7 @@ class StoreMessageRequest extends FormRequest
             $handle = (string) preg_replace('#^(https?://)?(www\.)?(t\.me|telegram\.me|telegram\.dog)/#i', '', $handle);
             $handle = ltrim(trim($handle), '@');
 
-            $patch['telegram'] = $handle === '' ? null : '@'.$handle;
+            $patch['telegram'] = trim($telegram) === '' ? null : '@'.$handle;
         }
 
         $phone = $this->input('phone');
@@ -45,7 +45,7 @@ class StoreMessageRequest extends FormRequest
             // Keep a leading +, drop the separators around the digits.
             $digits = (string) preg_replace('/(?!^\+)[^\d]/', '', $digits);
 
-            $patch['phone'] = $digits === '' || $digits === '+' ? null : $digits;
+            $patch['phone'] = trim($phone) === '' ? null : ($digits === '' ? trim($phone) : $digits);
         }
 
         if ($patch !== []) {
@@ -62,12 +62,9 @@ class StoreMessageRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
 
-            // Neither is required on its own, but a message with no way to
-            // reply outside email is the case this is here to prevent — so at
-            // least one of the two has to be filled in.
+            // Email is required; additional reply channels are optional.
             'telegram' => [
                 'nullable',
-                'required_without:phone',
                 'string',
                 // Telegram's own rule: 5-32 characters, letters, digits and
                 // underscores, after the @ this request adds back.
@@ -75,7 +72,6 @@ class StoreMessageRequest extends FormRequest
             ],
             'phone' => [
                 'nullable',
-                'required_without:telegram',
                 'string',
                 // Digits only by the time this runs, optionally with a
                 // leading +. Long enough to be a real number, short enough to
@@ -97,13 +93,6 @@ class StoreMessageRequest extends FormRequest
     {
         return [
             'website.prohibited' => 'Spam aniqlandi.',
-
-            // The default wording for required_without names the other field
-            // in English and reads as though the form is broken. Both sides
-            // say the same thing, so whichever one fires is understandable on
-            // its own.
-            'telegram.required_without' => 'Telegram yoki telefon raqamidan birini kiriting.',
-            'phone.required_without' => 'Telegram yoki telefon raqamidan birini kiriting.',
 
             'telegram.regex' => 'Telegram username 5–32 ta harf, raqam yoki pastki chiziqdan iborat bo‘lishi kerak.',
             'phone.regex' => 'Telefon raqamini to‘liq kiriting, masalan +998901234567.',
